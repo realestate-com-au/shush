@@ -16,23 +16,6 @@ func main() {
 	app.Name = "shush"
 	app.Version = "1.0.0"
 	app.Usage = "KMS encryption and decryption"
-	app.Flags = []cli.Flag{
-		cli.StringFlag{
-			Name:   "region",
-			Usage:  "AWS region",
-			EnvVar: "AWS_DEFAULT_REGION",
-		},
-		cli.StringFlag{
-			Name:   "access-key",
-			Usage:  "AWS access-key",
-			EnvVar: "AWS_ACCESS_KEY_ID",
-		},
-		cli.StringFlag{
-			Name:   "session-token",
-			Usage:  "AWS session token",
-			EnvVar: "AWS_SESSION_TOKEN",
-		},
-	}
 
 	app.Commands = []cli.Command{
 		{
