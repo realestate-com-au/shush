@@ -1,10 +1,10 @@
 package main
 
 import (
-	// "encoding/base64"
-	// "github.com/awslabs/aws-sdk-go/aws"
-	// "github.com/awslabs/aws-sdk-go/gen/kms"
+	"encoding/base64"
 	"fmt"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/service/kms"
 	"github.com/codegangsta/cli"
 	"io/ioutil"
 	"os"
@@ -30,7 +30,11 @@ func main() {
 				if err != nil {
 					abort(1, err)
 				}
-				fmt.Println("encrypt " + string(plaintext) + " with key " + key)
+				ciphertext, err := encrypt(plaintext, key)
+				if err != nil {
+					abort(2, err)
+				}
+				fmt.Println(ciphertext)
 			},
 		},
 		{
@@ -50,11 +54,28 @@ func main() {
 
 }
 
-func getPayload(args []string) ([]byte, error) {
+func encrypt(plaintext string, key string) (string, error) {
+	kmsClient := kms.New(&aws.Config{Region: "ap-southeast-2"})
+	output, err := kmsClient.Encrypt(&kms.EncryptInput{
+		KeyID:     &key,
+		Plaintext: []byte(plaintext),
+	})
+	if err != nil {
+		return "", err
+	}
+	ciphertext := base64.StdEncoding.EncodeToString(output.CiphertextBlob)
+	return ciphertext, nil
+}
+
+func getPayload(args []string) (string, error) {
 	if len(args) >= 1 {
-		return []byte(args[0]), nil
+		return args[0], nil
 	} else {
-		return ioutil.ReadAll(os.Stdin)
+		input, err := ioutil.ReadAll(os.Stdin)
+		if err != nil {
+			return "", err
+		}
+		return string(input), nil
 	}
 }
 
