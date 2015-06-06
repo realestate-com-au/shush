@@ -45,7 +45,11 @@ func main() {
 				if err != nil {
 					abort(1, err)
 				}
-				fmt.Println("decrypt " + string(ciphertext))
+				plaintext, err := decrypt(ciphertext)
+				if err != nil {
+					abort(2, err)
+				}
+				fmt.Println(plaintext)
 			},
 		},
 	}
@@ -65,6 +69,21 @@ func encrypt(plaintext string, key string) (string, error) {
 	}
 	ciphertext := base64.StdEncoding.EncodeToString(output.CiphertextBlob)
 	return ciphertext, nil
+}
+
+func decrypt(ciphertext string) (string, error) {
+	kmsClient := kms.New(&aws.Config{Region: "ap-southeast-2"})
+	ciphertextBlob, err := base64.StdEncoding.DecodeString(ciphertext)
+	if err != nil {
+		return "", err
+	}
+	output, err := kmsClient.Decrypt(&kms.DecryptInput{
+		CiphertextBlob: ciphertextBlob,
+	})
+	if err != nil {
+		return "", err
+	}
+	return string(output.Plaintext), nil
 }
 
 func getPayload(args []string) (string, error) {
