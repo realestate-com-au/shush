@@ -50,7 +50,7 @@ func main() {
 				if err != nil {
 					abort(2, err)
 				}
-				fmt.Println(plaintext)
+				fmt.Print(plaintext)
 			},
 		},
 	}
