@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/base64"
 	"fmt"
+	"git.realestate.com.au/mwilliams/shush/awsmeta"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/kms"
 	"github.com/codegangsta/cli"
@@ -58,9 +59,16 @@ func main() {
 
 }
 
+func kmsClient() *kms.KMS {
+	region := os.Getenv("AWS_DEFAULT_REGION")
+	if region == "" {
+		region = awsmeta.GetRegion()
+	}
+	return kms.New(&aws.Config{Region: region})
+}
+
 func encrypt(plaintext string, key string) (string, error) {
-	kmsClient := kms.New(&aws.Config{Region: "ap-southeast-2"})
-	output, err := kmsClient.Encrypt(&kms.EncryptInput{
+	output, err := kmsClient().Encrypt(&kms.EncryptInput{
 		KeyID:     &key,
 		Plaintext: []byte(plaintext),
 	})
@@ -72,12 +80,11 @@ func encrypt(plaintext string, key string) (string, error) {
 }
 
 func decrypt(ciphertext string) (string, error) {
-	kmsClient := kms.New(&aws.Config{Region: "ap-southeast-2"})
 	ciphertextBlob, err := base64.StdEncoding.DecodeString(ciphertext)
 	if err != nil {
 		return "", err
 	}
-	output, err := kmsClient.Decrypt(&kms.DecryptInput{
+	output, err := kmsClient().Decrypt(&kms.DecryptInput{
 		CiphertextBlob: ciphertextBlob,
 	})
 	if err != nil {
