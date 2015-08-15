@@ -104,7 +104,8 @@ func decrypt(ciphertext string, encryptionContext map[string]*string) (string, e
 		return "", err
 	}
 	output, err := kmsClient().Decrypt(&kms.DecryptInput{
-		CiphertextBlob: ciphertextBlob,
+		EncryptionContext: encryptionContext,
+		CiphertextBlob:    ciphertextBlob,
 	})
 	if err != nil {
 		return "", err
