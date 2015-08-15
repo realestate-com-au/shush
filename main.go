@@ -79,6 +79,8 @@ func main() {
 
 type kmsEncryptionContext map[string]*string
 
+// Structure encapsulating stuff common to encrypt and decrypt.
+//
 type kmsHandle struct {
 	Client  *kms.KMS
 	Context kmsEncryptionContext
@@ -114,6 +116,7 @@ func parseEncryptionContext(contextString string) (kmsEncryptionContext, error) 
 	return context, nil
 }
 
+// Encrypt plaintext using specified key.
 func (h *kmsHandle) Encrypt(plaintext string, keyID string) (string, error) {
 	output, err := h.Client.Encrypt(&kms.EncryptInput{
 		KeyID:             &keyID,
@@ -127,6 +130,7 @@ func (h *kmsHandle) Encrypt(plaintext string, keyID string) (string, error) {
 	return ciphertext, nil
 }
 
+// Decrypt ciphertext.
 func (h *kmsHandle) Decrypt(ciphertext string) (string, error) {
 	ciphertextBlob, err := base64.StdEncoding.DecodeString(ciphertext)
 	if err != nil {
@@ -142,6 +146,7 @@ func (h *kmsHandle) Decrypt(ciphertext string) (string, error) {
 	return string(output.Plaintext), nil
 }
 
+// Get input, from command-line (if present) or STDIN.
 func getPayload(args []string) (string, error) {
 	if len(args) >= 1 {
 		return args[0], nil
