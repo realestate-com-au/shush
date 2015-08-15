@@ -4,48 +4,43 @@
 	"Deps": [
 		{
 			"ImportPath": "github.com/aws/aws-sdk-go/aws",
-			"Comment": "v0.6.1-9-g496a3ed",
-			"Rev": "496a3ed061799c7b39384e47424e556af575c71a"
-		},
-		{
-			"ImportPath": "github.com/aws/aws-sdk-go/internal/apierr",
-			"Comment": "v0.6.1-9-g496a3ed",
-			"Rev": "496a3ed061799c7b39384e47424e556af575c71a"
+			"Comment": "v0.7.4-4-g8aa49b7",
+			"Rev": "8aa49b7df483d06102fd8b61bf02268e7697d51c"
 		},
 		{
 			"ImportPath": "github.com/aws/aws-sdk-go/internal/endpoints",
-			"Comment": "v0.6.1-9-g496a3ed",
-			"Rev": "496a3ed061799c7b39384e47424e556af575c71a"
+			"Comment": "v0.7.4-4-g8aa49b7",
+			"Rev": "8aa49b7df483d06102fd8b61bf02268e7697d51c"
 		},
 		{
 			"ImportPath": "github.com/aws/aws-sdk-go/internal/protocol/json/jsonutil",
-			"Comment": "v0.6.1-9-g496a3ed",
-			"Rev": "496a3ed061799c7b39384e47424e556af575c71a"
+			"Comment": "v0.7.4-4-g8aa49b7",
+			"Rev": "8aa49b7df483d06102fd8b61bf02268e7697d51c"
 		},
 		{
 			"ImportPath": "github.com/aws/aws-sdk-go/internal/protocol/jsonrpc",
-			"Comment": "v0.6.1-9-g496a3ed",
-			"Rev": "496a3ed061799c7b39384e47424e556af575c71a"
+			"Comment": "v0.7.4-4-g8aa49b7",
+			"Rev": "8aa49b7df483d06102fd8b61bf02268e7697d51c"
 		},
 		{
 			"ImportPath": "github.com/aws/aws-sdk-go/internal/protocol/rest",
-			"Comment": "v0.6.1-9-g496a3ed",
-			"Rev": "496a3ed061799c7b39384e47424e556af575c71a"
+			"Comment": "v0.7.4-4-g8aa49b7",
+			"Rev": "8aa49b7df483d06102fd8b61bf02268e7697d51c"
 		},
 		{
 			"ImportPath": "github.com/aws/aws-sdk-go/internal/signer/v4",
-			"Comment": "v0.6.1-9-g496a3ed",
-			"Rev": "496a3ed061799c7b39384e47424e556af575c71a"
+			"Comment": "v0.7.4-4-g8aa49b7",
+			"Rev": "8aa49b7df483d06102fd8b61bf02268e7697d51c"
 		},
 		{
 			"ImportPath": "github.com/aws/aws-sdk-go/service/kms",
-			"Comment": "v0.6.1-9-g496a3ed",
-			"Rev": "496a3ed061799c7b39384e47424e556af575c71a"
+			"Comment": "v0.7.4-4-g8aa49b7",
+			"Rev": "8aa49b7df483d06102fd8b61bf02268e7697d51c"
 		},
 		{
 			"ImportPath": "github.com/codegangsta/cli",
-			"Comment": "1.2.0-107-g942282e",
-			"Rev": "942282e931e8286aa802a30b01fa7e16befb50f3"
+			"Comment": "1.2.0-139-g142e6cd",
+			"Rev": "142e6cd241a4dfbf7f07a018f1f8225180018da4"
 		},
 		{
 			"ImportPath": "github.com/vaughan0/go-ini",

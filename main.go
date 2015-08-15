@@ -96,7 +96,7 @@ func makeKmsHandle(contextString string) (ops *kmsHandle, err error) {
 		region = awsmeta.GetRegion()
 	}
 	ops = &kmsHandle{
-		Client:  kms.New(&aws.Config{Region: region}),
+		Client:  kms.New(&aws.Config{Region: &region}),
 		Context: encryptionContext,
 	}
 	return
