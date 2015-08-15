@@ -37,7 +37,7 @@ func main() {
 					abort(1, "no key specified")
 				}
 				key := c.Args().First()
-				encryptionContext, err := parseEncryptionContext(c.GlobalString("context"))
+				handle, err := makeKmsHandle(c.GlobalString("context"))
 				if err != nil {
 					abort(1, err)
 				}
@@ -45,7 +45,7 @@ func main() {
 				if err != nil {
 					abort(1, err)
 				}
-				ciphertext, err := encrypt(plaintext, key, encryptionContext)
+				ciphertext, err := handle.Encrypt(plaintext, key)
 				if err != nil {
 					abort(2, err)
 				}
@@ -56,7 +56,7 @@ func main() {
 			Name:  "decrypt",
 			Usage: "Decrypt KMS ciphertext",
 			Action: func(c *cli.Context) {
-				encryptionContext, err := parseEncryptionContext(c.GlobalString("context"))
+				handle, err := makeKmsHandle(c.GlobalString("context"))
 				if err != nil {
 					abort(1, err)
 				}
@@ -64,7 +64,7 @@ func main() {
 				if err != nil {
 					abort(1, err)
 				}
-				plaintext, err := decrypt(ciphertext, encryptionContext)
+				plaintext, err := handle.Decrypt(ciphertext)
 				if err != nil {
 					abort(2, err)
 				}
@@ -77,18 +77,47 @@ func main() {
 
 }
 
-func kmsClient() *kms.KMS {
+type kmsEncryptionContext map[string]*string
+
+type kmsHandle struct {
+	Client  *kms.KMS
+	Context kmsEncryptionContext
+}
+
+func makeKmsHandle(contextString string) (ops *kmsHandle, err error) {
+	encryptionContext, err := parseEncryptionContext(contextString)
+	if err != nil {
+		return
+	}
 	region := os.Getenv("AWS_DEFAULT_REGION")
 	if region == "" {
 		region = awsmeta.GetRegion()
 	}
-	return kms.New(&aws.Config{Region: region})
+	ops = &kmsHandle{
+		Client:  kms.New(&aws.Config{Region: region}),
+		Context: encryptionContext,
+	}
+	return
 }
 
-func encrypt(plaintext string, key string, encryptionContext map[string]*string) (string, error) {
-	output, err := kmsClient().Encrypt(&kms.EncryptInput{
+func parseEncryptionContext(contextString string) (kmsEncryptionContext, error) {
+	if contextString == "" {
+		return kmsEncryptionContext{}, nil
+	}
+	parts := strings.Split(contextString, "=")
+	if len(parts) < 2 {
+		return kmsEncryptionContext{}, errors.New("context must be provided in KEY=VALUE format")
+	}
+	var context = kmsEncryptionContext{
+		parts[0]: &parts[1],
+	}
+	return context, nil
+}
+
+func (h *kmsHandle) Encrypt(plaintext string, key string) (string, error) {
+	output, err := h.Client.Encrypt(&kms.EncryptInput{
 		KeyID:             &key,
-		EncryptionContext: encryptionContext,
+		EncryptionContext: h.Context,
 		Plaintext:         []byte(plaintext),
 	})
 	if err != nil {
@@ -98,13 +127,13 @@ func encrypt(plaintext string, key string, encryptionContext map[string]*string)
 	return ciphertext, nil
 }
 
-func decrypt(ciphertext string, encryptionContext map[string]*string) (string, error) {
+func (h *kmsHandle) Decrypt(ciphertext string) (string, error) {
 	ciphertextBlob, err := base64.StdEncoding.DecodeString(ciphertext)
 	if err != nil {
 		return "", err
 	}
-	output, err := kmsClient().Decrypt(&kms.DecryptInput{
-		EncryptionContext: encryptionContext,
+	output, err := h.Client.Decrypt(&kms.DecryptInput{
+		EncryptionContext: h.Context,
 		CiphertextBlob:    ciphertextBlob,
 	})
 	if err != nil {
@@ -122,20 +151,6 @@ func getPayload(args []string) (string, error) {
 		return "", err
 	}
 	return string(input), nil
-}
-
-func parseEncryptionContext(contextString string) (map[string]*string, error) {
-	if contextString == "" {
-		return map[string]*string{}, nil
-	}
-	parts := strings.Split(contextString, "=")
-	if len(parts) < 2 {
-		return map[string]*string{}, errors.New("context must be provided in KEY=VALUE format")
-	}
-	var context = map[string]*string{
-		parts[0]: &parts[1],
-	}
-	return context, nil
 }
 
 func abort(status int, message interface{}) {
