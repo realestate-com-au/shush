@@ -114,9 +114,9 @@ func parseEncryptionContext(contextString string) (kmsEncryptionContext, error) 
 	return context, nil
 }
 
-func (h *kmsHandle) Encrypt(plaintext string, key string) (string, error) {
+func (h *kmsHandle) Encrypt(plaintext string, keyID string) (string, error) {
 	output, err := h.Client.Encrypt(&kms.EncryptInput{
-		KeyID:             &key,
+		KeyID:             &keyID,
 		EncryptionContext: h.Context,
 		Plaintext:         []byte(plaintext),
 	})
