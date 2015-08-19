@@ -8,10 +8,10 @@ import (
 	"os"
 	"strings"
 
-	"git.realestate.com.au/mwilliams/shush/awsmeta"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/service/kms"
 	"github.com/codegangsta/cli"
+	"github.com/realestate-com-au/shush/awsmeta"
 )
 
 func main() {
