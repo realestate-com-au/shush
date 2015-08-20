@@ -28,3 +28,26 @@ Outside EC2, you'll need to specify is, via `--region` or by setting `$AWS_DEFAU
     $ go get github.com/realestate-com-au/shush
 
 Binaries for official releases may be downloaded from the [releases page on GitHub](https://github.com/realestate-com-au/shush/releases).
+
+## Examples
+
+### Encrypt a password
+
+Encrypt user input:
+
+    echo -n "Enter password: "
+    ENCRYPTED_PASSWORD=$(shush encrypt alias/app-secrets)
+
+and later:
+
+    some-command --password $(shush decrypt "$ENCRYPTED_PASSWORD")
+
+### Bulk encryption of secrets
+
+Encrypt some environment variables, as though they were arguments to `env(1)`:
+
+    shush encrypt alias/app-secrets 'FOO=1 BAR=2' > secrets
+
+and later:
+
+    env $(shush decrypt < secrets) some-command
