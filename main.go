@@ -26,6 +26,11 @@ func main() {
 			Name:  "context, C",
 			Usage: "encryption context",
 		},
+		cli.StringFlag{
+			Name:   "region",
+			Usage:  "AWS region",
+			EnvVar: "AWS_DEFAULT_REGION",
+		},
 	}
 
 	app.Commands = []cli.Command{
@@ -37,7 +42,10 @@ func main() {
 					abort(1, "no key specified")
 				}
 				key := c.Args().First()
-				handle, err := makeKmsHandle(c.GlobalString("context"))
+				handle, err := makeKmsHandle(
+					c.GlobalString("region"),
+					c.GlobalString("context"),
+				)
 				if err != nil {
 					abort(1, err)
 				}
@@ -56,7 +64,10 @@ func main() {
 			Name:  "decrypt",
 			Usage: "Decrypt KMS ciphertext",
 			Action: func(c *cli.Context) {
-				handle, err := makeKmsHandle(c.GlobalString("context"))
+				handle, err := makeKmsHandle(
+					c.GlobalString("region"),
+					c.GlobalString("context"),
+				)
 				if err != nil {
 					abort(1, err)
 				}
@@ -86,14 +97,17 @@ type kmsHandle struct {
 	Context kmsEncryptionContext
 }
 
-func makeKmsHandle(contextString string) (ops *kmsHandle, err error) {
+func makeKmsHandle(region string, contextString string) (ops *kmsHandle, err error) {
 	encryptionContext, err := parseEncryptionContext(contextString)
 	if err != nil {
 		return
 	}
-	region := os.Getenv("AWS_DEFAULT_REGION")
 	if region == "" {
 		region = awsmeta.GetRegion()
+		if region == "" {
+			err = errors.New("please specify region (--region or $AWS_DEFAULT_REGION)")
+			return
+		}
 	}
 	ops = &kmsHandle{
 		Client:  kms.New(&aws.Config{Region: &region}),

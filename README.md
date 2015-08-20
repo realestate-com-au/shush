@@ -16,7 +16,8 @@ KEY-ID can be the id or ARN of a KMS master key, or alias prefixed by "alias/". 
 
 Appropriate AWS credentials must be provided by one of the [mechanisms support by aws-sdk-go](https://github.com/aws/aws-sdk-go/wiki/Getting-Started-Credentials), e.g. environment variables, or EC2 instance profile.
 
-When used within EC2, `shush` selects the appropriate region automatically.  Outside EC2, you'll need to set `$AWS_DEFAULT_REGION`.
+When used within EC2, `shush` selects the appropriate region automatically.  
+Outside EC2, you'll need to specify is, via `--region` or by setting `$AWS_DEFAULT_REGION`.
 
 ### Limitations
 
