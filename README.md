@@ -52,6 +52,18 @@ and later:
 
     env $(shush decrypt < secrets) some-command
 
+## See also
+
+If you dislike 8Gb binary files, and happen to have a Ruby interpreter handy,
+"ssssh" is a drop-in replacement for "shush":
+
+* https://github.com/mdub/ssssh
+
+Or, you can just use `bash`, `base64`, and the AWS CLI:
+
+    base64 -d < secrets.encrypted > /tmp/secrets.bin
+    aws kms decrypt --ciphertext-blob fileb:///tmp/secrets.bin --output text --query Plaintext | base64 -d > secrets.txt
+
 ## License
 
 Copyright (c) 2015 REA Group Ltd.
