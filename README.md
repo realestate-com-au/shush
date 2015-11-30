@@ -25,9 +25,11 @@ Outside EC2, you'll need to specify it, via `--region` or by setting `$AWS_DEFAU
 
 ## Installation
 
-    $ go get github.com/realestate-com-au/shush
-
 Binaries for official releases may be downloaded from the [releases page on GitHub](https://github.com/realestate-com-au/shush/releases).
+
+If you want to compile it from source, try:
+
+    $ go get github.com/realestate-com-au/shush
 
 ## Examples
 
