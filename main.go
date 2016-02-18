@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/kms"
 	"github.com/codegangsta/cli"
 	"github.com/realestate-com-au/shush/awsmeta"
@@ -109,8 +110,9 @@ func makeKmsHandle(region string, contextString string) (ops *kmsHandle, err err
 			return
 		}
 	}
+	client := kms.New(session.New(), aws.NewConfig().WithRegion(region))
 	ops = &kmsHandle{
-		Client:  kms.New(&aws.Config{Region: &region}),
+		Client:  client,
 		Context: encryptionContext,
 	}
 	return
@@ -133,7 +135,7 @@ func parseEncryptionContext(contextString string) (kmsEncryptionContext, error) 
 // Encrypt plaintext using specified key.
 func (h *kmsHandle) Encrypt(plaintext string, keyID string) (string, error) {
 	output, err := h.Client.Encrypt(&kms.EncryptInput{
-		KeyID:             &keyID,
+		KeyId:             &keyID,
 		EncryptionContext: h.Context,
 		Plaintext:         []byte(plaintext),
 	})
