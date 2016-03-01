@@ -117,18 +117,7 @@ func main() {
 						os.Setenv(plaintextKey, plaintext)
 					}
 				}
-				if len(c.Args()) == 0 {
-					abort(1, "no command specified")
-				}
-				commandName := c.Args().First()
-				commandPath, err := exec.LookPath(commandName)
-				if err != nil {
-					abort(3, fmt.Sprintf("cannot find $%s\n", commandName))
-				}
-				err = syscall.Exec(commandPath, c.Args(), os.Environ())
-				if err != nil {
-					abort(3, err)
-				}
+				execCommand(c.Args())
 			},
 		},
 	}
@@ -225,4 +214,19 @@ func getPayload(args []string) (string, error) {
 func abort(status int, message interface{}) {
 	fmt.Fprintf(os.Stderr, "ERROR: %s", message)
 	os.Exit(status)
+}
+
+func execCommand(args []string) {
+	if len(args) == 0 {
+		abort(1, "no command specified")
+	}
+	commandName := args[0]
+	commandPath, err := exec.LookPath(commandName)
+	if err != nil {
+		abort(3, fmt.Sprintf("cannot find $%s\n", commandName))
+	}
+	err = syscall.Exec(commandPath, args, os.Environ())
+	if err != nil {
+		abort(3, err)
+	}
 }
