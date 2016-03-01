@@ -6,7 +6,9 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"os/exec"
 	"strings"
+	"syscall"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -81,6 +83,52 @@ func main() {
 					abort(2, err)
 				}
 				fmt.Print(plaintext)
+			},
+		},
+		{
+			Name:  "exec",
+			Usage: "Execute a command",
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "prefix",
+					Usage: "environment variable prefix",
+					Value: "KMS_ENCRYPTED_",
+				},
+			},
+			Action: func(c *cli.Context) {
+				encryptedVarPrefix := c.String("prefix")
+				handle, err := makeKmsHandle(
+					c.GlobalString("region"),
+					c.GlobalString("context"),
+				)
+				if err != nil {
+					abort(1, err)
+				}
+				for _, e := range os.Environ() {
+					pair := strings.Split(e, "=")
+					key := pair[0]
+					if strings.HasPrefix(key, encryptedVarPrefix) {
+						ciphertext := pair[1]
+						plaintextKey := key[len(encryptedVarPrefix):len(key)]
+						plaintext, err := handle.Decrypt(ciphertext)
+						if err != nil {
+							abort(2, fmt.Sprintf("cannot decrypt $%s\n", key))
+						}
+						os.Setenv(plaintextKey, plaintext)
+					}
+				}
+				if len(c.Args()) == 0 {
+					abort(1, "no command specified")
+				}
+				commandName := c.Args().First()
+				commandPath, err := exec.LookPath(commandName)
+				if err != nil {
+					abort(3, fmt.Sprintf("cannot find $%s\n", commandName))
+				}
+				err = syscall.Exec(commandPath, c.Args(), os.Environ())
+				if err != nil {
+					abort(3, err)
+				}
 			},
 		},
 	}
