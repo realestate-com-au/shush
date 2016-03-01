@@ -17,9 +17,10 @@ import (
 	"github.com/realestate-com-au/shush/awsmeta"
 )
 
-const usageError = 64 // incorrect usage of "shush"
-const kmsError = 69   // KMS encrypt/decrypt issues
-const execError = 126 // cannot execute the specified command
+const usageError = 64            // incorrect usage of "shush"
+const kmsError = 69              // KMS encrypt/decrypt issues
+const execError = 126            // cannot execute the specified command
+const commandNotFoundError = 127 // cannot find the specified command
 
 func main() {
 
@@ -227,7 +228,7 @@ func execCommand(args []string) {
 	commandName := args[0]
 	commandPath, err := exec.LookPath(commandName)
 	if err != nil {
-		abort(execError, fmt.Sprintf("cannot find $%s\n", commandName))
+		abort(commandNotFoundError, fmt.Sprintf("cannot find $%s\n", commandName))
 	}
 	err = syscall.Exec(commandPath, args, os.Environ())
 	if err != nil {
