@@ -112,7 +112,7 @@ func main() {
 						plaintextKey := key[len(encryptedVarPrefix):len(key)]
 						plaintext, err := handle.Decrypt(ciphertext)
 						if err != nil {
-							abort(2, fmt.Sprintf("cannot decrypt $%s\n", key))
+							abort(2, fmt.Sprintf("cannot decrypt $%s; %s\n", key, err))
 						}
 						os.Setenv(plaintextKey, plaintext)
 					}
