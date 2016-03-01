@@ -4,20 +4,41 @@
 
 ## Usage
 
+### Encrypting things
+
 Encrypt secrets like this:
 
-    shush encrypt KEY-ID < secrets.txt > secrets.encrypted
+    shush encrypt KEY-ID < secret.txt > secret.encrypted
 
-Later, you can decrypt them:
-
-    shush decrypt < secrets.encrypted > secrets.txt
+The output of `encrypt` is Base64-encoded ciphertext.
 
 KEY-ID can be the id or ARN of a KMS master key, or alias prefixed by "alias/".  See documentation on [Encrypt](http://docs.aws.amazon.com/kms/latest/APIReference/API_Encrypt.html) for more details.
+
+Plaintext input can also be provided on the command-line, e.g.
+
+    shush encrypt KEY-ID 'this is a secret' > secret.encrypted
+
+### Decrypting things
+
+Encrypted secrets are easy to decrypt, like this:
+
+    shush decrypt < secret.encrypted > secret.txt
+
+There's no need to specify a KEY-ID here, as it's encoded in the ciphertext.
+
+### Credentials and region
 
 Appropriate AWS credentials must be provided by one of the [mechanisms supported by aws-sdk-go](https://github.com/aws/aws-sdk-go/wiki/Getting-Started-Credentials), e.g. environment variables, or EC2 instance profile.
 
 When used within EC2, `shush` selects the appropriate region automatically.  
 Outside EC2, you'll need to specify it, via `--region` or by setting `$AWS_DEFAULT_REGION`.
+
+### Encryption context
+
+"shush" supports KMS [encryption contexts](http://docs.aws.amazon.com/kms/latest/developerguide/encryption-context.html), which may be used to scope use of a key.  The same encryption context must be provided when encrypting and decrypting.
+
+    shush --context app=myapp encrypt KEY-ID secret.txt > secret.encrypted
+    shush --context app=myapp decrypt < secret.encrypted > secret.txt
 
 ### Limitations
 
