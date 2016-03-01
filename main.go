@@ -17,6 +17,10 @@ import (
 	"github.com/realestate-com-au/shush/awsmeta"
 )
 
+const usageError = 1 // incorrect usage of "shush"
+const kmsError = 2   // KMS encrypt/decrypt issues
+const execError = 3  // cannot execute the specified command
+
 func main() {
 
 	app := cli.NewApp()
@@ -42,7 +46,7 @@ func main() {
 			Usage: "Encrypt with a KMS key",
 			Action: func(c *cli.Context) {
 				if len(c.Args()) == 0 {
-					abort(1, "no key specified")
+					abort(usageError, "no key specified")
 				}
 				key := c.Args().First()
 				handle, err := makeKmsHandle(
@@ -50,15 +54,15 @@ func main() {
 					c.GlobalString("context"),
 				)
 				if err != nil {
-					abort(1, err)
+					abort(usageError, err)
 				}
 				plaintext, err := getPayload(c.Args()[1:])
 				if err != nil {
-					abort(1, err)
+					abort(usageError, err)
 				}
 				ciphertext, err := handle.Encrypt(plaintext, key)
 				if err != nil {
-					abort(2, err)
+					abort(kmsError, err)
 				}
 				fmt.Println(ciphertext)
 			},
@@ -72,15 +76,15 @@ func main() {
 					c.GlobalString("context"),
 				)
 				if err != nil {
-					abort(1, err)
+					abort(usageError, err)
 				}
 				ciphertext, err := getPayload(c.Args())
 				if err != nil {
-					abort(1, err)
+					abort(usageError, err)
 				}
 				plaintext, err := handle.Decrypt(ciphertext)
 				if err != nil {
-					abort(2, err)
+					abort(kmsError, err)
 				}
 				fmt.Print(plaintext)
 			},
@@ -102,7 +106,7 @@ func main() {
 					c.GlobalString("context"),
 				)
 				if err != nil {
-					abort(1, err)
+					abort(usageError, err)
 				}
 				for _, e := range os.Environ() {
 					pair := strings.SplitN(e, "=", 2)
@@ -112,7 +116,7 @@ func main() {
 						plaintextKey := key[len(encryptedVarPrefix):len(key)]
 						plaintext, err := handle.Decrypt(ciphertext)
 						if err != nil {
-							abort(2, fmt.Sprintf("cannot decrypt $%s; %s\n", key, err))
+							abort(kmsError, fmt.Sprintf("cannot decrypt $%s; %s\n", key, err))
 						}
 						os.Setenv(plaintextKey, plaintext)
 					}
@@ -218,15 +222,15 @@ func abort(status int, message interface{}) {
 
 func execCommand(args []string) {
 	if len(args) == 0 {
-		abort(1, "no command specified")
+		abort(usageError, "no command specified")
 	}
 	commandName := args[0]
 	commandPath, err := exec.LookPath(commandName)
 	if err != nil {
-		abort(3, fmt.Sprintf("cannot find $%s\n", commandName))
+		abort(execError, fmt.Sprintf("cannot find $%s\n", commandName))
 	}
 	err = syscall.Exec(commandPath, args, os.Environ())
 	if err != nil {
-		abort(3, err)
+		abort(execError, err)
 	}
 }
