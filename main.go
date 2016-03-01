@@ -17,9 +17,9 @@ import (
 	"github.com/realestate-com-au/shush/awsmeta"
 )
 
-const usageError = 1 // incorrect usage of "shush"
-const kmsError = 2   // KMS encrypt/decrypt issues
-const execError = 3  // cannot execute the specified command
+const usageError = 64 // incorrect usage of "shush"
+const kmsError = 69   // KMS encrypt/decrypt issues
+const execError = 126 // cannot execute the specified command
 
 func main() {
 
