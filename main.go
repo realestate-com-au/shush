@@ -31,8 +31,9 @@ func main() {
 
 	app.Flags = []cli.Flag{
 		cli.StringFlag{
-			Name:  "context, C",
-			Usage: "encryption context",
+			Name:   "context, C",
+			Usage:  "encryption context",
+			EnvVar: "KMS_ENCRYPTION_CONTEXT",
 		},
 		cli.StringFlag{
 			Name:   "region",
