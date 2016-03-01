@@ -44,6 +44,33 @@ Outside EC2, you'll need to specify it, via `--region` or by setting `$AWS_DEFAU
 
 "shush" can only encrypt small amounts of data; up to 4 KB.
 
+## Use as a command shim
+
+"shush exec" is a command shim that makes it easy to use secrets transported
+via the (Unix) process environment.  It decrypts any environment variables
+prefixed by "`KMS_ENCRYPTED_`", and executes a specified command.
+
+For example:
+
+```
+$ export KMS_ENCRYPTED_DB_PASSWORD=$(shush encrypt alias/app-secrets 'seasame')
+$ shush exec -- env | grep PASSWORD
+KMS_ENCRYPTED_DB_PASSWORD=CiAbQLOo2VC4QTV/Ng986wsDSJ0srAe6oZnLyzRT6pDFWRKOAQEBAgB4G0CzqNlQuEE1fzYPfOsLA0idLKwHuqGZy8s0U+qQxVkAAABlMGMGCSqGSIb3DQEHBqBWMFQCAQAwTwYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAzfFR0tsHRq18JUhMcCARCAImvuMNYuHUut3BT7sZs9a31qWcmOBUBXYEsD+kx2GxUxBPE=
+DB_PASSWORD=seasame
+```
+
+In this example, "shush exec":
+
+- found `$KMS_ENCRYPTED_DB_PASSWORD` in the environment
+- decrypted the contents
+- put the result in `$DB_PASSWORD`
+- executed `env`
+
+"shush exec" works well as an entrypoint for Docker images, e.g.
+
+    ADD shush_linux_amd64 /usr/local/bin/shush
+    ENTRYPOINT ["usr/local/bin/shush", "exec", "--"]
+
 ## Installation
 
 Binaries for official releases may be downloaded from the [releases page on GitHub](https://github.com/realestate-com-au/shush/releases).
