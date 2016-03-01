@@ -105,7 +105,7 @@ func main() {
 					abort(1, err)
 				}
 				for _, e := range os.Environ() {
-					pair := strings.Split(e, "=")
+					pair := strings.SplitN(e, "=", 2)
 					key := pair[0]
 					if strings.HasPrefix(key, encryptedVarPrefix) {
 						ciphertext := pair[1]
