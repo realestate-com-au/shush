@@ -228,7 +228,7 @@ func execCommand(args []string) {
 	commandName := args[0]
 	commandPath, err := exec.LookPath(commandName)
 	if err != nil {
-		abort(commandNotFoundError, fmt.Sprintf("cannot find $%s\n", commandName))
+		abort(commandNotFoundError, fmt.Sprintf("cannot find '%s'\n", commandName))
 	}
 	err = syscall.Exec(commandPath, args, os.Environ())
 	if err != nil {
