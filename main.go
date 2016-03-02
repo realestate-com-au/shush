@@ -103,24 +103,33 @@ func main() {
 			},
 			Action: func(c *cli.Context) {
 				encryptedVarPrefix := c.String("prefix")
-				handle, err := makeKmsHandle(
-					c.GlobalString("region"),
-					c.GlobalString("context"),
-				)
-				if err != nil {
-					abort(usageError, err)
-				}
+				foundEncrypted := false
 				for _, e := range os.Environ() {
-					pair := strings.SplitN(e, "=", 2)
-					key := pair[0]
-					if strings.HasPrefix(key, encryptedVarPrefix) {
-						ciphertext := pair[1]
-						plaintextKey := key[len(encryptedVarPrefix):len(key)]
-						plaintext, err := handle.Decrypt(ciphertext)
-						if err != nil {
-							abort(kmsError, fmt.Sprintf("cannot decrypt $%s; %s\n", key, err))
+					if strings.HasPrefix(e, encryptedVarPrefix) {
+						foundEncrypted = true
+						break
+					}
+				}
+				if foundEncrypted {
+					handle, err := makeKmsHandle(
+						c.GlobalString("region"),
+						c.GlobalString("context"),
+					)
+					if err != nil {
+						abort(usageError, err)
+					}
+					for _, e := range os.Environ() {
+						keyValuePair := strings.SplitN(e, "=", 2)
+						key := keyValuePair[0]
+						if strings.HasPrefix(key, encryptedVarPrefix) {
+							ciphertext := keyValuePair[1]
+							plaintextKey := key[len(encryptedVarPrefix):len(key)]
+							plaintext, err := handle.Decrypt(ciphertext)
+							if err != nil {
+								abort(kmsError, fmt.Sprintf("cannot decrypt $%s; %s\n", key, err))
+							}
+							os.Setenv(plaintextKey, plaintext)
 						}
-						os.Setenv(plaintextKey, plaintext)
 					}
 				}
 				execCommand(c.Args())
