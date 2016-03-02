@@ -69,7 +69,7 @@ In this example, "shush exec":
 "shush exec" works well as an entrypoint for Docker images, e.g.
 
     ADD shush_linux_amd64 /usr/local/bin/shush
-    ENTRYPOINT ["usr/local/bin/shush", "exec", "--"]
+    ENTRYPOINT ["/usr/local/bin/shush", "exec", "--"]
 
 ## Installation
 
