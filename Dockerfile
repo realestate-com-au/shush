@@ -1,6 +1,8 @@
 FROM alpine:3.2
 
+
 RUN apk add --update git go && \
+    apk add --update build-base && \
     rm -rf /var/cache/apk/*
 
 ENV GOPATH /go
