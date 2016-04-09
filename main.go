@@ -14,9 +14,9 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/kms"
 	"github.com/codegangsta/cli"
-	"github.com/opencontainers/runc/libcontainer/system"
 	"github.com/opencontainers/runc/libcontainer/user"
 	"github.com/realestate-com-au/shush/awsmeta"
+	"github.com/realestate-com-au/shush/setuid"
 )
 
 const usageError = 64            // incorrect usage of "shush"
@@ -286,10 +286,10 @@ func SetupUser(u string) error {
 	if err := syscall.Setgroups(execUser.Sgids); err != nil {
 		return err
 	}
-	if err := system.Setgid(execUser.Gid); err != nil {
+	if err := setuid.Setgid(execUser.Gid); err != nil {
 		return err
 	}
-	if err := system.Setuid(execUser.Uid); err != nil {
+	if err := setuid.Setuid(execUser.Uid); err != nil {
 		return err
 	}
 	// if we didn't get HOME already, set it based on the user's HOME
