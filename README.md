@@ -68,7 +68,10 @@ In this example, "shush exec":
 
 "shush exec" works well as an entrypoint for Docker images, e.g.
 
-    ADD shush_linux_amd64 /usr/local/bin/shush
+    # Include "shush" to decode KMS_ENCRYPTED_STUFF
+    RUN curl -sL -o /usr/local/bin/shush \
+        https://github.com/realestate-com-au/shush/releases/download/v1.2.0/shush_linux_amd64 \
+     && chmod +x /usr/local/bin/shush
     ENTRYPOINT ["/usr/local/bin/shush", "exec", "--"]
 
 ## Installation
