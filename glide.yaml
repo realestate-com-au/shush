@@ -1,16 +1,8 @@
 package: github.com/realestate-com-au/shush
 import:
 - package: github.com/aws/aws-sdk-go
-  version: d17da62685915c25ab5b429b1d1e5b67faa98ac2
   subpackages:
   - aws
-  - private/endpoints
-  - private/protocol
-  - private/signer/v4
+  - aws/session
   - service/kms
 - package: github.com/codegangsta/cli
-  version: 142e6cd241a4dfbf7f07a018f1f8225180018da4
-- package: github.com/go-ini/ini
-  version: f461e7678980ec9ced7d37b2b18abf8a7da393da
-- package: github.com/jmespath/go-jmespath
-  version: 0b12d6b521d83fc7f755e7cfc1b1fbdd35a01a74

@@ -1,18 +1,32 @@
-hash: b3f5e5d0ff6f9a2dee8b796203f55caf9769e77b921babf604c7a4254c6f24c4
-updated: 2016-04-20T18:01:12.969379774+10:00
+hash: 72f16b4ee95ab36ac05d90e43feb096bdec43b29d26baf5f31ab5a23bf8718a1
+updated: 2016-04-20T18:08:23.090806443+10:00
 imports:
 - name: github.com/aws/aws-sdk-go
-  version: ""
+  version: 9300ebee2d7b53f3146548d04545f83517e48469
   subpackages:
   - aws
-  - private/endpoints
-  - private/protocol
-  - private/signer/v4
+  - aws/session
   - service/kms
+  - aws/awserr
+  - aws/credentials
+  - aws/client
+  - aws/corehandlers
+  - aws/defaults
+  - aws/request
+  - private/endpoints
+  - aws/awsutil
+  - aws/client/metadata
+  - private/protocol
+  - private/protocol/jsonrpc
+  - private/signer/v4
+  - aws/credentials/ec2rolecreds
+  - aws/ec2metadata
+  - private/protocol/json/jsonutil
+  - private/protocol/rest
 - name: github.com/codegangsta/cli
-  version: ""
+  version: 71f57d300dd6a780ac1856c005c4b518cfd498ec
 - name: github.com/go-ini/ini
-  version: ""
+  version: 12f418cc7edc5a618a51407b7ac1f1f512139df3
 - name: github.com/jmespath/go-jmespath
-  version: ""
+  version: 0b12d6b521d83fc7f755e7cfc1b1fbdd35a01a74
 devImports: []
