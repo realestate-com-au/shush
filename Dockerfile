@@ -1,7 +1,6 @@
-FROM alpine:3.2
+FROM alpine:3.3
 
-RUN apk add --update git go && \
-    rm -rf /var/cache/apk/*
+RUN apk --no-cache add git go
 
 ENV GOPATH /go
 ENV GOBIN $GOPATH/bin
