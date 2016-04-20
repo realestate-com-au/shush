@@ -1,0 +1,18 @@
+hash: b3f5e5d0ff6f9a2dee8b796203f55caf9769e77b921babf604c7a4254c6f24c4
+updated: 2016-04-20T18:01:12.969379774+10:00
+imports:
+- name: github.com/aws/aws-sdk-go
+  version: ""
+  subpackages:
+  - aws
+  - private/endpoints
+  - private/protocol
+  - private/signer/v4
+  - service/kms
+- name: github.com/codegangsta/cli
+  version: ""
+- name: github.com/go-ini/ini
+  version: ""
+- name: github.com/jmespath/go-jmespath
+  version: ""
+devImports: []

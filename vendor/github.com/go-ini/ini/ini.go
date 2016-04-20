@@ -36,7 +36,7 @@ const (
 
 	// Maximum allowed depth when recursively substituing variable names.
 	_DEPTH_VALUES = 99
-	_VERSION      = "1.9.1"
+	_VERSION      = "1.11.0"
 )
 
 // Version returns current package version literal.
@@ -56,6 +56,9 @@ var (
 	// Indicate whether to align "=" sign with spaces to produce pretty output
 	// or reduce all possible spaces for compact format.
 	PrettyFormat = true
+
+	// Explicitly write DEFAULT section header
+	DefaultHeader = false
 )
 
 func init() {
@@ -123,16 +126,20 @@ type File struct {
 	// To keep data in order.
 	sectionList []string
 
+	// Whether the parser should ignore nonexistent files or return error.
+	looseMode bool
+
 	NameMapper
 }
 
 // newFile initializes File object with given data sources.
-func newFile(dataSources []dataSource) *File {
+func newFile(dataSources []dataSource, looseMode bool) *File {
 	return &File{
 		BlockMode:   true,
 		dataSources: dataSources,
 		sections:    make(map[string]*Section),
 		sectionList: make([]string, 0, 10),
+		looseMode:   looseMode,
 	}
 }
 
@@ -147,9 +154,7 @@ func parseDataSource(source interface{}) (dataSource, error) {
 	}
 }
 
-// Load loads and parses from INI data sources.
-// Arguments can be mixed of file name with string type, or raw data in []byte.
-func Load(source interface{}, others ...interface{}) (_ *File, err error) {
+func loadSources(looseMode bool, source interface{}, others ...interface{}) (_ *File, err error) {
 	sources := make([]dataSource, len(others)+1)
 	sources[0], err = parseDataSource(source)
 	if err != nil {
@@ -161,11 +166,24 @@ func Load(source interface{}, others ...interface{}) (_ *File, err error) {
 			return nil, err
 		}
 	}
-	f := newFile(sources)
+	f := newFile(sources, looseMode)
 	if err = f.Reload(); err != nil {
 		return nil, err
 	}
 	return f, nil
+}
+
+// Load loads and parses from INI data sources.
+// Arguments can be mixed of file name with string type, or raw data in []byte.
+// It will return error if list contains nonexistent files.
+func Load(source interface{}, others ...interface{}) (*File, error) {
+	return loadSources(false, source, others...)
+}
+
+// LooseLoad has exactly same functionality as Load function
+// except it ignores nonexistent files instead of returning error.
+func LooseLoad(source interface{}, others ...interface{}) (*File, error) {
+	return loadSources(true, source, others...)
 }
 
 // Empty returns an empty file object.
@@ -285,6 +303,11 @@ func (f *File) reload(s dataSource) error {
 func (f *File) Reload() (err error) {
 	for _, s := range f.dataSources {
 		if err = f.reload(s); err != nil {
+			// In loose mode, we create an empty default section for nonexistent files.
+			if os.IsNotExist(err) && f.looseMode {
+				f.parse(bytes.NewBuffer(nil))
+				continue
+			}
 			return err
 		}
 	}
@@ -330,7 +353,7 @@ func (f *File) WriteToIndent(w io.Writer, indent string) (n int64, err error) {
 			}
 		}
 
-		if i > 0 {
+		if i > 0 || DefaultHeader {
 			if _, err = buf.WriteString("[" + sname + "]" + LineBreak); err != nil {
 				return 0, err
 			}
