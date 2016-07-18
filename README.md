@@ -70,7 +70,7 @@ In this example, "shush exec":
 
     # Include "shush" to decode KMS_ENCRYPTED_STUFF
     RUN curl -sL -o /usr/local/bin/shush \
-        https://github.com/realestate-com-au/shush/releases/download/v1.2.0/shush_linux_amd64 \
+        https://github.com/realestate-com-au/shush/releases/download/v1.3.0/shush_linux_amd64 \
      && chmod +x /usr/local/bin/shush
     ENTRYPOINT ["/usr/local/bin/shush", "exec", "--"]
 
