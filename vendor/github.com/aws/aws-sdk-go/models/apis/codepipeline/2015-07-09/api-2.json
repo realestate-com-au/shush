@@ -4,11 +4,11 @@
     "apiVersion":"2015-07-09",
     "endpointPrefix":"codepipeline",
     "jsonVersion":"1.1",
+    "protocol":"json",
     "serviceAbbreviation":"CodePipeline",
     "serviceFullName":"AWS CodePipeline",
     "signatureVersion":"v4",
-    "targetPrefix":"CodePipeline_20150709",
-    "protocol":"json"
+    "targetPrefix":"CodePipeline_20150709"
   },
   "operations":{
     "AcknowledgeJob":{
@@ -20,18 +20,9 @@
       "input":{"shape":"AcknowledgeJobInput"},
       "output":{"shape":"AcknowledgeJobOutput"},
       "errors":[
-        {
-          "shape":"ValidationException",
-          "exception":true
-        },
-        {
-          "shape":"InvalidNonceException",
-          "exception":true
-        },
-        {
-          "shape":"JobNotFoundException",
-          "exception":true
-        }
+        {"shape":"ValidationException"},
+        {"shape":"InvalidNonceException"},
+        {"shape":"JobNotFoundException"}
       ]
     },
     "AcknowledgeThirdPartyJob":{
@@ -43,22 +34,10 @@
       "input":{"shape":"AcknowledgeThirdPartyJobInput"},
       "output":{"shape":"AcknowledgeThirdPartyJobOutput"},
       "errors":[
-        {
-          "shape":"ValidationException",
-          "exception":true
-        },
-        {
-          "shape":"InvalidNonceException",
-          "exception":true
-        },
-        {
-          "shape":"JobNotFoundException",
-          "exception":true
-        },
-        {
-          "shape":"InvalidClientTokenException",
-          "exception":true
-        }
+        {"shape":"ValidationException"},
+        {"shape":"InvalidNonceException"},
+        {"shape":"JobNotFoundException"},
+        {"shape":"InvalidClientTokenException"}
       ]
     },
     "CreateCustomActionType":{
@@ -70,14 +49,8 @@
       "input":{"shape":"CreateCustomActionTypeInput"},
       "output":{"shape":"CreateCustomActionTypeOutput"},
       "errors":[
-        {
-          "shape":"ValidationException",
-          "exception":true
-        },
-        {
-          "shape":"LimitExceededException",
-          "exception":true
-        }
+        {"shape":"ValidationException"},
+        {"shape":"LimitExceededException"}
       ]
     },
     "CreatePipeline":{
@@ -89,34 +62,13 @@
       "input":{"shape":"CreatePipelineInput"},
       "output":{"shape":"CreatePipelineOutput"},
       "errors":[
-        {
-          "shape":"ValidationException",
-          "exception":true
-        },
-        {
-          "shape":"PipelineNameInUseException",
-          "exception":true
-        },
-        {
-          "shape":"InvalidStageDeclarationException",
-          "exception":true
-        },
-        {
-          "shape":"InvalidActionDeclarationException",
-          "exception":true
-        },
-        {
-          "shape":"InvalidBlockerDeclarationException",
-          "exception":true
-        },
-        {
-          "shape":"InvalidStructureException",
-          "exception":true
-        },
-        {
-          "shape":"LimitExceededException",
-          "exception":true
-        }
+        {"shape":"ValidationException"},
+        {"shape":"PipelineNameInUseException"},
+        {"shape":"InvalidStageDeclarationException"},
+        {"shape":"InvalidActionDeclarationException"},
+        {"shape":"InvalidBlockerDeclarationException"},
+        {"shape":"InvalidStructureException"},
+        {"shape":"LimitExceededException"}
       ]
     },
     "DeleteCustomActionType":{
@@ -127,10 +79,7 @@
       },
       "input":{"shape":"DeleteCustomActionTypeInput"},
       "errors":[
-        {
-          "shape":"ValidationException",
-          "exception":true
-        }
+        {"shape":"ValidationException"}
       ]
     },
     "DeletePipeline":{
@@ -141,10 +90,7 @@
       },
       "input":{"shape":"DeletePipelineInput"},
       "errors":[
-        {
-          "shape":"ValidationException",
-          "exception":true
-        }
+        {"shape":"ValidationException"}
       ]
     },
     "DisableStageTransition":{
@@ -155,18 +101,9 @@
       },
       "input":{"shape":"DisableStageTransitionInput"},
       "errors":[
-        {
-          "shape":"ValidationException",
-          "exception":true
-        },
-        {
-          "shape":"PipelineNotFoundException",
-          "exception":true
-        },
-        {
-          "shape":"StageNotFoundException",
-          "exception":true
-        }
+        {"shape":"ValidationException"},
+        {"shape":"PipelineNotFoundException"},
+        {"shape":"StageNotFoundException"}
       ]
     },
     "EnableStageTransition":{
@@ -177,18 +114,9 @@
       },
       "input":{"shape":"EnableStageTransitionInput"},
       "errors":[
-        {
-          "shape":"ValidationException",
-          "exception":true
-        },
-        {
-          "shape":"PipelineNotFoundException",
-          "exception":true
-        },
-        {
-          "shape":"StageNotFoundException",
-          "exception":true
-        }
+        {"shape":"ValidationException"},
+        {"shape":"PipelineNotFoundException"},
+        {"shape":"StageNotFoundException"}
       ]
     },
     "GetJobDetails":{
@@ -200,14 +128,8 @@
       "input":{"shape":"GetJobDetailsInput"},
       "output":{"shape":"GetJobDetailsOutput"},
       "errors":[
-        {
-          "shape":"ValidationException",
-          "exception":true
-        },
-        {
-          "shape":"JobNotFoundException",
-          "exception":true
-        }
+        {"shape":"ValidationException"},
+        {"shape":"JobNotFoundException"}
       ]
     },
     "GetPipeline":{
@@ -219,18 +141,23 @@
       "input":{"shape":"GetPipelineInput"},
       "output":{"shape":"GetPipelineOutput"},
       "errors":[
-        {
-          "shape":"ValidationException",
-          "exception":true
-        },
-        {
-          "shape":"PipelineNotFoundException",
-          "exception":true
-        },
-        {
-          "shape":"PipelineVersionNotFoundException",
-          "exception":true
-        }
+        {"shape":"ValidationException"},
+        {"shape":"PipelineNotFoundException"},
+        {"shape":"PipelineVersionNotFoundException"}
+      ]
+    },
+    "GetPipelineExecution":{
+      "name":"GetPipelineExecution",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"GetPipelineExecutionInput"},
+      "output":{"shape":"GetPipelineExecutionOutput"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"PipelineNotFoundException"},
+        {"shape":"PipelineExecutionNotFoundException"}
       ]
     },
     "GetPipelineState":{
@@ -242,14 +169,8 @@
       "input":{"shape":"GetPipelineStateInput"},
       "output":{"shape":"GetPipelineStateOutput"},
       "errors":[
-        {
-          "shape":"ValidationException",
-          "exception":true
-        },
-        {
-          "shape":"PipelineNotFoundException",
-          "exception":true
-        }
+        {"shape":"ValidationException"},
+        {"shape":"PipelineNotFoundException"}
       ]
     },
     "GetThirdPartyJobDetails":{
@@ -261,22 +182,10 @@
       "input":{"shape":"GetThirdPartyJobDetailsInput"},
       "output":{"shape":"GetThirdPartyJobDetailsOutput"},
       "errors":[
-        {
-          "shape":"JobNotFoundException",
-          "exception":true
-        },
-        {
-          "shape":"ValidationException",
-          "exception":true
-        },
-        {
-          "shape":"InvalidClientTokenException",
-          "exception":true
-        },
-        {
-          "shape":"InvalidJobException",
-          "exception":true
-        }
+        {"shape":"JobNotFoundException"},
+        {"shape":"ValidationException"},
+        {"shape":"InvalidClientTokenException"},
+        {"shape":"InvalidJobException"}
       ]
     },
     "ListActionTypes":{
@@ -288,14 +197,8 @@
       "input":{"shape":"ListActionTypesInput"},
       "output":{"shape":"ListActionTypesOutput"},
       "errors":[
-        {
-          "shape":"ValidationException",
-          "exception":true
-        },
-        {
-          "shape":"InvalidNextTokenException",
-          "exception":true
-        }
+        {"shape":"ValidationException"},
+        {"shape":"InvalidNextTokenException"}
       ]
     },
     "ListPipelines":{
@@ -307,10 +210,7 @@
       "input":{"shape":"ListPipelinesInput"},
       "output":{"shape":"ListPipelinesOutput"},
       "errors":[
-        {
-          "shape":"InvalidNextTokenException",
-          "exception":true
-        }
+        {"shape":"InvalidNextTokenException"}
       ]
     },
     "PollForJobs":{
@@ -322,14 +222,8 @@
       "input":{"shape":"PollForJobsInput"},
       "output":{"shape":"PollForJobsOutput"},
       "errors":[
-        {
-          "shape":"ValidationException",
-          "exception":true
-        },
-        {
-          "shape":"ActionTypeNotFoundException",
-          "exception":true
-        }
+        {"shape":"ValidationException"},
+        {"shape":"ActionTypeNotFoundException"}
       ]
     },
     "PollForThirdPartyJobs":{
@@ -341,14 +235,8 @@
       "input":{"shape":"PollForThirdPartyJobsInput"},
       "output":{"shape":"PollForThirdPartyJobsOutput"},
       "errors":[
-        {
-          "shape":"ActionTypeNotFoundException",
-          "exception":true
-        },
-        {
-          "shape":"ValidationException",
-          "exception":true
-        }
+        {"shape":"ActionTypeNotFoundException"},
+        {"shape":"ValidationException"}
       ]
     },
     "PutActionRevision":{
@@ -360,22 +248,27 @@
       "input":{"shape":"PutActionRevisionInput"},
       "output":{"shape":"PutActionRevisionOutput"},
       "errors":[
-        {
-          "shape":"PipelineNotFoundException",
-          "exception":true
-        },
-        {
-          "shape":"StageNotFoundException",
-          "exception":true
-        },
-        {
-          "shape":"ActionNotFoundException",
-          "exception":true
-        },
-        {
-          "shape":"ValidationException",
-          "exception":true
-        }
+        {"shape":"PipelineNotFoundException"},
+        {"shape":"StageNotFoundException"},
+        {"shape":"ActionNotFoundException"},
+        {"shape":"ValidationException"}
+      ]
+    },
+    "PutApprovalResult":{
+      "name":"PutApprovalResult",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"PutApprovalResultInput"},
+      "output":{"shape":"PutApprovalResultOutput"},
+      "errors":[
+        {"shape":"InvalidApprovalTokenException"},
+        {"shape":"ApprovalAlreadyCompletedException"},
+        {"shape":"PipelineNotFoundException"},
+        {"shape":"StageNotFoundException"},
+        {"shape":"ActionNotFoundException"},
+        {"shape":"ValidationException"}
       ]
     },
     "PutJobFailureResult":{
@@ -386,18 +279,9 @@
       },
       "input":{"shape":"PutJobFailureResultInput"},
       "errors":[
-        {
-          "shape":"ValidationException",
-          "exception":true
-        },
-        {
-          "shape":"JobNotFoundException",
-          "exception":true
-        },
-        {
-          "shape":"InvalidJobStateException",
-          "exception":true
-        }
+        {"shape":"ValidationException"},
+        {"shape":"JobNotFoundException"},
+        {"shape":"InvalidJobStateException"}
       ]
     },
     "PutJobSuccessResult":{
@@ -408,18 +292,9 @@
       },
       "input":{"shape":"PutJobSuccessResultInput"},
       "errors":[
-        {
-          "shape":"ValidationException",
-          "exception":true
-        },
-        {
-          "shape":"JobNotFoundException",
-          "exception":true
-        },
-        {
-          "shape":"InvalidJobStateException",
-          "exception":true
-        }
+        {"shape":"ValidationException"},
+        {"shape":"JobNotFoundException"},
+        {"shape":"InvalidJobStateException"}
       ]
     },
     "PutThirdPartyJobFailureResult":{
@@ -430,22 +305,10 @@
       },
       "input":{"shape":"PutThirdPartyJobFailureResultInput"},
       "errors":[
-        {
-          "shape":"ValidationException",
-          "exception":true
-        },
-        {
-          "shape":"JobNotFoundException",
-          "exception":true
-        },
-        {
-          "shape":"InvalidJobStateException",
-          "exception":true
-        },
-        {
-          "shape":"InvalidClientTokenException",
-          "exception":true
-        }
+        {"shape":"ValidationException"},
+        {"shape":"JobNotFoundException"},
+        {"shape":"InvalidJobStateException"},
+        {"shape":"InvalidClientTokenException"}
       ]
     },
     "PutThirdPartyJobSuccessResult":{
@@ -456,22 +319,26 @@
       },
       "input":{"shape":"PutThirdPartyJobSuccessResultInput"},
       "errors":[
-        {
-          "shape":"ValidationException",
-          "exception":true
-        },
-        {
-          "shape":"JobNotFoundException",
-          "exception":true
-        },
-        {
-          "shape":"InvalidJobStateException",
-          "exception":true
-        },
-        {
-          "shape":"InvalidClientTokenException",
-          "exception":true
-        }
+        {"shape":"ValidationException"},
+        {"shape":"JobNotFoundException"},
+        {"shape":"InvalidJobStateException"},
+        {"shape":"InvalidClientTokenException"}
+      ]
+    },
+    "RetryStageExecution":{
+      "name":"RetryStageExecution",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"RetryStageExecutionInput"},
+      "output":{"shape":"RetryStageExecutionOutput"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"PipelineNotFoundException"},
+        {"shape":"StageNotFoundException"},
+        {"shape":"StageNotRetryableException"},
+        {"shape":"NotLatestPipelineExecutionException"}
       ]
     },
     "StartPipelineExecution":{
@@ -483,14 +350,8 @@
       "input":{"shape":"StartPipelineExecutionInput"},
       "output":{"shape":"StartPipelineExecutionOutput"},
       "errors":[
-        {
-          "shape":"ValidationException",
-          "exception":true
-        },
-        {
-          "shape":"PipelineNotFoundException",
-          "exception":true
-        }
+        {"shape":"ValidationException"},
+        {"shape":"PipelineNotFoundException"}
       ]
     },
     "UpdatePipeline":{
@@ -502,26 +363,11 @@
       "input":{"shape":"UpdatePipelineInput"},
       "output":{"shape":"UpdatePipelineOutput"},
       "errors":[
-        {
-          "shape":"ValidationException",
-          "exception":true
-        },
-        {
-          "shape":"InvalidStageDeclarationException",
-          "exception":true
-        },
-        {
-          "shape":"InvalidActionDeclarationException",
-          "exception":true
-        },
-        {
-          "shape":"InvalidBlockerDeclarationException",
-          "exception":true
-        },
-        {
-          "shape":"InvalidStructureException",
-          "exception":true
-        }
+        {"shape":"ValidationException"},
+        {"shape":"InvalidStageDeclarationException"},
+        {"shape":"InvalidActionDeclarationException"},
+        {"shape":"InvalidBlockerDeclarationException"},
+        {"shape":"InvalidStructureException"}
       ]
     }
   },
@@ -588,7 +434,8 @@
         "Build",
         "Deploy",
         "Test",
-        "Invoke"
+        "Invoke",
+        "Approval"
       ]
     },
     "ActionConfiguration":{
@@ -599,8 +446,8 @@
     },
     "ActionConfigurationKey":{
       "type":"string",
-      "min":1,
-      "max":50
+      "max":50,
+      "min":1
     },
     "ActionConfigurationMap":{
       "type":"map",
@@ -640,14 +487,14 @@
     },
     "ActionConfigurationQueryableValue":{
       "type":"string",
-      "min":1,
       "max":20,
+      "min":1,
       "pattern":"[a-zA-Z0-9_-]+"
     },
     "ActionConfigurationValue":{
       "type":"string",
-      "min":1,
-      "max":250
+      "max":500,
+      "min":1
     },
     "ActionContext":{
       "type":"structure",
@@ -677,6 +524,8 @@
         "status":{"shape":"ActionExecutionStatus"},
         "summary":{"shape":"ExecutionSummary"},
         "lastStatusChange":{"shape":"Timestamp"},
+        "token":{"shape":"ActionExecutionToken"},
+        "lastUpdatedBy":{"shape":"LastUpdatedBy"},
         "externalExecutionId":{"shape":"ExecutionId"},
         "externalExecutionUrl":{"shape":"Url"},
         "percentComplete":{"shape":"Percentage"},
@@ -691,10 +540,11 @@
         "Failed"
       ]
     },
+    "ActionExecutionToken":{"type":"string"},
     "ActionName":{
       "type":"string",
-      "min":1,
       "max":100,
+      "min":1,
       "pattern":"[A-Za-z0-9.@\\-_]+"
     },
     "ActionNotFoundException":{
@@ -713,26 +563,27 @@
     },
     "ActionProvider":{
       "type":"string",
-      "min":1,
       "max":25,
+      "min":1,
       "pattern":"[0-9A-Za-z_-]+"
     },
     "ActionRevision":{
       "type":"structure",
       "required":[
         "revisionId",
+        "revisionChangeId",
         "created"
       ],
       "members":{
-        "revisionId":{"shape":"RevisionId"},
-        "revisionChangeId":{"shape":"RevisionChangeId"},
+        "revisionId":{"shape":"Revision"},
+        "revisionChangeId":{"shape":"RevisionChangeIdentifier"},
         "created":{"shape":"Timestamp"}
       }
     },
     "ActionRunOrder":{
       "type":"integer",
-      "min":1,
-      "max":999
+      "max":999,
+      "min":1
     },
     "ActionState":{
       "type":"structure",
@@ -797,6 +648,39 @@
         "revisionUrlTemplate":{"shape":"UrlTemplate"}
       }
     },
+    "ApprovalAlreadyCompletedException":{
+      "type":"structure",
+      "members":{
+      },
+      "exception":true
+    },
+    "ApprovalResult":{
+      "type":"structure",
+      "required":[
+        "summary",
+        "status"
+      ],
+      "members":{
+        "summary":{"shape":"ApprovalSummary"},
+        "status":{"shape":"ApprovalStatus"}
+      }
+    },
+    "ApprovalStatus":{
+      "type":"string",
+      "enum":[
+        "Approved",
+        "Rejected"
+      ]
+    },
+    "ApprovalSummary":{
+      "type":"string",
+      "max":512,
+      "min":0
+    },
+    "ApprovalToken":{
+      "type":"string",
+      "pattern":"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+    },
     "Artifact":{
       "type":"structure",
       "members":{
@@ -833,9 +717,24 @@
     },
     "ArtifactName":{
       "type":"string",
-      "min":1,
       "max":100,
+      "min":1,
       "pattern":"[a-zA-Z0-9_\\-]+"
+    },
+    "ArtifactRevision":{
+      "type":"structure",
+      "members":{
+        "name":{"shape":"ArtifactName"},
+        "revisionId":{"shape":"Revision"},
+        "revisionChangeIdentifier":{"shape":"RevisionChangeIdentifier"},
+        "revisionSummary":{"shape":"RevisionSummary"},
+        "created":{"shape":"Timestamp"},
+        "revisionUrl":{"shape":"Url"}
+      }
+    },
+    "ArtifactRevisionList":{
+      "type":"list",
+      "member":{"shape":"ArtifactRevision"}
     },
     "ArtifactStore":{
       "type":"structure",
@@ -851,8 +750,8 @@
     },
     "ArtifactStoreLocation":{
       "type":"string",
-      "min":3,
       "max":63,
+      "min":3,
       "pattern":"[a-zA-Z0-9\\-\\.]+"
     },
     "ArtifactStoreType":{
@@ -872,8 +771,8 @@
     },
     "BlockerName":{
       "type":"string",
-      "min":1,
-      "max":100
+      "max":100,
+      "min":1
     },
     "BlockerType":{
       "type":"string",
@@ -934,7 +833,9 @@
       ],
       "members":{
         "revision":{"shape":"Revision"},
-        "changeIdentifier":{"shape":"RevisionChangeIdentifier"}
+        "changeIdentifier":{"shape":"RevisionChangeIdentifier"},
+        "created":{"shape":"Time"},
+        "revisionSummary":{"shape":"RevisionSummary"}
       }
     },
     "DeleteCustomActionTypeInput":{
@@ -959,8 +860,8 @@
     },
     "Description":{
       "type":"string",
-      "min":1,
-      "max":2048
+      "max":2048,
+      "min":1
     },
     "DisableStageTransitionInput":{
       "type":"structure",
@@ -979,8 +880,8 @@
     },
     "DisabledReason":{
       "type":"string",
-      "min":1,
       "max":300,
+      "min":1,
       "pattern":"[a-zA-Z0-9!@ \\(\\)\\.\\*\\?\\-]+"
     },
     "EnableStageTransitionInput":{
@@ -1010,8 +911,8 @@
     },
     "EncryptionKeyId":{
       "type":"string",
-      "min":1,
-      "max":100
+      "max":100,
+      "min":1
     },
     "EncryptionKeyType":{
       "type":"string",
@@ -1032,7 +933,11 @@
         "percentComplete":{"shape":"Percentage"}
       }
     },
-    "ExecutionId":{"type":"string"},
+    "ExecutionId":{
+      "type":"string",
+      "max":1500,
+      "min":1
+    },
     "ExecutionSummary":{"type":"string"},
     "FailureDetails":{
       "type":"structure",
@@ -1068,6 +973,23 @@
       "type":"structure",
       "members":{
         "jobDetails":{"shape":"JobDetails"}
+      }
+    },
+    "GetPipelineExecutionInput":{
+      "type":"structure",
+      "required":[
+        "pipelineName",
+        "pipelineExecutionId"
+      ],
+      "members":{
+        "pipelineName":{"shape":"PipelineName"},
+        "pipelineExecutionId":{"shape":"PipelineExecutionId"}
+      }
+    },
+    "GetPipelineExecutionOutput":{
+      "type":"structure",
+      "members":{
+        "pipelineExecution":{"shape":"PipelineExecution"}
       }
     },
     "GetPipelineInput":{
@@ -1130,6 +1052,12 @@
       "member":{"shape":"InputArtifact"}
     },
     "InvalidActionDeclarationException":{
+      "type":"structure",
+      "members":{
+      },
+      "exception":true
+    },
+    "InvalidApprovalTokenException":{
       "type":"structure",
       "members":{
       },
@@ -1241,6 +1169,7 @@
     },
     "LastChangedAt":{"type":"timestamp"},
     "LastChangedBy":{"type":"string"},
+    "LastUpdatedBy":{"type":"string"},
     "LimitExceededException":{
       "type":"structure",
       "members":{
@@ -1281,17 +1210,23 @@
     },
     "MaximumArtifactCount":{
       "type":"integer",
-      "min":0,
-      "max":5
+      "max":5,
+      "min":0
     },
     "Message":{"type":"string"},
     "MinimumArtifactCount":{
       "type":"integer",
-      "min":0,
-      "max":5
+      "max":5,
+      "min":0
     },
     "NextToken":{"type":"string"},
     "Nonce":{"type":"string"},
+    "NotLatestPipelineExecutionException":{
+      "type":"structure",
+      "members":{
+      },
+      "exception":true
+    },
     "OutputArtifact":{
       "type":"structure",
       "required":["name"],
@@ -1305,8 +1240,8 @@
     },
     "Percentage":{
       "type":"integer",
-      "min":0,
-      "max":100
+      "max":100,
+      "min":0
     },
     "PipelineContext":{
       "type":"structure",
@@ -1332,9 +1267,34 @@
         "version":{"shape":"PipelineVersion"}
       }
     },
+    "PipelineExecution":{
+      "type":"structure",
+      "members":{
+        "pipelineName":{"shape":"PipelineName"},
+        "pipelineVersion":{"shape":"PipelineVersion"},
+        "pipelineExecutionId":{"shape":"PipelineExecutionId"},
+        "status":{"shape":"PipelineExecutionStatus"},
+        "artifactRevisions":{"shape":"ArtifactRevisionList"}
+      }
+    },
     "PipelineExecutionId":{
       "type":"string",
       "pattern":"[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"
+    },
+    "PipelineExecutionNotFoundException":{
+      "type":"structure",
+      "members":{
+      },
+      "exception":true
+    },
+    "PipelineExecutionStatus":{
+      "type":"string",
+      "enum":[
+        "InProgress",
+        "Succeeded",
+        "Superseded",
+        "Failed"
+      ]
     },
     "PipelineList":{
       "type":"list",
@@ -1342,8 +1302,8 @@
     },
     "PipelineName":{
       "type":"string",
-      "min":1,
       "max":100,
+      "min":1,
       "pattern":"[A-Za-z0-9.@\\-_]+"
     },
     "PipelineNameInUseException":{
@@ -1432,6 +1392,29 @@
         "pipelineExecutionId":{"shape":"PipelineExecutionId"}
       }
     },
+    "PutApprovalResultInput":{
+      "type":"structure",
+      "required":[
+        "pipelineName",
+        "stageName",
+        "actionName",
+        "result",
+        "token"
+      ],
+      "members":{
+        "pipelineName":{"shape":"PipelineName"},
+        "stageName":{"shape":"StageName"},
+        "actionName":{"shape":"ActionName"},
+        "result":{"shape":"ApprovalResult"},
+        "token":{"shape":"ApprovalToken"}
+      }
+    },
+    "PutApprovalResultOutput":{
+      "type":"structure",
+      "members":{
+        "approvedAt":{"shape":"Timestamp"}
+      }
+    },
     "PutJobFailureResultInput":{
       "type":"structure",
       "required":[
@@ -1484,16 +1467,49 @@
       "type":"map",
       "key":{"shape":"ActionConfigurationKey"},
       "value":{"shape":"ActionConfigurationQueryableValue"},
-      "min":0,
-      "max":1
+      "max":1,
+      "min":0
     },
-    "Revision":{"type":"string"},
-    "RevisionChangeId":{"type":"string"},
-    "RevisionChangeIdentifier":{"type":"string"},
-    "RevisionId":{"type":"string"},
+    "RetryStageExecutionInput":{
+      "type":"structure",
+      "required":[
+        "pipelineName",
+        "stageName",
+        "pipelineExecutionId",
+        "retryMode"
+      ],
+      "members":{
+        "pipelineName":{"shape":"PipelineName"},
+        "stageName":{"shape":"StageName"},
+        "pipelineExecutionId":{"shape":"PipelineExecutionId"},
+        "retryMode":{"shape":"StageRetryMode"}
+      }
+    },
+    "RetryStageExecutionOutput":{
+      "type":"structure",
+      "members":{
+        "pipelineExecutionId":{"shape":"PipelineExecutionId"}
+      }
+    },
+    "Revision":{
+      "type":"string",
+      "max":1500,
+      "min":1
+    },
+    "RevisionChangeIdentifier":{
+      "type":"string",
+      "max":100,
+      "min":1
+    },
+    "RevisionSummary":{
+      "type":"string",
+      "max":2048,
+      "min":1
+    },
     "RoleArn":{
       "type":"string",
-      "pattern":"arn:[^:]+:iam::[0-9]{12}:role/.*"
+      "max":1024,
+      "pattern":"arn:aws(-[\\w]+)*:iam::[0-9]{12}:role/.*"
     },
     "S3ArtifactLocation":{
       "type":"structure",
@@ -1536,10 +1552,29 @@
         "actions":{"shape":"StageActionDeclarationList"}
       }
     },
+    "StageExecution":{
+      "type":"structure",
+      "required":[
+        "pipelineExecutionId",
+        "status"
+      ],
+      "members":{
+        "pipelineExecutionId":{"shape":"PipelineExecutionId"},
+        "status":{"shape":"StageExecutionStatus"}
+      }
+    },
+    "StageExecutionStatus":{
+      "type":"string",
+      "enum":[
+        "InProgress",
+        "Failed",
+        "Succeeded"
+      ]
+    },
     "StageName":{
       "type":"string",
-      "min":1,
       "max":100,
+      "min":1,
       "pattern":"[A-Za-z0-9.@\\-_]+"
     },
     "StageNotFoundException":{
@@ -1548,12 +1583,23 @@
       },
       "exception":true
     },
+    "StageNotRetryableException":{
+      "type":"structure",
+      "members":{
+      },
+      "exception":true
+    },
+    "StageRetryMode":{
+      "type":"string",
+      "enum":["FAILED_ACTIONS"]
+    },
     "StageState":{
       "type":"structure",
       "members":{
         "stageName":{"shape":"StageName"},
         "inboundTransitionState":{"shape":"TransitionState"},
-        "actionStates":{"shape":"ActionStateList"}
+        "actionStates":{"shape":"ActionStateList"},
+        "latestExecution":{"shape":"StageExecution"}
       }
     },
     "StageStateList":{
@@ -1610,13 +1656,14 @@
     },
     "ThirdPartyJobId":{
       "type":"string",
-      "min":1,
-      "max":512
+      "max":512,
+      "min":1
     },
     "ThirdPartyJobList":{
       "type":"list",
       "member":{"shape":"ThirdPartyJob"}
     },
+    "Time":{"type":"timestamp"},
     "Timestamp":{"type":"timestamp"},
     "TransitionState":{
       "type":"structure",
@@ -1642,13 +1689,13 @@
     },
     "Url":{
       "type":"string",
-      "min":1,
-      "max":2048
+      "max":2048,
+      "min":1
     },
     "UrlTemplate":{
       "type":"string",
-      "min":1,
-      "max":2048
+      "max":2048,
+      "min":1
     },
     "ValidationException":{
       "type":"structure",
@@ -1658,8 +1705,8 @@
     },
     "Version":{
       "type":"string",
-      "min":1,
       "max":9,
+      "min":1,
       "pattern":"[0-9A-Za-z_-]+"
     }
   }

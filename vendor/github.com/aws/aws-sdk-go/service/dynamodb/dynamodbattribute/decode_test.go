@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"strconv"
 	"testing"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
@@ -269,13 +270,67 @@ func TestUnmarshalMapError(t *testing.T) {
 	}
 }
 
-type unmarhsalUnmarshaler struct {
+func TestUnmarshalListOfMaps(t *testing.T) {
+	type testItem struct {
+		Value  string
+		Value2 int
+	}
+
+	cases := []struct {
+		in               []map[string]*dynamodb.AttributeValue
+		actual, expected interface{}
+		err              error
+	}{
+		{ // Simple map conversion.
+			in: []map[string]*dynamodb.AttributeValue{
+				{
+					"Value": &dynamodb.AttributeValue{
+						BOOL: aws.Bool(true),
+					},
+				},
+			},
+			actual: &[]map[string]interface{}{},
+			expected: []map[string]interface{}{
+				{
+					"Value": true,
+				},
+			},
+		},
+		{ // attribute to struct.
+			in: []map[string]*dynamodb.AttributeValue{
+				{
+					"Value": &dynamodb.AttributeValue{
+						S: aws.String("abc"),
+					},
+					"Value2": &dynamodb.AttributeValue{
+						N: aws.String("123"),
+					},
+				},
+			},
+			actual: &[]testItem{},
+			expected: []testItem{
+				{
+					Value:  "abc",
+					Value2: 123,
+				},
+			},
+		},
+	}
+
+	for i, c := range cases {
+		err := UnmarshalListOfMaps(c.in, c.actual)
+		assertConvertTest(t, i, c.actual, c.expected, err, c.err)
+	}
+}
+
+type unmarshalUnmarshaler struct {
 	Value  string
 	Value2 int
 	Value3 bool
+	Value4 time.Time
 }
 
-func (u *unmarhsalUnmarshaler) UnmarshalDynamoDBAttributeValue(av *dynamodb.AttributeValue) error {
+func (u *unmarshalUnmarshaler) UnmarshalDynamoDBAttributeValue(av *dynamodb.AttributeValue) error {
 	if av.M == nil {
 		return fmt.Errorf("expected AttributeValue to be map")
 	}
@@ -308,16 +363,29 @@ func (u *unmarhsalUnmarshaler) UnmarshalDynamoDBAttributeValue(av *dynamodb.Attr
 		u.Value3 = *v.BOOL
 	}
 
+	if v, ok := av.M["jkl"]; !ok {
+		return fmt.Errorf("expected `jkl` map key")
+	} else if v.S == nil {
+		return fmt.Errorf("expected `jkl` map value string")
+	} else {
+		t, err := time.Parse(time.RFC3339, *v.S)
+		if err != nil {
+			return err
+		}
+		u.Value4 = t
+	}
+
 	return nil
 }
 
 func TestUnmarshalUnmashaler(t *testing.T) {
-	u := &unmarhsalUnmarshaler{}
+	u := &unmarshalUnmarshaler{}
 	av := &dynamodb.AttributeValue{
 		M: map[string]*dynamodb.AttributeValue{
 			"abc": {S: aws.String("value")},
 			"def": {N: aws.String("123")},
 			"ghi": {BOOL: aws.Bool(true)},
+			"jkl": {S: aws.String("2016-05-03T17:06:26.209072Z")},
 		},
 	}
 
@@ -327,6 +395,7 @@ func TestUnmarshalUnmashaler(t *testing.T) {
 	assert.Equal(t, "value", u.Value)
 	assert.Equal(t, 123, u.Value2)
 	assert.Equal(t, true, u.Value3)
+	assert.Equal(t, testDate, u.Value4)
 }
 
 func TestDecodeUseNumber(t *testing.T) {
@@ -375,4 +444,37 @@ func TestDecodeUseNumberNumberSet(t *testing.T) {
 
 	assert.Equal(t, "123", ns[0].String())
 	assert.Equal(t, "321", ns[1].String())
+}
+
+func TestDecodeEmbeddedPointerStruct(t *testing.T) {
+	type B struct {
+		Bint int
+	}
+	type C struct {
+		Cint int
+	}
+	type A struct {
+		Aint int
+		*B
+		*C
+	}
+	av := &dynamodb.AttributeValue{
+		M: map[string]*dynamodb.AttributeValue{
+			"Aint": {
+				N: aws.String("321"),
+			},
+			"Bint": {
+				N: aws.String("123"),
+			},
+		},
+	}
+	decoder := NewDecoder()
+	a := A{}
+	err := decoder.Decode(av, &a)
+	assert.NoError(t, err)
+	assert.Equal(t, 321, a.Aint)
+	// Embedded pointer struct can be created automatically.
+	assert.Equal(t, 123, a.Bint)
+	// But not for absent fields.
+	assert.Nil(t, a.C)
 }

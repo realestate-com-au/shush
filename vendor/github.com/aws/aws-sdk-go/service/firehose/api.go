@@ -4,6 +4,7 @@
 package firehose
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/aws/aws-sdk-go/aws/awsutil"
@@ -12,7 +13,30 @@ import (
 
 const opCreateDeliveryStream = "CreateDeliveryStream"
 
-// CreateDeliveryStreamRequest generates a request for the CreateDeliveryStream operation.
+// CreateDeliveryStreamRequest generates a "aws/request.Request" representing the
+// client's request for the CreateDeliveryStream operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// See CreateDeliveryStream for usage and error information.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the CreateDeliveryStream method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the CreateDeliveryStreamRequest method.
+//    req, resp := client.CreateDeliveryStreamRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Firehose) CreateDeliveryStreamRequest(input *CreateDeliveryStreamInput) (req *request.Request, output *CreateDeliveryStreamOutput) {
 	op := &request.Operation{
 		Name:       opCreateDeliveryStream,
@@ -30,6 +54,8 @@ func (c *Firehose) CreateDeliveryStreamRequest(input *CreateDeliveryStreamInput)
 	return
 }
 
+// CreateDeliveryStream API operation for Amazon Kinesis Firehose.
+//
 // Creates a delivery stream.
 //
 // CreateDeliveryStream is an asynchronous operation that immediately returns.
@@ -46,9 +72,9 @@ func (c *Firehose) CreateDeliveryStreamRequest(input *CreateDeliveryStreamInput)
 // By default, you can create up to 20 delivery streams per region.
 //
 // A delivery stream can only be configured with a single destination, Amazon
-// S3 or Amazon Redshift. For correct CreateDeliveryStream request syntax, specify
-// only one destination configuration parameter: either ElasticsearchDestinationConfiguration,
-// RedshiftDestinationConfiguration or S3DestinationConfiguration
+// S3, Amazon Elasticsearch Service, or Amazon Redshift. For correct CreateDeliveryStream
+// request syntax, specify only one destination configuration parameter: either
+// S3DestinationConfiguration, ElasticsearchDestinationConfiguration, or RedshiftDestinationConfiguration.
 //
 // As part of S3DestinationConfiguration, optional values BufferingHints, EncryptionConfiguration,
 // and CompressionFormat can be provided. By default, if no BufferingHints value
@@ -62,20 +88,42 @@ func (c *Firehose) CreateDeliveryStreamRequest(input *CreateDeliveryStreamInput)
 //
 // A few notes about RedshiftDestinationConfiguration:
 //
-//  An Amazon Redshift destination requires an S3 bucket as intermediate location,
-// as Firehose first delivers data to S3 and then uses COPY syntax to load data
-// into an Amazon Redshift table. This is specified in the RedshiftDestinationConfiguration.S3Configuration
-// parameter element. The compression formats SNAPPY or ZIP cannot be specified
-// in RedshiftDestinationConfiguration.S3Configuration because the Amazon Redshift
-// COPY operation that reads from the S3 bucket doesn't support these compression
-// formats. We strongly recommend that the username and password provided is
-// used exclusively for Firehose purposes, and that the permissions for the
-// account are restricted for Amazon Redshift INSERT permissions.  Firehose
-// assumes the IAM role that is configured as part of destinations. The IAM
-// role should allow the Firehose principal to assume the role, and the role
-// should have permissions that allows the service to deliver the data. For
-// more information, see Amazon S3 Bucket Access (http://docs.aws.amazon.com/firehose/latest/dev/controlling-access.html#using-iam-s3)
+//    * An Amazon Redshift destination requires an S3 bucket as intermediate
+//    location, as Firehose first delivers data to S3 and then uses COPY syntax
+//    to load data into an Amazon Redshift table. This is specified in the RedshiftDestinationConfiguration.S3Configuration
+//    parameter element.
+//
+//    * The compression formats SNAPPY or ZIP cannot be specified in RedshiftDestinationConfiguration.S3Configuration
+//    because the Amazon Redshift COPY operation that reads from the S3 bucket
+//    doesn't support these compression formats.
+//
+//    * We strongly recommend that the username and password provided is used
+//    exclusively for Firehose purposes, and that the permissions for the account
+//    are restricted for Amazon Redshift INSERT permissions.
+//
+// Firehose assumes the IAM role that is configured as part of destinations.
+// The IAM role should allow the Firehose principal to assume the role, and
+// the role should have permissions that allows the service to deliver the data.
+// For more information, see Amazon S3 Bucket Access (http://docs.aws.amazon.com/firehose/latest/dev/controlling-access.html#using-iam-s3)
 // in the Amazon Kinesis Firehose Developer Guide.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Kinesis Firehose's
+// API operation CreateDeliveryStream for usage and error information.
+//
+// Returned Error Codes:
+//   * InvalidArgumentException
+//   The specified input parameter has an value that is not valid.
+//
+//   * LimitExceededException
+//   You have already reached the limit for a requested resource.
+//
+//   * ResourceInUseException
+//   The resource is already in use and not available for this operation.
+//
 func (c *Firehose) CreateDeliveryStream(input *CreateDeliveryStreamInput) (*CreateDeliveryStreamOutput, error) {
 	req, out := c.CreateDeliveryStreamRequest(input)
 	err := req.Send()
@@ -84,7 +132,30 @@ func (c *Firehose) CreateDeliveryStream(input *CreateDeliveryStreamInput) (*Crea
 
 const opDeleteDeliveryStream = "DeleteDeliveryStream"
 
-// DeleteDeliveryStreamRequest generates a request for the DeleteDeliveryStream operation.
+// DeleteDeliveryStreamRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteDeliveryStream operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// See DeleteDeliveryStream for usage and error information.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DeleteDeliveryStream method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DeleteDeliveryStreamRequest method.
+//    req, resp := client.DeleteDeliveryStreamRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Firehose) DeleteDeliveryStreamRequest(input *DeleteDeliveryStreamInput) (req *request.Request, output *DeleteDeliveryStreamOutput) {
 	op := &request.Operation{
 		Name:       opDeleteDeliveryStream,
@@ -102,6 +173,8 @@ func (c *Firehose) DeleteDeliveryStreamRequest(input *DeleteDeliveryStreamInput)
 	return
 }
 
+// DeleteDeliveryStream API operation for Amazon Kinesis Firehose.
+//
 // Deletes a delivery stream and its data.
 //
 // You can delete a delivery stream only if it is in ACTIVE or DELETING state,
@@ -114,6 +187,21 @@ func (c *Firehose) DeleteDeliveryStreamRequest(input *DeleteDeliveryStreamInput)
 // accept the records, but the service doesn't make any guarantees with respect
 // to delivering the data. Therefore, as a best practice, you should first stop
 // any applications that are sending records before deleting a delivery stream.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Kinesis Firehose's
+// API operation DeleteDeliveryStream for usage and error information.
+//
+// Returned Error Codes:
+//   * ResourceInUseException
+//   The resource is already in use and not available for this operation.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
 func (c *Firehose) DeleteDeliveryStream(input *DeleteDeliveryStreamInput) (*DeleteDeliveryStreamOutput, error) {
 	req, out := c.DeleteDeliveryStreamRequest(input)
 	err := req.Send()
@@ -122,7 +210,30 @@ func (c *Firehose) DeleteDeliveryStream(input *DeleteDeliveryStreamInput) (*Dele
 
 const opDescribeDeliveryStream = "DescribeDeliveryStream"
 
-// DescribeDeliveryStreamRequest generates a request for the DescribeDeliveryStream operation.
+// DescribeDeliveryStreamRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeDeliveryStream operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// See DescribeDeliveryStream for usage and error information.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DescribeDeliveryStream method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DescribeDeliveryStreamRequest method.
+//    req, resp := client.DescribeDeliveryStreamRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Firehose) DescribeDeliveryStreamRequest(input *DescribeDeliveryStreamInput) (req *request.Request, output *DescribeDeliveryStreamOutput) {
 	op := &request.Operation{
 		Name:       opDescribeDeliveryStream,
@@ -140,10 +251,24 @@ func (c *Firehose) DescribeDeliveryStreamRequest(input *DescribeDeliveryStreamIn
 	return
 }
 
+// DescribeDeliveryStream API operation for Amazon Kinesis Firehose.
+//
 // Describes the specified delivery stream and gets the status. For example,
 // after your delivery stream is created, call DescribeDeliveryStream to see
 // if the delivery stream is ACTIVE and therefore ready for data to be sent
 // to it.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Kinesis Firehose's
+// API operation DescribeDeliveryStream for usage and error information.
+//
+// Returned Error Codes:
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
 func (c *Firehose) DescribeDeliveryStream(input *DescribeDeliveryStreamInput) (*DescribeDeliveryStreamOutput, error) {
 	req, out := c.DescribeDeliveryStreamRequest(input)
 	err := req.Send()
@@ -152,7 +277,30 @@ func (c *Firehose) DescribeDeliveryStream(input *DescribeDeliveryStreamInput) (*
 
 const opListDeliveryStreams = "ListDeliveryStreams"
 
-// ListDeliveryStreamsRequest generates a request for the ListDeliveryStreams operation.
+// ListDeliveryStreamsRequest generates a "aws/request.Request" representing the
+// client's request for the ListDeliveryStreams operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// See ListDeliveryStreams for usage and error information.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the ListDeliveryStreams method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the ListDeliveryStreamsRequest method.
+//    req, resp := client.ListDeliveryStreamsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Firehose) ListDeliveryStreamsRequest(input *ListDeliveryStreamsInput) (req *request.Request, output *ListDeliveryStreamsOutput) {
 	op := &request.Operation{
 		Name:       opListDeliveryStreams,
@@ -170,6 +318,8 @@ func (c *Firehose) ListDeliveryStreamsRequest(input *ListDeliveryStreamsInput) (
 	return
 }
 
+// ListDeliveryStreams API operation for Amazon Kinesis Firehose.
+//
 // Lists your delivery streams.
 //
 // The number of delivery streams might be too large to return using a single
@@ -179,6 +329,13 @@ func (c *Firehose) ListDeliveryStreamsRequest(input *ListDeliveryStreamsInput) (
 // output. If there are more delivery streams to list, you can request them
 // by specifying the name of the last delivery stream returned in the call in
 // the ExclusiveStartDeliveryStreamName parameter of a subsequent call.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Kinesis Firehose's
+// API operation ListDeliveryStreams for usage and error information.
 func (c *Firehose) ListDeliveryStreams(input *ListDeliveryStreamsInput) (*ListDeliveryStreamsOutput, error) {
 	req, out := c.ListDeliveryStreamsRequest(input)
 	err := req.Send()
@@ -187,7 +344,30 @@ func (c *Firehose) ListDeliveryStreams(input *ListDeliveryStreamsInput) (*ListDe
 
 const opPutRecord = "PutRecord"
 
-// PutRecordRequest generates a request for the PutRecord operation.
+// PutRecordRequest generates a "aws/request.Request" representing the
+// client's request for the PutRecord operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// See PutRecord for usage and error information.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the PutRecord method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the PutRecordRequest method.
+//    req, resp := client.PutRecordRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Firehose) PutRecordRequest(input *PutRecordInput) (req *request.Request, output *PutRecordOutput) {
 	op := &request.Operation{
 		Name:       opPutRecord,
@@ -205,6 +385,8 @@ func (c *Firehose) PutRecordRequest(input *PutRecordInput) (req *request.Request
 	return
 }
 
+// PutRecord API operation for Amazon Kinesis Firehose.
+//
 // Writes a single data record into an Amazon Kinesis Firehose delivery stream.
 // To write multiple data records into a delivery stream, use PutRecordBatch.
 // Applications using these operations are referred to as producers.
@@ -238,6 +420,27 @@ func (c *Firehose) PutRecordRequest(input *PutRecordInput) (req *request.Request
 // are added to a delivery stream as it attempts to send the records to the
 // destination. If the destination is unreachable for more than 24 hours, the
 // data is no longer available.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Kinesis Firehose's
+// API operation PutRecord for usage and error information.
+//
+// Returned Error Codes:
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * InvalidArgumentException
+//   The specified input parameter has an value that is not valid.
+//
+//   * ServiceUnavailableException
+//   The service is unavailable, back off and retry the operation. If you continue
+//   to see the exception, throughput limits for the delivery stream may have
+//   been exceeded. For more information about limits and how to request an increase,
+//   see Amazon Kinesis Firehose Limits (http://docs.aws.amazon.com/firehose/latest/dev/limits.html).
+//
 func (c *Firehose) PutRecord(input *PutRecordInput) (*PutRecordOutput, error) {
 	req, out := c.PutRecordRequest(input)
 	err := req.Send()
@@ -246,7 +449,30 @@ func (c *Firehose) PutRecord(input *PutRecordInput) (*PutRecordOutput, error) {
 
 const opPutRecordBatch = "PutRecordBatch"
 
-// PutRecordBatchRequest generates a request for the PutRecordBatch operation.
+// PutRecordBatchRequest generates a "aws/request.Request" representing the
+// client's request for the PutRecordBatch operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// See PutRecordBatch for usage and error information.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the PutRecordBatch method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the PutRecordBatchRequest method.
+//    req, resp := client.PutRecordBatchRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Firehose) PutRecordBatchRequest(input *PutRecordBatchInput) (req *request.Request, output *PutRecordBatchOutput) {
 	op := &request.Operation{
 		Name:       opPutRecordBatch,
@@ -264,6 +490,8 @@ func (c *Firehose) PutRecordBatchRequest(input *PutRecordBatchInput) (req *reque
 	return
 }
 
+// PutRecordBatch API operation for Amazon Kinesis Firehose.
+//
 // Writes multiple data records into a delivery stream in a single call, which
 // can achieve higher throughput per producer than when writing single records.
 // To write single data records into a delivery stream, use PutRecord. Applications
@@ -320,6 +548,27 @@ func (c *Firehose) PutRecordBatchRequest(input *PutRecordBatchInput) (req *reque
 // are added to a delivery stream as it attempts to send the records to the
 // destination. If the destination is unreachable for more than 24 hours, the
 // data is no longer available.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Kinesis Firehose's
+// API operation PutRecordBatch for usage and error information.
+//
+// Returned Error Codes:
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * InvalidArgumentException
+//   The specified input parameter has an value that is not valid.
+//
+//   * ServiceUnavailableException
+//   The service is unavailable, back off and retry the operation. If you continue
+//   to see the exception, throughput limits for the delivery stream may have
+//   been exceeded. For more information about limits and how to request an increase,
+//   see Amazon Kinesis Firehose Limits (http://docs.aws.amazon.com/firehose/latest/dev/limits.html).
+//
 func (c *Firehose) PutRecordBatch(input *PutRecordBatchInput) (*PutRecordBatchOutput, error) {
 	req, out := c.PutRecordBatchRequest(input)
 	err := req.Send()
@@ -328,7 +577,30 @@ func (c *Firehose) PutRecordBatch(input *PutRecordBatchInput) (*PutRecordBatchOu
 
 const opUpdateDestination = "UpdateDestination"
 
-// UpdateDestinationRequest generates a request for the UpdateDestination operation.
+// UpdateDestinationRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateDestination operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// See UpdateDestination for usage and error information.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the UpdateDestination method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the UpdateDestinationRequest method.
+//    req, resp := client.UpdateDestinationRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *Firehose) UpdateDestinationRequest(input *UpdateDestinationInput) (req *request.Request, output *UpdateDestinationOutput) {
 	op := &request.Operation{
 		Name:       opUpdateDestination,
@@ -346,16 +618,18 @@ func (c *Firehose) UpdateDestinationRequest(input *UpdateDestinationInput) (req 
 	return
 }
 
+// UpdateDestination API operation for Amazon Kinesis Firehose.
+//
 // Updates the specified destination of the specified delivery stream. Note:
 // Switching between Elasticsearch and other services is not supported. For
 // Elasticsearch destination, you can only update an existing Elasticsearch
 // destination with this operation.
 //
-// This operation can be used to change the destination type (for example,
-// to replace the Amazon S3 destination with Amazon Redshift) or change the
-// parameters associated with a given destination (for example, to change the
-// bucket name of the Amazon S3 destination). The update may not occur immediately.
-// The target delivery stream remains active while the configurations are updated,
+// This operation can be used to change the destination type (for example, to
+// replace the Amazon S3 destination with Amazon Redshift) or change the parameters
+// associated with a given destination (for example, to change the bucket name
+// of the Amazon S3 destination). The update may not occur immediately. The
+// target delivery stream remains active while the configurations are updated,
 // so data writes to the delivery stream can continue during this process. The
 // updated configurations are normally effective within a few minutes.
 //
@@ -378,6 +652,28 @@ func (c *Firehose) UpdateDestinationRequest(input *UpdateDestinationInput) (req 
 // updated, which can be retrieved with the DescribeDeliveryStream operation.
 // The new VersionId should be uses to set CurrentDeliveryStreamVersionId in
 // the next UpdateDestination operation.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Kinesis Firehose's
+// API operation UpdateDestination for usage and error information.
+//
+// Returned Error Codes:
+//   * InvalidArgumentException
+//   The specified input parameter has an value that is not valid.
+//
+//   * ResourceInUseException
+//   The resource is already in use and not available for this operation.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ConcurrentModificationException
+//   Another modification has already happened. Fetch VersionId again and use
+//   it to update the destination.
+//
 func (c *Firehose) UpdateDestination(input *UpdateDestinationInput) (*UpdateDestinationOutput, error) {
 	req, out := c.UpdateDestinationRequest(input)
 	err := req.Send()
@@ -411,6 +707,22 @@ func (s BufferingHints) String() string {
 // GoString returns the string representation
 func (s BufferingHints) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *BufferingHints) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "BufferingHints"}
+	if s.IntervalInSeconds != nil && *s.IntervalInSeconds < 60 {
+		invalidParams.Add(request.NewErrParamMinValue("IntervalInSeconds", 60))
+	}
+	if s.SizeInMBs != nil && *s.SizeInMBs < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("SizeInMBs", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Describes CloudWatch logging options for your delivery stream.
@@ -459,7 +771,7 @@ type CopyCommand struct {
 	// - fields are fixed width in the source, with each width specified after every
 	// column in the table.
 	//
-	//  JSON 's3://mybucket/jsonpaths.txt' - data is in JSON format, and the path
+	// JSON 's3://mybucket/jsonpaths.txt' - data is in JSON format, and the path
 	// specified is the format of the data.
 	//
 	// For more examples, see Amazon Redshift COPY command examples (http://docs.aws.amazon.com/redshift/latest/dg/r_COPY_command_examples.html).
@@ -469,6 +781,8 @@ type CopyCommand struct {
 	DataTableColumns *string `type:"string"`
 
 	// The name of the target table. The table must already exist in the database.
+	//
+	// DataTableName is a required field
 	DataTableName *string `min:"1" type:"string" required:"true"`
 }
 
@@ -482,11 +796,29 @@ func (s CopyCommand) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CopyCommand) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CopyCommand"}
+	if s.DataTableName == nil {
+		invalidParams.Add(request.NewErrParamRequired("DataTableName"))
+	}
+	if s.DataTableName != nil && len(*s.DataTableName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DataTableName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains the parameters for CreateDeliveryStream.
 type CreateDeliveryStreamInput struct {
 	_ struct{} `type:"structure"`
 
 	// The name of the delivery stream.
+	//
+	// DeliveryStreamName is a required field
 	DeliveryStreamName *string `min:"1" type:"string" required:"true"`
 
 	// The destination in Amazon ES. This value cannot be specified if Amazon S3
@@ -514,6 +846,37 @@ func (s CreateDeliveryStreamInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateDeliveryStreamInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateDeliveryStreamInput"}
+	if s.DeliveryStreamName == nil {
+		invalidParams.Add(request.NewErrParamRequired("DeliveryStreamName"))
+	}
+	if s.DeliveryStreamName != nil && len(*s.DeliveryStreamName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DeliveryStreamName", 1))
+	}
+	if s.ElasticsearchDestinationConfiguration != nil {
+		if err := s.ElasticsearchDestinationConfiguration.Validate(); err != nil {
+			invalidParams.AddNested("ElasticsearchDestinationConfiguration", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.RedshiftDestinationConfiguration != nil {
+		if err := s.RedshiftDestinationConfiguration.Validate(); err != nil {
+			invalidParams.AddNested("RedshiftDestinationConfiguration", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.S3DestinationConfiguration != nil {
+		if err := s.S3DestinationConfiguration.Validate(); err != nil {
+			invalidParams.AddNested("S3DestinationConfiguration", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains the output of CreateDeliveryStream.
 type CreateDeliveryStreamOutput struct {
 	_ struct{} `type:"structure"`
@@ -537,6 +900,8 @@ type DeleteDeliveryStreamInput struct {
 	_ struct{} `type:"structure"`
 
 	// The name of the delivery stream.
+	//
+	// DeliveryStreamName is a required field
 	DeliveryStreamName *string `min:"1" type:"string" required:"true"`
 }
 
@@ -548,6 +913,22 @@ func (s DeleteDeliveryStreamInput) String() string {
 // GoString returns the string representation
 func (s DeleteDeliveryStreamInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteDeliveryStreamInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteDeliveryStreamInput"}
+	if s.DeliveryStreamName == nil {
+		invalidParams.Add(request.NewErrParamRequired("DeliveryStreamName"))
+	}
+	if s.DeliveryStreamName != nil && len(*s.DeliveryStreamName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DeliveryStreamName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Contains the output of DeleteDeliveryStream.
@@ -573,18 +954,28 @@ type DeliveryStreamDescription struct {
 	CreateTimestamp *time.Time `type:"timestamp" timestampFormat:"unix"`
 
 	// The Amazon Resource Name (ARN) of the delivery stream.
+	//
+	// DeliveryStreamARN is a required field
 	DeliveryStreamARN *string `type:"string" required:"true"`
 
 	// The name of the delivery stream.
+	//
+	// DeliveryStreamName is a required field
 	DeliveryStreamName *string `min:"1" type:"string" required:"true"`
 
 	// The status of the delivery stream.
+	//
+	// DeliveryStreamStatus is a required field
 	DeliveryStreamStatus *string `type:"string" required:"true" enum:"DeliveryStreamStatus"`
 
 	// The destinations.
+	//
+	// Destinations is a required field
 	Destinations []*DestinationDescription `type:"list" required:"true"`
 
 	// Indicates whether there are more destinations available to list.
+	//
+	// HasMoreDestinations is a required field
 	HasMoreDestinations *bool `type:"boolean" required:"true"`
 
 	// The date and time that the delivery stream was last updated.
@@ -595,6 +986,8 @@ type DeliveryStreamDescription struct {
 	// VersionId is required when updating the destination. This is so that the
 	// service knows it is applying the changes to the correct version of the delivery
 	// stream.
+	//
+	// VersionId is a required field
 	VersionId *string `min:"1" type:"string" required:"true"`
 }
 
@@ -613,6 +1006,8 @@ type DescribeDeliveryStreamInput struct {
 	_ struct{} `type:"structure"`
 
 	// The name of the delivery stream.
+	//
+	// DeliveryStreamName is a required field
 	DeliveryStreamName *string `min:"1" type:"string" required:"true"`
 
 	// Specifies the destination ID to start returning the destination information.
@@ -634,11 +1029,35 @@ func (s DescribeDeliveryStreamInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DescribeDeliveryStreamInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DescribeDeliveryStreamInput"}
+	if s.DeliveryStreamName == nil {
+		invalidParams.Add(request.NewErrParamRequired("DeliveryStreamName"))
+	}
+	if s.DeliveryStreamName != nil && len(*s.DeliveryStreamName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DeliveryStreamName", 1))
+	}
+	if s.ExclusiveStartDestinationId != nil && len(*s.ExclusiveStartDestinationId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ExclusiveStartDestinationId", 1))
+	}
+	if s.Limit != nil && *s.Limit < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("Limit", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains the output of DescribeDeliveryStream.
 type DescribeDeliveryStreamOutput struct {
 	_ struct{} `type:"structure"`
 
 	// Information about the delivery stream.
+	//
+	// DeliveryStreamDescription is a required field
 	DeliveryStreamDescription *DeliveryStreamDescription `type:"structure" required:"true"`
 }
 
@@ -657,6 +1076,8 @@ type DestinationDescription struct {
 	_ struct{} `type:"structure"`
 
 	// The ID of the destination.
+	//
+	// DestinationId is a required field
 	DestinationId *string `min:"1" type:"string" required:"true"`
 
 	// The destination in Amazon ES.
@@ -707,6 +1128,22 @@ func (s ElasticsearchBufferingHints) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ElasticsearchBufferingHints) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ElasticsearchBufferingHints"}
+	if s.IntervalInSeconds != nil && *s.IntervalInSeconds < 60 {
+		invalidParams.Add(request.NewErrParamMinValue("IntervalInSeconds", 60))
+	}
+	if s.SizeInMBs != nil && *s.SizeInMBs < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("SizeInMBs", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Describes the configuration of a destination in Amazon ES.
 type ElasticsearchDestinationConfiguration struct {
 	_ struct{} `type:"structure"`
@@ -721,9 +1158,13 @@ type ElasticsearchDestinationConfiguration struct {
 	// The ARN of the Amazon ES domain. The IAM role must have permission for DescribeElasticsearchDomain,
 	// DescribeElasticsearchDomains , and DescribeElasticsearchDomainConfig after
 	// assuming RoleARN.
+	//
+	// DomainARN is a required field
 	DomainARN *string `min:"1" type:"string" required:"true"`
 
 	// The Elasticsearch index name.
+	//
+	// IndexName is a required field
 	IndexName *string `min:"1" type:"string" required:"true"`
 
 	// The Elasticsearch index rotation period. Index rotation appends a timestamp
@@ -739,6 +1180,8 @@ type ElasticsearchDestinationConfiguration struct {
 	// The ARN of the IAM role to be assumed by Firehose for calling the Amazon
 	// ES Configuration API and for indexing documents. For more information, see
 	// Amazon S3 Bucket Access (http://docs.aws.amazon.com/firehose/latest/dev/controlling-access.html#using-iam-s3).
+	//
+	// RoleARN is a required field
 	RoleARN *string `min:"1" type:"string" required:"true"`
 
 	// Defines how documents should be delivered to Amazon S3. When set to FailedDocumentsOnly,
@@ -752,9 +1195,13 @@ type ElasticsearchDestinationConfiguration struct {
 	S3BackupMode *string `type:"string" enum:"ElasticsearchS3BackupMode"`
 
 	// Describes the configuration of a destination in Amazon S3.
+	//
+	// S3Configuration is a required field
 	S3Configuration *S3DestinationConfiguration `type:"structure" required:"true"`
 
 	// The Elasticsearch type name.
+	//
+	// TypeName is a required field
 	TypeName *string `min:"1" type:"string" required:"true"`
 }
 
@@ -766,6 +1213,53 @@ func (s ElasticsearchDestinationConfiguration) String() string {
 // GoString returns the string representation
 func (s ElasticsearchDestinationConfiguration) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ElasticsearchDestinationConfiguration) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ElasticsearchDestinationConfiguration"}
+	if s.DomainARN == nil {
+		invalidParams.Add(request.NewErrParamRequired("DomainARN"))
+	}
+	if s.DomainARN != nil && len(*s.DomainARN) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DomainARN", 1))
+	}
+	if s.IndexName == nil {
+		invalidParams.Add(request.NewErrParamRequired("IndexName"))
+	}
+	if s.IndexName != nil && len(*s.IndexName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("IndexName", 1))
+	}
+	if s.RoleARN == nil {
+		invalidParams.Add(request.NewErrParamRequired("RoleARN"))
+	}
+	if s.RoleARN != nil && len(*s.RoleARN) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("RoleARN", 1))
+	}
+	if s.S3Configuration == nil {
+		invalidParams.Add(request.NewErrParamRequired("S3Configuration"))
+	}
+	if s.TypeName == nil {
+		invalidParams.Add(request.NewErrParamRequired("TypeName"))
+	}
+	if s.TypeName != nil && len(*s.TypeName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("TypeName", 1))
+	}
+	if s.BufferingHints != nil {
+		if err := s.BufferingHints.Validate(); err != nil {
+			invalidParams.AddNested("BufferingHints", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.S3Configuration != nil {
+		if err := s.S3Configuration.Validate(); err != nil {
+			invalidParams.AddNested("S3Configuration", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // The destination description in Amazon ES.
@@ -864,15 +1358,48 @@ func (s ElasticsearchDestinationUpdate) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ElasticsearchDestinationUpdate) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ElasticsearchDestinationUpdate"}
+	if s.DomainARN != nil && len(*s.DomainARN) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DomainARN", 1))
+	}
+	if s.IndexName != nil && len(*s.IndexName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("IndexName", 1))
+	}
+	if s.RoleARN != nil && len(*s.RoleARN) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("RoleARN", 1))
+	}
+	if s.TypeName != nil && len(*s.TypeName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("TypeName", 1))
+	}
+	if s.BufferingHints != nil {
+		if err := s.BufferingHints.Validate(); err != nil {
+			invalidParams.AddNested("BufferingHints", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.S3Update != nil {
+		if err := s.S3Update.Validate(); err != nil {
+			invalidParams.AddNested("S3Update", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Configures retry behavior in the event that Firehose is unable to deliver
 // documents to Amazon ES.
 type ElasticsearchRetryOptions struct {
 	_ struct{} `type:"structure"`
 
 	// After an initial failure to deliver to Amazon ES, the total amount of time
-	// during which Firehose re-attempts delivery. After this time has elapsed,
-	// the failed documents are written to Amazon S3. Default value is 300 seconds.
-	// A value of 0 (zero) results in no retries.
+	// during which Firehose re-attempts delivery (including the first attempt).
+	// After this time has elapsed, the failed documents are written to Amazon S3.
+	// Default value is 300 seconds (5 minutes). A value of 0 (zero) results in
+	// no retries.
 	DurationInSeconds *int64 `type:"integer"`
 }
 
@@ -908,12 +1435,29 @@ func (s EncryptionConfiguration) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *EncryptionConfiguration) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "EncryptionConfiguration"}
+	if s.KMSEncryptionConfig != nil {
+		if err := s.KMSEncryptionConfig.Validate(); err != nil {
+			invalidParams.AddNested("KMSEncryptionConfig", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Describes an encryption key for a destination in Amazon S3.
 type KMSEncryptionConfig struct {
 	_ struct{} `type:"structure"`
 
 	// The ARN of the encryption key. Must belong to the same region as the destination
 	// Amazon S3 bucket.
+	//
+	// AWSKMSKeyARN is a required field
 	AWSKMSKeyARN *string `min:"1" type:"string" required:"true"`
 }
 
@@ -925,6 +1469,22 @@ func (s KMSEncryptionConfig) String() string {
 // GoString returns the string representation
 func (s KMSEncryptionConfig) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *KMSEncryptionConfig) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "KMSEncryptionConfig"}
+	if s.AWSKMSKeyARN == nil {
+		invalidParams.Add(request.NewErrParamRequired("AWSKMSKeyARN"))
+	}
+	if s.AWSKMSKeyARN != nil && len(*s.AWSKMSKeyARN) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("AWSKMSKeyARN", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Contains the parameters for ListDeliveryStreams.
@@ -948,14 +1508,34 @@ func (s ListDeliveryStreamsInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListDeliveryStreamsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListDeliveryStreamsInput"}
+	if s.ExclusiveStartDeliveryStreamName != nil && len(*s.ExclusiveStartDeliveryStreamName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ExclusiveStartDeliveryStreamName", 1))
+	}
+	if s.Limit != nil && *s.Limit < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("Limit", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains the output of ListDeliveryStreams.
 type ListDeliveryStreamsOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The names of the delivery streams.
+	//
+	// DeliveryStreamNames is a required field
 	DeliveryStreamNames []*string `type:"list" required:"true"`
 
 	// Indicates whether there are more delivery streams available to list.
+	//
+	// HasMoreDeliveryStreams is a required field
 	HasMoreDeliveryStreams *bool `type:"boolean" required:"true"`
 }
 
@@ -974,9 +1554,13 @@ type PutRecordBatchInput struct {
 	_ struct{} `type:"structure"`
 
 	// The name of the delivery stream.
+	//
+	// DeliveryStreamName is a required field
 	DeliveryStreamName *string `min:"1" type:"string" required:"true"`
 
 	// One or more records.
+	//
+	// Records is a required field
 	Records []*Record `min:"1" type:"list" required:"true"`
 }
 
@@ -990,15 +1574,51 @@ func (s PutRecordBatchInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *PutRecordBatchInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "PutRecordBatchInput"}
+	if s.DeliveryStreamName == nil {
+		invalidParams.Add(request.NewErrParamRequired("DeliveryStreamName"))
+	}
+	if s.DeliveryStreamName != nil && len(*s.DeliveryStreamName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DeliveryStreamName", 1))
+	}
+	if s.Records == nil {
+		invalidParams.Add(request.NewErrParamRequired("Records"))
+	}
+	if s.Records != nil && len(s.Records) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Records", 1))
+	}
+	if s.Records != nil {
+		for i, v := range s.Records {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Records", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains the output of PutRecordBatch.
 type PutRecordBatchOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The number of unsuccessfully written records.
+	//
+	// FailedPutCount is a required field
 	FailedPutCount *int64 `type:"integer" required:"true"`
 
 	// The results for the individual records. The index of each element matches
 	// the same index in which records were sent.
+	//
+	// RequestResponses is a required field
 	RequestResponses []*PutRecordBatchResponseEntry `min:"1" type:"list" required:"true"`
 }
 
@@ -1044,9 +1664,13 @@ type PutRecordInput struct {
 	_ struct{} `type:"structure"`
 
 	// The name of the delivery stream.
+	//
+	// DeliveryStreamName is a required field
 	DeliveryStreamName *string `min:"1" type:"string" required:"true"`
 
 	// The record.
+	//
+	// Record is a required field
 	Record *Record `type:"structure" required:"true"`
 }
 
@@ -1060,11 +1684,37 @@ func (s PutRecordInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *PutRecordInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "PutRecordInput"}
+	if s.DeliveryStreamName == nil {
+		invalidParams.Add(request.NewErrParamRequired("DeliveryStreamName"))
+	}
+	if s.DeliveryStreamName != nil && len(*s.DeliveryStreamName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DeliveryStreamName", 1))
+	}
+	if s.Record == nil {
+		invalidParams.Add(request.NewErrParamRequired("Record"))
+	}
+	if s.Record != nil {
+		if err := s.Record.Validate(); err != nil {
+			invalidParams.AddNested("Record", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains the output of PutRecord.
 type PutRecordOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The ID of the record.
+	//
+	// RecordId is a required field
 	RecordId *string `min:"1" type:"string" required:"true"`
 }
 
@@ -1086,6 +1736,8 @@ type Record struct {
 	// size of the data blob, before base64-encoding, is 1,000 KB.
 	//
 	// Data is automatically base64 encoded/decoded by the SDK.
+	//
+	// Data is a required field
 	Data []byte `type:"blob" required:"true"`
 }
 
@@ -1099,6 +1751,19 @@ func (s Record) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *Record) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "Record"}
+	if s.Data == nil {
+		invalidParams.Add(request.NewErrParamRequired("Data"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Describes the configuration of a destination in Amazon Redshift.
 type RedshiftDestinationConfiguration struct {
 	_ struct{} `type:"structure"`
@@ -1107,15 +1772,27 @@ type RedshiftDestinationConfiguration struct {
 	CloudWatchLoggingOptions *CloudWatchLoggingOptions `type:"structure"`
 
 	// The database connection string.
+	//
+	// ClusterJDBCURL is a required field
 	ClusterJDBCURL *string `min:"1" type:"string" required:"true"`
 
 	// The COPY command.
+	//
+	// CopyCommand is a required field
 	CopyCommand *CopyCommand `type:"structure" required:"true"`
 
 	// The user password.
+	//
+	// Password is a required field
 	Password *string `min:"6" type:"string" required:"true"`
 
+	// Configures retry behavior in the event that Firehose is unable to deliver
+	// documents to Amazon Redshift. Default value is 3600 (60 minutes).
+	RetryOptions *RedshiftRetryOptions `type:"structure"`
+
 	// The ARN of the AWS credentials.
+	//
+	// RoleARN is a required field
 	RoleARN *string `min:"1" type:"string" required:"true"`
 
 	// The S3 configuration for the intermediate location from which Amazon Redshift
@@ -1124,9 +1801,13 @@ type RedshiftDestinationConfiguration struct {
 	// The compression formats SNAPPY or ZIP cannot be specified in RedshiftDestinationConfiguration.S3Configuration
 	// because the Amazon Redshift COPY operation that reads from the S3 bucket
 	// doesn't support these compression formats.
+	//
+	// S3Configuration is a required field
 	S3Configuration *S3DestinationConfiguration `type:"structure" required:"true"`
 
 	// The name of the user.
+	//
+	// Username is a required field
 	Username *string `min:"1" type:"string" required:"true"`
 }
 
@@ -1140,6 +1821,56 @@ func (s RedshiftDestinationConfiguration) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RedshiftDestinationConfiguration) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RedshiftDestinationConfiguration"}
+	if s.ClusterJDBCURL == nil {
+		invalidParams.Add(request.NewErrParamRequired("ClusterJDBCURL"))
+	}
+	if s.ClusterJDBCURL != nil && len(*s.ClusterJDBCURL) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ClusterJDBCURL", 1))
+	}
+	if s.CopyCommand == nil {
+		invalidParams.Add(request.NewErrParamRequired("CopyCommand"))
+	}
+	if s.Password == nil {
+		invalidParams.Add(request.NewErrParamRequired("Password"))
+	}
+	if s.Password != nil && len(*s.Password) < 6 {
+		invalidParams.Add(request.NewErrParamMinLen("Password", 6))
+	}
+	if s.RoleARN == nil {
+		invalidParams.Add(request.NewErrParamRequired("RoleARN"))
+	}
+	if s.RoleARN != nil && len(*s.RoleARN) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("RoleARN", 1))
+	}
+	if s.S3Configuration == nil {
+		invalidParams.Add(request.NewErrParamRequired("S3Configuration"))
+	}
+	if s.Username == nil {
+		invalidParams.Add(request.NewErrParamRequired("Username"))
+	}
+	if s.Username != nil && len(*s.Username) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Username", 1))
+	}
+	if s.CopyCommand != nil {
+		if err := s.CopyCommand.Validate(); err != nil {
+			invalidParams.AddNested("CopyCommand", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.S3Configuration != nil {
+		if err := s.S3Configuration.Validate(); err != nil {
+			invalidParams.AddNested("S3Configuration", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Describes a destination in Amazon Redshift.
 type RedshiftDestinationDescription struct {
 	_ struct{} `type:"structure"`
@@ -1148,18 +1879,32 @@ type RedshiftDestinationDescription struct {
 	CloudWatchLoggingOptions *CloudWatchLoggingOptions `type:"structure"`
 
 	// The database connection string.
+	//
+	// ClusterJDBCURL is a required field
 	ClusterJDBCURL *string `min:"1" type:"string" required:"true"`
 
 	// The COPY command.
+	//
+	// CopyCommand is a required field
 	CopyCommand *CopyCommand `type:"structure" required:"true"`
 
+	// Configures retry behavior in the event that Firehose is unable to deliver
+	// documents to Amazon Redshift. Default value is 3600 (60 minutes).
+	RetryOptions *RedshiftRetryOptions `type:"structure"`
+
 	// The ARN of the AWS credentials.
+	//
+	// RoleARN is a required field
 	RoleARN *string `min:"1" type:"string" required:"true"`
 
 	// The Amazon S3 destination.
+	//
+	// S3DestinationDescription is a required field
 	S3DestinationDescription *S3DestinationDescription `type:"structure" required:"true"`
 
 	// The name of the user.
+	//
+	// Username is a required field
 	Username *string `min:"1" type:"string" required:"true"`
 }
 
@@ -1189,6 +1934,10 @@ type RedshiftDestinationUpdate struct {
 	// The user password.
 	Password *string `min:"6" type:"string"`
 
+	// Configures retry behavior in the event that Firehose is unable to deliver
+	// documents to Amazon Redshift. Default value is 3600 (60 minutes).
+	RetryOptions *RedshiftRetryOptions `type:"structure"`
+
 	// The ARN of the AWS credentials.
 	RoleARN *string `min:"1" type:"string"`
 
@@ -1213,11 +1962,68 @@ func (s RedshiftDestinationUpdate) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RedshiftDestinationUpdate) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RedshiftDestinationUpdate"}
+	if s.ClusterJDBCURL != nil && len(*s.ClusterJDBCURL) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ClusterJDBCURL", 1))
+	}
+	if s.Password != nil && len(*s.Password) < 6 {
+		invalidParams.Add(request.NewErrParamMinLen("Password", 6))
+	}
+	if s.RoleARN != nil && len(*s.RoleARN) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("RoleARN", 1))
+	}
+	if s.Username != nil && len(*s.Username) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Username", 1))
+	}
+	if s.CopyCommand != nil {
+		if err := s.CopyCommand.Validate(); err != nil {
+			invalidParams.AddNested("CopyCommand", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.S3Update != nil {
+		if err := s.S3Update.Validate(); err != nil {
+			invalidParams.AddNested("S3Update", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// Configures retry behavior in the event that Firehose is unable to deliver
+// documents to Amazon Redshift.
+type RedshiftRetryOptions struct {
+	_ struct{} `type:"structure"`
+
+	// The length of time during which Firehose retries delivery after a failure,
+	// starting from the initial request and including the first attempt. The default
+	// value is 3600 seconds (60 minutes). Firehose does not retry if the value
+	// of DurationInSeconds is 0 (zero) or if the first delivery attempt takes longer
+	// than the current value.
+	DurationInSeconds *int64 `type:"integer"`
+}
+
+// String returns the string representation
+func (s RedshiftRetryOptions) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation
+func (s RedshiftRetryOptions) GoString() string {
+	return s.String()
+}
+
 // Describes the configuration of a destination in Amazon S3.
 type S3DestinationConfiguration struct {
 	_ struct{} `type:"structure"`
 
 	// The ARN of the S3 bucket.
+	//
+	// BucketARN is a required field
 	BucketARN *string `min:"1" type:"string" required:"true"`
 
 	// The buffering option. If no value is specified, BufferingHints object default
@@ -1243,10 +2049,12 @@ type S3DestinationConfiguration struct {
 	// format prefix. Note that if the prefix ends with a slash, it appears as a
 	// folder in the S3 bucket. For more information, see Amazon S3 Object Name
 	// Format (http://docs.aws.amazon.com/firehose/latest/dev/basic-deliver.html)
-	// in the guide-fh-dev (http://docs.aws.amazon.com/firehose/latest/dev/).
+	// in the Amazon Kinesis Firehose Developer Guide (http://docs.aws.amazon.com/firehose/latest/dev/).
 	Prefix *string `type:"string"`
 
 	// The ARN of the AWS credentials.
+	//
+	// RoleARN is a required field
 	RoleARN *string `min:"1" type:"string" required:"true"`
 }
 
@@ -1260,25 +2068,65 @@ func (s S3DestinationConfiguration) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *S3DestinationConfiguration) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "S3DestinationConfiguration"}
+	if s.BucketARN == nil {
+		invalidParams.Add(request.NewErrParamRequired("BucketARN"))
+	}
+	if s.BucketARN != nil && len(*s.BucketARN) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("BucketARN", 1))
+	}
+	if s.RoleARN == nil {
+		invalidParams.Add(request.NewErrParamRequired("RoleARN"))
+	}
+	if s.RoleARN != nil && len(*s.RoleARN) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("RoleARN", 1))
+	}
+	if s.BufferingHints != nil {
+		if err := s.BufferingHints.Validate(); err != nil {
+			invalidParams.AddNested("BufferingHints", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.EncryptionConfiguration != nil {
+		if err := s.EncryptionConfiguration.Validate(); err != nil {
+			invalidParams.AddNested("EncryptionConfiguration", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Describes a destination in Amazon S3.
 type S3DestinationDescription struct {
 	_ struct{} `type:"structure"`
 
 	// The ARN of the S3 bucket.
+	//
+	// BucketARN is a required field
 	BucketARN *string `min:"1" type:"string" required:"true"`
 
 	// The buffering option. If no value is specified, BufferingHints object default
 	// values are used.
+	//
+	// BufferingHints is a required field
 	BufferingHints *BufferingHints `type:"structure" required:"true"`
 
 	// Describes CloudWatch logging options for your delivery stream.
 	CloudWatchLoggingOptions *CloudWatchLoggingOptions `type:"structure"`
 
 	// The compression format. If no value is specified, the default is NOCOMPRESSION.
+	//
+	// CompressionFormat is a required field
 	CompressionFormat *string `type:"string" required:"true" enum:"CompressionFormat"`
 
 	// The encryption configuration. If no value is specified, the default is no
 	// encryption.
+	//
+	// EncryptionConfiguration is a required field
 	EncryptionConfiguration *EncryptionConfiguration `type:"structure" required:"true"`
 
 	// The "YYYY/MM/DD/HH" time format prefix is automatically used for delivered
@@ -1286,10 +2134,12 @@ type S3DestinationDescription struct {
 	// format prefix. Note that if the prefix ends with a slash, it appears as a
 	// folder in the S3 bucket. For more information, see Amazon S3 Object Name
 	// Format (http://docs.aws.amazon.com/firehose/latest/dev/basic-deliver.html)
-	// in the guide-fh-dev (http://docs.aws.amazon.com/firehose/latest/dev/).
+	// in the Amazon Kinesis Firehose Developer Guide (http://docs.aws.amazon.com/firehose/latest/dev/).
 	Prefix *string `type:"string"`
 
 	// The ARN of the AWS credentials.
+	//
+	// RoleARN is a required field
 	RoleARN *string `min:"1" type:"string" required:"true"`
 }
 
@@ -1333,7 +2183,7 @@ type S3DestinationUpdate struct {
 	// format prefix. Note that if the prefix ends with a slash, it appears as a
 	// folder in the S3 bucket. For more information, see Amazon S3 Object Name
 	// Format (http://docs.aws.amazon.com/firehose/latest/dev/basic-deliver.html)
-	// in the guide-fh-dev (http://docs.aws.amazon.com/firehose/latest/dev/).
+	// in the Amazon Kinesis Firehose Developer Guide (http://docs.aws.amazon.com/firehose/latest/dev/).
 	Prefix *string `type:"string"`
 
 	// The ARN of the AWS credentials.
@@ -1350,6 +2200,32 @@ func (s S3DestinationUpdate) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *S3DestinationUpdate) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "S3DestinationUpdate"}
+	if s.BucketARN != nil && len(*s.BucketARN) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("BucketARN", 1))
+	}
+	if s.RoleARN != nil && len(*s.RoleARN) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("RoleARN", 1))
+	}
+	if s.BufferingHints != nil {
+		if err := s.BufferingHints.Validate(); err != nil {
+			invalidParams.AddNested("BufferingHints", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.EncryptionConfiguration != nil {
+		if err := s.EncryptionConfiguration.Validate(); err != nil {
+			invalidParams.AddNested("EncryptionConfiguration", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains the parameters for UpdateDestination.
 type UpdateDestinationInput struct {
 	_ struct{} `type:"structure"`
@@ -1360,12 +2236,18 @@ type UpdateDestinationInput struct {
 	// is null, then the update destination fails. After the update is successful,
 	// the VersionId value is updated. The service then performs a merge of the
 	// old configuration with the new configuration.
+	//
+	// CurrentDeliveryStreamVersionId is a required field
 	CurrentDeliveryStreamVersionId *string `min:"1" type:"string" required:"true"`
 
 	// The name of the delivery stream.
+	//
+	// DeliveryStreamName is a required field
 	DeliveryStreamName *string `min:"1" type:"string" required:"true"`
 
 	// The ID of the destination.
+	//
+	// DestinationId is a required field
 	DestinationId *string `min:"1" type:"string" required:"true"`
 
 	// Describes an update for a destination in Amazon ES.
@@ -1388,6 +2270,49 @@ func (s UpdateDestinationInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateDestinationInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateDestinationInput"}
+	if s.CurrentDeliveryStreamVersionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("CurrentDeliveryStreamVersionId"))
+	}
+	if s.CurrentDeliveryStreamVersionId != nil && len(*s.CurrentDeliveryStreamVersionId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("CurrentDeliveryStreamVersionId", 1))
+	}
+	if s.DeliveryStreamName == nil {
+		invalidParams.Add(request.NewErrParamRequired("DeliveryStreamName"))
+	}
+	if s.DeliveryStreamName != nil && len(*s.DeliveryStreamName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DeliveryStreamName", 1))
+	}
+	if s.DestinationId == nil {
+		invalidParams.Add(request.NewErrParamRequired("DestinationId"))
+	}
+	if s.DestinationId != nil && len(*s.DestinationId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DestinationId", 1))
+	}
+	if s.ElasticsearchDestinationUpdate != nil {
+		if err := s.ElasticsearchDestinationUpdate.Validate(); err != nil {
+			invalidParams.AddNested("ElasticsearchDestinationUpdate", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.RedshiftDestinationUpdate != nil {
+		if err := s.RedshiftDestinationUpdate.Validate(); err != nil {
+			invalidParams.AddNested("RedshiftDestinationUpdate", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.S3DestinationUpdate != nil {
+		if err := s.S3DestinationUpdate.Validate(); err != nil {
+			invalidParams.AddNested("S3DestinationUpdate", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains the output of UpdateDestination.
 type UpdateDestinationOutput struct {
 	_ struct{} `type:"structure"`
@@ -1404,46 +2329,56 @@ func (s UpdateDestinationOutput) GoString() string {
 }
 
 const (
-	// @enum CompressionFormat
+	// CompressionFormatUncompressed is a CompressionFormat enum value
 	CompressionFormatUncompressed = "UNCOMPRESSED"
-	// @enum CompressionFormat
+
+	// CompressionFormatGzip is a CompressionFormat enum value
 	CompressionFormatGzip = "GZIP"
-	// @enum CompressionFormat
+
+	// CompressionFormatZip is a CompressionFormat enum value
 	CompressionFormatZip = "ZIP"
-	// @enum CompressionFormat
+
+	// CompressionFormatSnappy is a CompressionFormat enum value
 	CompressionFormatSnappy = "Snappy"
 )
 
 const (
-	// @enum DeliveryStreamStatus
+	// DeliveryStreamStatusCreating is a DeliveryStreamStatus enum value
 	DeliveryStreamStatusCreating = "CREATING"
-	// @enum DeliveryStreamStatus
+
+	// DeliveryStreamStatusDeleting is a DeliveryStreamStatus enum value
 	DeliveryStreamStatusDeleting = "DELETING"
-	// @enum DeliveryStreamStatus
+
+	// DeliveryStreamStatusActive is a DeliveryStreamStatus enum value
 	DeliveryStreamStatusActive = "ACTIVE"
 )
 
 const (
-	// @enum ElasticsearchIndexRotationPeriod
+	// ElasticsearchIndexRotationPeriodNoRotation is a ElasticsearchIndexRotationPeriod enum value
 	ElasticsearchIndexRotationPeriodNoRotation = "NoRotation"
-	// @enum ElasticsearchIndexRotationPeriod
+
+	// ElasticsearchIndexRotationPeriodOneHour is a ElasticsearchIndexRotationPeriod enum value
 	ElasticsearchIndexRotationPeriodOneHour = "OneHour"
-	// @enum ElasticsearchIndexRotationPeriod
+
+	// ElasticsearchIndexRotationPeriodOneDay is a ElasticsearchIndexRotationPeriod enum value
 	ElasticsearchIndexRotationPeriodOneDay = "OneDay"
-	// @enum ElasticsearchIndexRotationPeriod
+
+	// ElasticsearchIndexRotationPeriodOneWeek is a ElasticsearchIndexRotationPeriod enum value
 	ElasticsearchIndexRotationPeriodOneWeek = "OneWeek"
-	// @enum ElasticsearchIndexRotationPeriod
+
+	// ElasticsearchIndexRotationPeriodOneMonth is a ElasticsearchIndexRotationPeriod enum value
 	ElasticsearchIndexRotationPeriodOneMonth = "OneMonth"
 )
 
 const (
-	// @enum ElasticsearchS3BackupMode
+	// ElasticsearchS3BackupModeFailedDocumentsOnly is a ElasticsearchS3BackupMode enum value
 	ElasticsearchS3BackupModeFailedDocumentsOnly = "FailedDocumentsOnly"
-	// @enum ElasticsearchS3BackupMode
+
+	// ElasticsearchS3BackupModeAllDocuments is a ElasticsearchS3BackupMode enum value
 	ElasticsearchS3BackupModeAllDocuments = "AllDocuments"
 )
 
 const (
-	// @enum NoEncryptionConfig
+	// NoEncryptionConfigNoEncryption is a NoEncryptionConfig enum value
 	NoEncryptionConfigNoEncryption = "NoEncryption"
 )

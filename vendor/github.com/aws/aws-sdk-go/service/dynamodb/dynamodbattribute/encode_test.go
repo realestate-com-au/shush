@@ -3,6 +3,7 @@ package dynamodbattribute
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
@@ -40,6 +41,7 @@ type marshalMarshaler struct {
 	Value  string
 	Value2 int
 	Value3 bool
+	Value4 time.Time
 }
 
 func (m *marshalMarshaler) MarshalDynamoDBAttributeValue(av *dynamodb.AttributeValue) error {
@@ -47,6 +49,7 @@ func (m *marshalMarshaler) MarshalDynamoDBAttributeValue(av *dynamodb.AttributeV
 		"abc": {S: &m.Value},
 		"def": {N: aws.String(fmt.Sprintf("%d", m.Value2))},
 		"ghi": {BOOL: &m.Value3},
+		"jkl": {S: aws.String(m.Value4.Format(time.RFC3339Nano))},
 	}
 
 	return nil
@@ -57,6 +60,7 @@ func TestMarshalMashaler(t *testing.T) {
 		Value:  "value",
 		Value2: 123,
 		Value3: true,
+		Value4: testDate,
 	}
 
 	expect := &dynamodb.AttributeValue{
@@ -64,6 +68,7 @@ func TestMarshalMashaler(t *testing.T) {
 			"abc": {S: aws.String("value")},
 			"def": {N: aws.String("123")},
 			"ghi": {BOOL: aws.Bool(true)},
+			"jkl": {S: aws.String("2016-05-03T17:06:26.209072Z")},
 		},
 	}
 
@@ -117,5 +122,57 @@ func TestMarshalMapOmitEmptyElem(t *testing.T) {
 
 	actual, err := Marshal(m)
 	assert.NoError(t, err)
+	assert.Equal(t, expect, actual)
+}
+
+type testOmitEmptyScalar struct {
+	IntZero       int  `dynamodbav:",omitempty"`
+	IntPtrNil     *int `dynamodbav:",omitempty"`
+	IntPtrSetZero *int `dynamodbav:",omitempty"`
+}
+
+func TestMarshalOmitEmpty(t *testing.T) {
+	expect := &dynamodb.AttributeValue{
+		M: map[string]*dynamodb.AttributeValue{
+			"IntPtrSetZero": {N: aws.String("0")},
+		},
+	}
+
+	m := testOmitEmptyScalar{IntPtrSetZero: aws.Int(0)}
+
+	actual, err := Marshal(m)
+	assert.NoError(t, err)
+	assert.Equal(t, expect, actual)
+}
+
+func TestEncodeEmbeddedPointerStruct(t *testing.T) {
+	type B struct {
+		Bint int
+	}
+	type C struct {
+		Cint int
+	}
+	type A struct {
+		Aint int
+		*B
+		*C
+	}
+	a := A{Aint: 321, B: &B{123}}
+	assert.Equal(t, 321, a.Aint)
+	assert.Equal(t, 123, a.Bint)
+	assert.Nil(t, a.C)
+
+	actual, err := Marshal(a)
+	assert.NoError(t, err)
+	expect := &dynamodb.AttributeValue{
+		M: map[string]*dynamodb.AttributeValue{
+			"Aint": {
+				N: aws.String("321"),
+			},
+			"Bint": {
+				N: aws.String("123"),
+			},
+		},
+	}
 	assert.Equal(t, expect, actual)
 }

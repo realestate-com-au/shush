@@ -25,8 +25,8 @@ import (
 // functionality within Amazon's proven computing environment, are able to scale
 // instantly, and pay only for what they use.
 //
-//  Visit http://aws.amazon.com/simpledb/ (http://aws.amazon.com/simpledb/)
-// for more information.
+// Visit http://aws.amazon.com/simpledb/ (http://aws.amazon.com/simpledb/) for
+// more information.
 //The service client's operations are safe to be used concurrently.
 // It is not safe to mutate any of the client's properties though.
 type SimpleDB struct {
@@ -73,7 +73,7 @@ func newClient(cfg aws.Config, handlers request.Handlers, endpoint, signingRegio
 	}
 
 	// Handlers
-	svc.Handlers.Sign.PushBack(v2.Sign)
+	svc.Handlers.Sign.PushBackNamed(v2.SignRequestHandler)
 	svc.Handlers.Sign.PushBackNamed(corehandlers.BuildContentLengthHandler)
 	svc.Handlers.Build.PushBackNamed(query.BuildHandler)
 	svc.Handlers.Unmarshal.PushBackNamed(query.UnmarshalHandler)

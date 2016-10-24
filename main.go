@@ -13,8 +13,8 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/kms"
-	"github.com/codegangsta/cli"
 	"github.com/realestate-com-au/shush/awsmeta"
+	"github.com/urfave/cli"
 )
 
 const usageError = 64            // incorrect usage of "shush"

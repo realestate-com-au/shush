@@ -412,6 +412,18 @@
       "documentationUrl":"http://docs.amazonwebservices.com/AmazonS3/latest/API/RESTBucketGET.html",
       "alias":"GetBucket"
     },
+    "ListObjectsV2":{
+      "name":"ListObjectsV2",
+      "http":{
+        "method":"GET",
+        "requestUri":"/{Bucket}?list-type=2"
+      },
+      "input":{"shape":"ListObjectsV2Request"},
+      "output":{"shape":"ListObjectsV2Output"},
+      "errors":[
+        {"shape":"NoSuchBucket"}
+      ]
+    },
     "ListParts":{
       "name":"ListParts",
       "http":{
@@ -741,6 +753,7 @@
         "eu-west-1",
         "us-west-1",
         "us-west-2",
+        "ap-south-1",
         "ap-southeast-1",
         "ap-southeast-2",
         "ap-northeast-1",
@@ -951,7 +964,7 @@
     "ContentDisposition":{"type":"string"},
     "ContentEncoding":{"type":"string"},
     "ContentLanguage":{"type":"string"},
-    "ContentLength":{"type":"integer"},
+    "ContentLength":{"type":"long"},
     "ContentMD5":{"type":"string"},
     "ContentRange":{"type":"string"},
     "ContentType":{"type":"string"},
@@ -1722,6 +1735,7 @@
       "member":{"shape":"ExposeHeader"},
       "flattened":true
     },
+    "FetchOwner":{"type":"boolean"},
     "FilterRule":{
       "type":"structure",
       "members":{
@@ -2172,6 +2186,11 @@
           "shape":"ReplicationStatus",
           "location":"header",
           "locationName":"x-amz-replication-status"
+        },
+        "PartsCount":{
+          "shape":"PartsCount",
+          "location":"header",
+          "locationName":"x-amz-mp-parts-count"
         }
       },
       "payload":"Body"
@@ -2272,6 +2291,11 @@
           "shape":"RequestPayer",
           "location":"header",
           "locationName":"x-amz-request-payer"
+        },
+        "PartNumber":{
+          "shape":"PartNumber",
+          "location":"querystring",
+          "locationName":"partNumber"
         }
       }
     },
@@ -2485,6 +2509,11 @@
           "shape":"ReplicationStatus",
           "location":"header",
           "locationName":"x-amz-replication-status"
+        },
+        "PartsCount":{
+          "shape":"PartsCount",
+          "location":"header",
+          "locationName":"x-amz-mp-parts-count"
         }
       }
     },
@@ -2554,6 +2583,11 @@
           "shape":"RequestPayer",
           "location":"header",
           "locationName":"x-amz-request-payer"
+        },
+        "PartNumber":{
+          "shape":"PartNumber",
+          "location":"querystring",
+          "locationName":"partNumber"
         }
       }
     },
@@ -2582,6 +2616,7 @@
     },
     "IsLatest":{"type":"boolean"},
     "IsTruncated":{"type":"boolean"},
+    "KeyCount":{"type":"integer"},
     "KeyMarker":{"type":"string"},
     "KeyPrefixEquals":{"type":"string"},
     "LambdaFunctionArn":{"type":"string"},
@@ -2837,6 +2872,79 @@
           "shape":"Prefix",
           "location":"querystring",
           "locationName":"prefix"
+        },
+        "RequestPayer":{
+          "shape":"RequestPayer",
+          "location":"header",
+          "locationName":"x-amz-request-payer"
+        }
+      }
+    },
+    "ListObjectsV2Output":{
+      "type":"structure",
+      "members":{
+        "IsTruncated":{"shape":"IsTruncated"},
+        "Contents":{"shape":"ObjectList"},
+        "Name":{"shape":"BucketName"},
+        "Prefix":{"shape":"Prefix"},
+        "Delimiter":{"shape":"Delimiter"},
+        "MaxKeys":{"shape":"MaxKeys"},
+        "CommonPrefixes":{"shape":"CommonPrefixList"},
+        "EncodingType":{"shape":"EncodingType"},
+        "KeyCount":{"shape":"KeyCount"},
+        "ContinuationToken":{"shape":"Token"},
+        "NextContinuationToken":{"shape":"NextToken"},
+        "StartAfter":{"shape":"StartAfter"}
+      }
+    },
+    "ListObjectsV2Request":{
+      "type":"structure",
+      "required":["Bucket"],
+      "members":{
+        "Bucket":{
+          "shape":"BucketName",
+          "location":"uri",
+          "locationName":"Bucket"
+        },
+        "Delimiter":{
+          "shape":"Delimiter",
+          "location":"querystring",
+          "locationName":"delimiter"
+        },
+        "EncodingType":{
+          "shape":"EncodingType",
+          "location":"querystring",
+          "locationName":"encoding-type"
+        },
+        "MaxKeys":{
+          "shape":"MaxKeys",
+          "location":"querystring",
+          "locationName":"max-keys"
+        },
+        "Prefix":{
+          "shape":"Prefix",
+          "location":"querystring",
+          "locationName":"prefix"
+        },
+        "ContinuationToken":{
+          "shape":"Token",
+          "location":"querystring",
+          "locationName":"continuation-token"
+        },
+        "FetchOwner":{
+          "shape":"FetchOwner",
+          "location":"querystring",
+          "locationName":"fetch-owner"
+        },
+        "StartAfter":{
+          "shape":"StartAfter",
+          "location":"querystring",
+          "locationName":"start-after"
+        },
+        "RequestPayer":{
+          "shape":"RequestPayer",
+          "location":"header",
+          "locationName":"x-amz-request-payer"
         }
       }
     },
@@ -2979,6 +3087,7 @@
     "NextKeyMarker":{"type":"string"},
     "NextMarker":{"type":"string"},
     "NextPartNumberMarker":{"type":"integer"},
+    "NextToken":{"type":"string"},
     "NextUploadIdMarker":{"type":"string"},
     "NextVersionIdMarker":{"type":"string"},
     "NoSuchBucket":{
@@ -3163,6 +3272,7 @@
       "member":{"shape":"Part"},
       "flattened":true
     },
+    "PartsCount":{"type":"integer"},
     "Payer":{
       "type":"string",
       "enum":[
@@ -4055,6 +4165,7 @@
       ]
     },
     "Size":{"type":"integer"},
+    "StartAfter":{"type":"string"},
     "StorageClass":{
       "type":"string",
       "enum":[
@@ -4105,6 +4216,7 @@
       }
     },
     "TargetPrefix":{"type":"string"},
+    "Token":{"type":"string"},
     "TopicArn":{"type":"string"},
     "TopicConfiguration":{
       "type":"structure",

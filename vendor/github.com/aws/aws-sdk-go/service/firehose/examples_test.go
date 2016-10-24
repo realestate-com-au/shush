@@ -16,7 +16,13 @@ var _ time.Duration
 var _ bytes.Buffer
 
 func ExampleFirehose_CreateDeliveryStream() {
-	svc := firehose.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := firehose.New(sess)
 
 	params := &firehose.CreateDeliveryStreamInput{
 		DeliveryStreamName: aws.String("DeliveryStreamName"), // Required
@@ -97,6 +103,9 @@ func ExampleFirehose_CreateDeliveryStream() {
 				LogGroupName:  aws.String("LogGroupName"),
 				LogStreamName: aws.String("LogStreamName"),
 			},
+			RetryOptions: &firehose.RedshiftRetryOptions{
+				DurationInSeconds: aws.Int64(1),
+			},
 		},
 		S3DestinationConfiguration: &firehose.S3DestinationConfiguration{
 			BucketARN: aws.String("BucketARN"), // Required
@@ -134,7 +143,13 @@ func ExampleFirehose_CreateDeliveryStream() {
 }
 
 func ExampleFirehose_DeleteDeliveryStream() {
-	svc := firehose.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := firehose.New(sess)
 
 	params := &firehose.DeleteDeliveryStreamInput{
 		DeliveryStreamName: aws.String("DeliveryStreamName"), // Required
@@ -153,7 +168,13 @@ func ExampleFirehose_DeleteDeliveryStream() {
 }
 
 func ExampleFirehose_DescribeDeliveryStream() {
-	svc := firehose.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := firehose.New(sess)
 
 	params := &firehose.DescribeDeliveryStreamInput{
 		DeliveryStreamName:          aws.String("DeliveryStreamName"), // Required
@@ -174,7 +195,13 @@ func ExampleFirehose_DescribeDeliveryStream() {
 }
 
 func ExampleFirehose_ListDeliveryStreams() {
-	svc := firehose.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := firehose.New(sess)
 
 	params := &firehose.ListDeliveryStreamsInput{
 		ExclusiveStartDeliveryStreamName: aws.String("DeliveryStreamName"),
@@ -194,7 +221,13 @@ func ExampleFirehose_ListDeliveryStreams() {
 }
 
 func ExampleFirehose_PutRecord() {
-	svc := firehose.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := firehose.New(sess)
 
 	params := &firehose.PutRecordInput{
 		DeliveryStreamName: aws.String("DeliveryStreamName"), // Required
@@ -216,7 +249,13 @@ func ExampleFirehose_PutRecord() {
 }
 
 func ExampleFirehose_PutRecordBatch() {
-	svc := firehose.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := firehose.New(sess)
 
 	params := &firehose.PutRecordBatchInput{
 		DeliveryStreamName: aws.String("DeliveryStreamName"), // Required
@@ -241,7 +280,13 @@ func ExampleFirehose_PutRecordBatch() {
 }
 
 func ExampleFirehose_UpdateDestination() {
-	svc := firehose.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := firehose.New(sess)
 
 	params := &firehose.UpdateDestinationInput{
 		CurrentDeliveryStreamVersionId: aws.String("DeliveryStreamVersionId"), // Required
@@ -300,7 +345,10 @@ func ExampleFirehose_UpdateDestination() {
 				DataTableColumns: aws.String("DataTableColumns"),
 			},
 			Password: aws.String("Password"),
-			RoleARN:  aws.String("RoleARN"),
+			RetryOptions: &firehose.RedshiftRetryOptions{
+				DurationInSeconds: aws.Int64(1),
+			},
+			RoleARN: aws.String("RoleARN"),
 			S3Update: &firehose.S3DestinationUpdate{
 				BucketARN: aws.String("BucketARN"),
 				BufferingHints: &firehose.BufferingHints{

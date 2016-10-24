@@ -1,32 +1,38 @@
-hash: 72f16b4ee95ab36ac05d90e43feb096bdec43b29d26baf5f31ab5a23bf8718a1
-updated: 2016-04-20T18:08:23.090806443+10:00
+hash: 05c549cfb981e9696a1b91f1eb4588def0a862e448cac80c0d484a271abbe91b
+updated: 2016-10-25T09:30:17.467555818+11:00
 imports:
 - name: github.com/aws/aws-sdk-go
-  version: 9300ebee2d7b53f3146548d04545f83517e48469
+  version: 22a2bfb1277b927a7b89145317f2bab829d679d6
   subpackages:
   - aws
-  - aws/session
-  - service/kms
   - aws/awserr
-  - aws/credentials
-  - aws/client
-  - aws/corehandlers
-  - aws/defaults
-  - aws/request
-  - private/endpoints
   - aws/awsutil
+  - aws/client
   - aws/client/metadata
-  - private/protocol
-  - private/protocol/jsonrpc
-  - private/signer/v4
+  - aws/corehandlers
+  - aws/credentials
   - aws/credentials/ec2rolecreds
+  - aws/credentials/endpointcreds
+  - aws/credentials/stscreds
+  - aws/defaults
   - aws/ec2metadata
+  - aws/request
+  - aws/session
+  - aws/signer/v4
+  - private/endpoints
+  - private/protocol
   - private/protocol/json/jsonutil
+  - private/protocol/jsonrpc
+  - private/protocol/query
+  - private/protocol/query/queryutil
   - private/protocol/rest
-- name: github.com/codegangsta/cli
-  version: 71f57d300dd6a780ac1856c005c4b518cfd498ec
+  - private/protocol/xml/xmlutil
+  - service/kms
+  - service/sts
 - name: github.com/go-ini/ini
-  version: 12f418cc7edc5a618a51407b7ac1f1f512139df3
+  version: 6e4869b434bd001f6983749881c7ead3545887d8
 - name: github.com/jmespath/go-jmespath
-  version: 0b12d6b521d83fc7f755e7cfc1b1fbdd35a01a74
-devImports: []
+  version: bd40a432e4c76585ef6b72d3fd96fb9b6dc7b68d
+- name: github.com/urfave/cli
+  version: a14d7d367bc02b1f57d88de97926727f2d936387
+testImports: []

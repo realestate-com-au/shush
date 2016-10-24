@@ -16,7 +16,13 @@ var _ time.Duration
 var _ bytes.Buffer
 
 func ExampleIoT_AcceptCertificateTransfer() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.AcceptCertificateTransferInput{
 		CertificateId: aws.String("CertificateId"), // Required
@@ -36,7 +42,13 @@ func ExampleIoT_AcceptCertificateTransfer() {
 }
 
 func ExampleIoT_AttachPrincipalPolicy() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.AttachPrincipalPolicyInput{
 		PolicyName: aws.String("PolicyName"), // Required
@@ -56,7 +68,13 @@ func ExampleIoT_AttachPrincipalPolicy() {
 }
 
 func ExampleIoT_AttachThingPrincipal() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.AttachThingPrincipalInput{
 		Principal: aws.String("Principal"), // Required
@@ -76,7 +94,13 @@ func ExampleIoT_AttachThingPrincipal() {
 }
 
 func ExampleIoT_CancelCertificateTransfer() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.CancelCertificateTransferInput{
 		CertificateId: aws.String("CertificateId"), // Required
@@ -95,7 +119,13 @@ func ExampleIoT_CancelCertificateTransfer() {
 }
 
 func ExampleIoT_CreateCertificateFromCsr() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.CreateCertificateFromCsrInput{
 		CertificateSigningRequest: aws.String("CertificateSigningRequest"), // Required
@@ -115,7 +145,13 @@ func ExampleIoT_CreateCertificateFromCsr() {
 }
 
 func ExampleIoT_CreateKeysAndCertificate() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.CreateKeysAndCertificateInput{
 		SetAsActive: aws.Bool(true),
@@ -134,7 +170,13 @@ func ExampleIoT_CreateKeysAndCertificate() {
 }
 
 func ExampleIoT_CreatePolicy() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.CreatePolicyInput{
 		PolicyDocument: aws.String("PolicyDocument"), // Required
@@ -154,7 +196,13 @@ func ExampleIoT_CreatePolicy() {
 }
 
 func ExampleIoT_CreatePolicyVersion() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.CreatePolicyVersionInput{
 		PolicyDocument: aws.String("PolicyDocument"), // Required
@@ -175,7 +223,13 @@ func ExampleIoT_CreatePolicyVersion() {
 }
 
 func ExampleIoT_CreateThing() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.CreateThingInput{
 		ThingName: aws.String("ThingName"), // Required
@@ -184,7 +238,9 @@ func ExampleIoT_CreateThing() {
 				"Key": aws.String("AttributeValue"), // Required
 				// More values...
 			},
+			Merge: aws.Bool(true),
 		},
+		ThingTypeName: aws.String("ThingTypeName"),
 	}
 	resp, err := svc.CreateThing(params)
 
@@ -199,8 +255,46 @@ func ExampleIoT_CreateThing() {
 	fmt.Println(resp)
 }
 
+func ExampleIoT_CreateThingType() {
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
+
+	params := &iot.CreateThingTypeInput{
+		ThingTypeName: aws.String("ThingTypeName"), // Required
+		ThingTypeProperties: &iot.ThingTypeProperties{
+			SearchableAttributes: []*string{
+				aws.String("AttributeName"), // Required
+				// More values...
+			},
+			ThingTypeDescription: aws.String("ThingTypeDescription"),
+		},
+	}
+	resp, err := svc.CreateThingType(params)
+
+	if err != nil {
+		// Print the error, cast err to awserr.Error to get the Code and
+		// Message from an error.
+		fmt.Println(err.Error())
+		return
+	}
+
+	// Pretty-print the response data.
+	fmt.Println(resp)
+}
+
 func ExampleIoT_CreateTopicRule() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.CreateTopicRuleInput{
 		RuleName: aws.String("RuleName"), // Required
@@ -222,13 +316,22 @@ func ExampleIoT_CreateTopicRule() {
 						MetricTimestamp: aws.String("MetricTimestamp"),
 					},
 					DynamoDB: &iot.DynamoDBAction{
-						HashKeyField:  aws.String("HashKeyField"),  // Required
-						HashKeyValue:  aws.String("HashKeyValue"),  // Required
-						RangeKeyField: aws.String("RangeKeyField"), // Required
-						RangeKeyValue: aws.String("RangeKeyValue"), // Required
-						RoleArn:       aws.String("AwsArn"),        // Required
-						TableName:     aws.String("TableName"),     // Required
+						HashKeyField:  aws.String("HashKeyField"), // Required
+						HashKeyValue:  aws.String("HashKeyValue"), // Required
+						RoleArn:       aws.String("AwsArn"),       // Required
+						TableName:     aws.String("TableName"),    // Required
+						HashKeyType:   aws.String("DynamoKeyType"),
+						Operation:     aws.String("DynamoOperation"),
 						PayloadField:  aws.String("PayloadField"),
+						RangeKeyField: aws.String("RangeKeyField"),
+						RangeKeyType:  aws.String("DynamoKeyType"),
+						RangeKeyValue: aws.String("RangeKeyValue"),
+					},
+					DynamoDBv2: &iot.DynamoDBv2Action{
+						PutItem: &iot.PutItemInput{
+							TableName: aws.String("TableName"), // Required
+						},
+						RoleArn: aws.String("AwsArn"),
 					},
 					Elasticsearch: &iot.ElasticsearchAction{
 						Endpoint: aws.String("ElasticsearchEndpoint"), // Required
@@ -240,6 +343,7 @@ func ExampleIoT_CreateTopicRule() {
 					Firehose: &iot.FirehoseAction{
 						DeliveryStreamName: aws.String("DeliveryStreamName"), // Required
 						RoleArn:            aws.String("AwsArn"),             // Required
+						Separator:          aws.String("FirehoseSeparator"),
 					},
 					Kinesis: &iot.KinesisAction{
 						RoleArn:      aws.String("AwsArn"),     // Required
@@ -257,6 +361,7 @@ func ExampleIoT_CreateTopicRule() {
 						BucketName: aws.String("BucketName"), // Required
 						Key:        aws.String("Key"),        // Required
 						RoleArn:    aws.String("AwsArn"),     // Required
+						CannedAcl:  aws.String("CannedAccessControlList"),
 					},
 					Sns: &iot.SnsAction{
 						RoleArn:       aws.String("AwsArn"), // Required
@@ -271,9 +376,10 @@ func ExampleIoT_CreateTopicRule() {
 				},
 				// More values...
 			},
-			Sql:          aws.String("SQL"), // Required
-			Description:  aws.String("Description"),
-			RuleDisabled: aws.Bool(true),
+			Sql:              aws.String("SQL"), // Required
+			AwsIotSqlVersion: aws.String("AwsIotSqlVersion"),
+			Description:      aws.String("Description"),
+			RuleDisabled:     aws.Bool(true),
 		},
 	}
 	resp, err := svc.CreateTopicRule(params)
@@ -290,7 +396,13 @@ func ExampleIoT_CreateTopicRule() {
 }
 
 func ExampleIoT_DeleteCACertificate() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.DeleteCACertificateInput{
 		CertificateId: aws.String("CertificateId"), // Required
@@ -309,7 +421,13 @@ func ExampleIoT_DeleteCACertificate() {
 }
 
 func ExampleIoT_DeleteCertificate() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.DeleteCertificateInput{
 		CertificateId: aws.String("CertificateId"), // Required
@@ -328,7 +446,13 @@ func ExampleIoT_DeleteCertificate() {
 }
 
 func ExampleIoT_DeletePolicy() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.DeletePolicyInput{
 		PolicyName: aws.String("PolicyName"), // Required
@@ -347,7 +471,13 @@ func ExampleIoT_DeletePolicy() {
 }
 
 func ExampleIoT_DeletePolicyVersion() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.DeletePolicyVersionInput{
 		PolicyName:      aws.String("PolicyName"),      // Required
@@ -367,7 +497,13 @@ func ExampleIoT_DeletePolicyVersion() {
 }
 
 func ExampleIoT_DeleteRegistrationCode() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	var params *iot.DeleteRegistrationCodeInput
 	resp, err := svc.DeleteRegistrationCode(params)
@@ -384,10 +520,17 @@ func ExampleIoT_DeleteRegistrationCode() {
 }
 
 func ExampleIoT_DeleteThing() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.DeleteThingInput{
-		ThingName: aws.String("ThingName"), // Required
+		ThingName:       aws.String("ThingName"), // Required
+		ExpectedVersion: aws.Int64(1),
 	}
 	resp, err := svc.DeleteThing(params)
 
@@ -402,8 +545,39 @@ func ExampleIoT_DeleteThing() {
 	fmt.Println(resp)
 }
 
+func ExampleIoT_DeleteThingType() {
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
+
+	params := &iot.DeleteThingTypeInput{
+		ThingTypeName: aws.String("ThingTypeName"), // Required
+	}
+	resp, err := svc.DeleteThingType(params)
+
+	if err != nil {
+		// Print the error, cast err to awserr.Error to get the Code and
+		// Message from an error.
+		fmt.Println(err.Error())
+		return
+	}
+
+	// Pretty-print the response data.
+	fmt.Println(resp)
+}
+
 func ExampleIoT_DeleteTopicRule() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.DeleteTopicRuleInput{
 		RuleName: aws.String("RuleName"), // Required
@@ -421,8 +595,40 @@ func ExampleIoT_DeleteTopicRule() {
 	fmt.Println(resp)
 }
 
+func ExampleIoT_DeprecateThingType() {
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
+
+	params := &iot.DeprecateThingTypeInput{
+		ThingTypeName: aws.String("ThingTypeName"), // Required
+		UndoDeprecate: aws.Bool(true),
+	}
+	resp, err := svc.DeprecateThingType(params)
+
+	if err != nil {
+		// Print the error, cast err to awserr.Error to get the Code and
+		// Message from an error.
+		fmt.Println(err.Error())
+		return
+	}
+
+	// Pretty-print the response data.
+	fmt.Println(resp)
+}
+
 func ExampleIoT_DescribeCACertificate() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.DescribeCACertificateInput{
 		CertificateId: aws.String("CertificateId"), // Required
@@ -441,7 +647,13 @@ func ExampleIoT_DescribeCACertificate() {
 }
 
 func ExampleIoT_DescribeCertificate() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.DescribeCertificateInput{
 		CertificateId: aws.String("CertificateId"), // Required
@@ -460,7 +672,13 @@ func ExampleIoT_DescribeCertificate() {
 }
 
 func ExampleIoT_DescribeEndpoint() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	var params *iot.DescribeEndpointInput
 	resp, err := svc.DescribeEndpoint(params)
@@ -477,7 +695,13 @@ func ExampleIoT_DescribeEndpoint() {
 }
 
 func ExampleIoT_DescribeThing() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.DescribeThingInput{
 		ThingName: aws.String("ThingName"), // Required
@@ -495,8 +719,39 @@ func ExampleIoT_DescribeThing() {
 	fmt.Println(resp)
 }
 
+func ExampleIoT_DescribeThingType() {
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
+
+	params := &iot.DescribeThingTypeInput{
+		ThingTypeName: aws.String("ThingTypeName"), // Required
+	}
+	resp, err := svc.DescribeThingType(params)
+
+	if err != nil {
+		// Print the error, cast err to awserr.Error to get the Code and
+		// Message from an error.
+		fmt.Println(err.Error())
+		return
+	}
+
+	// Pretty-print the response data.
+	fmt.Println(resp)
+}
+
 func ExampleIoT_DetachPrincipalPolicy() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.DetachPrincipalPolicyInput{
 		PolicyName: aws.String("PolicyName"), // Required
@@ -516,7 +771,13 @@ func ExampleIoT_DetachPrincipalPolicy() {
 }
 
 func ExampleIoT_DetachThingPrincipal() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.DetachThingPrincipalInput{
 		Principal: aws.String("Principal"), // Required
@@ -536,7 +797,13 @@ func ExampleIoT_DetachThingPrincipal() {
 }
 
 func ExampleIoT_DisableTopicRule() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.DisableTopicRuleInput{
 		RuleName: aws.String("RuleName"), // Required
@@ -555,7 +822,13 @@ func ExampleIoT_DisableTopicRule() {
 }
 
 func ExampleIoT_EnableTopicRule() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.EnableTopicRuleInput{
 		RuleName: aws.String("RuleName"), // Required
@@ -574,7 +847,13 @@ func ExampleIoT_EnableTopicRule() {
 }
 
 func ExampleIoT_GetLoggingOptions() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	var params *iot.GetLoggingOptionsInput
 	resp, err := svc.GetLoggingOptions(params)
@@ -591,7 +870,13 @@ func ExampleIoT_GetLoggingOptions() {
 }
 
 func ExampleIoT_GetPolicy() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.GetPolicyInput{
 		PolicyName: aws.String("PolicyName"), // Required
@@ -610,7 +895,13 @@ func ExampleIoT_GetPolicy() {
 }
 
 func ExampleIoT_GetPolicyVersion() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.GetPolicyVersionInput{
 		PolicyName:      aws.String("PolicyName"),      // Required
@@ -630,7 +921,13 @@ func ExampleIoT_GetPolicyVersion() {
 }
 
 func ExampleIoT_GetRegistrationCode() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	var params *iot.GetRegistrationCodeInput
 	resp, err := svc.GetRegistrationCode(params)
@@ -647,7 +944,13 @@ func ExampleIoT_GetRegistrationCode() {
 }
 
 func ExampleIoT_GetTopicRule() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.GetTopicRuleInput{
 		RuleName: aws.String("RuleName"), // Required
@@ -666,7 +969,13 @@ func ExampleIoT_GetTopicRule() {
 }
 
 func ExampleIoT_ListCACertificates() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.ListCACertificatesInput{
 		AscendingOrder: aws.Bool(true),
@@ -687,7 +996,13 @@ func ExampleIoT_ListCACertificates() {
 }
 
 func ExampleIoT_ListCertificates() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.ListCertificatesInput{
 		AscendingOrder: aws.Bool(true),
@@ -708,7 +1023,13 @@ func ExampleIoT_ListCertificates() {
 }
 
 func ExampleIoT_ListCertificatesByCA() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.ListCertificatesByCAInput{
 		CaCertificateId: aws.String("CertificateId"), // Required
@@ -729,8 +1050,41 @@ func ExampleIoT_ListCertificatesByCA() {
 	fmt.Println(resp)
 }
 
+func ExampleIoT_ListOutgoingCertificates() {
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
+
+	params := &iot.ListOutgoingCertificatesInput{
+		AscendingOrder: aws.Bool(true),
+		Marker:         aws.String("Marker"),
+		PageSize:       aws.Int64(1),
+	}
+	resp, err := svc.ListOutgoingCertificates(params)
+
+	if err != nil {
+		// Print the error, cast err to awserr.Error to get the Code and
+		// Message from an error.
+		fmt.Println(err.Error())
+		return
+	}
+
+	// Pretty-print the response data.
+	fmt.Println(resp)
+}
+
 func ExampleIoT_ListPolicies() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.ListPoliciesInput{
 		AscendingOrder: aws.Bool(true),
@@ -750,8 +1104,42 @@ func ExampleIoT_ListPolicies() {
 	fmt.Println(resp)
 }
 
+func ExampleIoT_ListPolicyPrincipals() {
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
+
+	params := &iot.ListPolicyPrincipalsInput{
+		PolicyName:     aws.String("PolicyName"), // Required
+		AscendingOrder: aws.Bool(true),
+		Marker:         aws.String("Marker"),
+		PageSize:       aws.Int64(1),
+	}
+	resp, err := svc.ListPolicyPrincipals(params)
+
+	if err != nil {
+		// Print the error, cast err to awserr.Error to get the Code and
+		// Message from an error.
+		fmt.Println(err.Error())
+		return
+	}
+
+	// Pretty-print the response data.
+	fmt.Println(resp)
+}
+
 func ExampleIoT_ListPolicyVersions() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.ListPolicyVersionsInput{
 		PolicyName: aws.String("PolicyName"), // Required
@@ -770,7 +1158,13 @@ func ExampleIoT_ListPolicyVersions() {
 }
 
 func ExampleIoT_ListPrincipalPolicies() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.ListPrincipalPoliciesInput{
 		Principal:      aws.String("Principal"), // Required
@@ -792,7 +1186,13 @@ func ExampleIoT_ListPrincipalPolicies() {
 }
 
 func ExampleIoT_ListPrincipalThings() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.ListPrincipalThingsInput{
 		Principal:  aws.String("Principal"), // Required
@@ -813,7 +1213,13 @@ func ExampleIoT_ListPrincipalThings() {
 }
 
 func ExampleIoT_ListThingPrincipals() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.ListThingPrincipalsInput{
 		ThingName: aws.String("ThingName"), // Required
@@ -831,14 +1237,48 @@ func ExampleIoT_ListThingPrincipals() {
 	fmt.Println(resp)
 }
 
+func ExampleIoT_ListThingTypes() {
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
+
+	params := &iot.ListThingTypesInput{
+		MaxResults:    aws.Int64(1),
+		NextToken:     aws.String("NextToken"),
+		ThingTypeName: aws.String("ThingTypeName"),
+	}
+	resp, err := svc.ListThingTypes(params)
+
+	if err != nil {
+		// Print the error, cast err to awserr.Error to get the Code and
+		// Message from an error.
+		fmt.Println(err.Error())
+		return
+	}
+
+	// Pretty-print the response data.
+	fmt.Println(resp)
+}
+
 func ExampleIoT_ListThings() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.ListThingsInput{
 		AttributeName:  aws.String("AttributeName"),
 		AttributeValue: aws.String("AttributeValue"),
 		MaxResults:     aws.Int64(1),
 		NextToken:      aws.String("NextToken"),
+		ThingTypeName:  aws.String("ThingTypeName"),
 	}
 	resp, err := svc.ListThings(params)
 
@@ -854,7 +1294,13 @@ func ExampleIoT_ListThings() {
 }
 
 func ExampleIoT_ListTopicRules() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.ListTopicRulesInput{
 		MaxResults:   aws.Int64(1),
@@ -876,11 +1322,18 @@ func ExampleIoT_ListTopicRules() {
 }
 
 func ExampleIoT_RegisterCACertificate() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.RegisterCACertificateInput{
 		CaCertificate:           aws.String("CertificatePem"), // Required
 		VerificationCertificate: aws.String("CertificatePem"), // Required
+		AllowAutoRegistration:   aws.Bool(true),
 		SetAsActive:             aws.Bool(true),
 	}
 	resp, err := svc.RegisterCACertificate(params)
@@ -897,12 +1350,19 @@ func ExampleIoT_RegisterCACertificate() {
 }
 
 func ExampleIoT_RegisterCertificate() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.RegisterCertificateInput{
 		CertificatePem:   aws.String("CertificatePem"), // Required
 		CaCertificatePem: aws.String("CertificatePem"),
 		SetAsActive:      aws.Bool(true),
+		Status:           aws.String("CertificateStatus"),
 	}
 	resp, err := svc.RegisterCertificate(params)
 
@@ -918,7 +1378,13 @@ func ExampleIoT_RegisterCertificate() {
 }
 
 func ExampleIoT_RejectCertificateTransfer() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.RejectCertificateTransferInput{
 		CertificateId: aws.String("CertificateId"), // Required
@@ -938,7 +1404,13 @@ func ExampleIoT_RejectCertificateTransfer() {
 }
 
 func ExampleIoT_ReplaceTopicRule() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.ReplaceTopicRuleInput{
 		RuleName: aws.String("RuleName"), // Required
@@ -960,13 +1432,22 @@ func ExampleIoT_ReplaceTopicRule() {
 						MetricTimestamp: aws.String("MetricTimestamp"),
 					},
 					DynamoDB: &iot.DynamoDBAction{
-						HashKeyField:  aws.String("HashKeyField"),  // Required
-						HashKeyValue:  aws.String("HashKeyValue"),  // Required
-						RangeKeyField: aws.String("RangeKeyField"), // Required
-						RangeKeyValue: aws.String("RangeKeyValue"), // Required
-						RoleArn:       aws.String("AwsArn"),        // Required
-						TableName:     aws.String("TableName"),     // Required
+						HashKeyField:  aws.String("HashKeyField"), // Required
+						HashKeyValue:  aws.String("HashKeyValue"), // Required
+						RoleArn:       aws.String("AwsArn"),       // Required
+						TableName:     aws.String("TableName"),    // Required
+						HashKeyType:   aws.String("DynamoKeyType"),
+						Operation:     aws.String("DynamoOperation"),
 						PayloadField:  aws.String("PayloadField"),
+						RangeKeyField: aws.String("RangeKeyField"),
+						RangeKeyType:  aws.String("DynamoKeyType"),
+						RangeKeyValue: aws.String("RangeKeyValue"),
+					},
+					DynamoDBv2: &iot.DynamoDBv2Action{
+						PutItem: &iot.PutItemInput{
+							TableName: aws.String("TableName"), // Required
+						},
+						RoleArn: aws.String("AwsArn"),
 					},
 					Elasticsearch: &iot.ElasticsearchAction{
 						Endpoint: aws.String("ElasticsearchEndpoint"), // Required
@@ -978,6 +1459,7 @@ func ExampleIoT_ReplaceTopicRule() {
 					Firehose: &iot.FirehoseAction{
 						DeliveryStreamName: aws.String("DeliveryStreamName"), // Required
 						RoleArn:            aws.String("AwsArn"),             // Required
+						Separator:          aws.String("FirehoseSeparator"),
 					},
 					Kinesis: &iot.KinesisAction{
 						RoleArn:      aws.String("AwsArn"),     // Required
@@ -995,6 +1477,7 @@ func ExampleIoT_ReplaceTopicRule() {
 						BucketName: aws.String("BucketName"), // Required
 						Key:        aws.String("Key"),        // Required
 						RoleArn:    aws.String("AwsArn"),     // Required
+						CannedAcl:  aws.String("CannedAccessControlList"),
 					},
 					Sns: &iot.SnsAction{
 						RoleArn:       aws.String("AwsArn"), // Required
@@ -1009,9 +1492,10 @@ func ExampleIoT_ReplaceTopicRule() {
 				},
 				// More values...
 			},
-			Sql:          aws.String("SQL"), // Required
-			Description:  aws.String("Description"),
-			RuleDisabled: aws.Bool(true),
+			Sql:              aws.String("SQL"), // Required
+			AwsIotSqlVersion: aws.String("AwsIotSqlVersion"),
+			Description:      aws.String("Description"),
+			RuleDisabled:     aws.Bool(true),
 		},
 	}
 	resp, err := svc.ReplaceTopicRule(params)
@@ -1028,7 +1512,13 @@ func ExampleIoT_ReplaceTopicRule() {
 }
 
 func ExampleIoT_SetDefaultPolicyVersion() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.SetDefaultPolicyVersionInput{
 		PolicyName:      aws.String("PolicyName"),      // Required
@@ -1048,7 +1538,13 @@ func ExampleIoT_SetDefaultPolicyVersion() {
 }
 
 func ExampleIoT_SetLoggingOptions() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.SetLoggingOptionsInput{
 		LoggingOptionsPayload: &iot.LoggingOptionsPayload{ // Required
@@ -1070,7 +1566,13 @@ func ExampleIoT_SetLoggingOptions() {
 }
 
 func ExampleIoT_TransferCertificate() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.TransferCertificateInput{
 		CertificateId:    aws.String("CertificateId"), // Required
@@ -1091,11 +1593,18 @@ func ExampleIoT_TransferCertificate() {
 }
 
 func ExampleIoT_UpdateCACertificate() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.UpdateCACertificateInput{
-		CertificateId: aws.String("CertificateId"),       // Required
-		NewStatus:     aws.String("CACertificateStatus"), // Required
+		CertificateId:             aws.String("CertificateId"), // Required
+		NewAutoRegistrationStatus: aws.String("AutoRegistrationStatus"),
+		NewStatus:                 aws.String("CACertificateStatus"),
 	}
 	resp, err := svc.UpdateCACertificate(params)
 
@@ -1111,7 +1620,13 @@ func ExampleIoT_UpdateCACertificate() {
 }
 
 func ExampleIoT_UpdateCertificate() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.UpdateCertificateInput{
 		CertificateId: aws.String("CertificateId"),     // Required
@@ -1131,16 +1646,26 @@ func ExampleIoT_UpdateCertificate() {
 }
 
 func ExampleIoT_UpdateThing() {
-	svc := iot.New(session.New())
+	sess, err := session.NewSession()
+	if err != nil {
+		fmt.Println("failed to create session,", err)
+		return
+	}
+
+	svc := iot.New(sess)
 
 	params := &iot.UpdateThingInput{
-		AttributePayload: &iot.AttributePayload{ // Required
+		ThingName: aws.String("ThingName"), // Required
+		AttributePayload: &iot.AttributePayload{
 			Attributes: map[string]*string{
 				"Key": aws.String("AttributeValue"), // Required
 				// More values...
 			},
+			Merge: aws.Bool(true),
 		},
-		ThingName: aws.String("ThingName"), // Required
+		ExpectedVersion: aws.Int64(1),
+		RemoveThingType: aws.Bool(true),
+		ThingTypeName:   aws.String("ThingTypeName"),
 	}
 	resp, err := svc.UpdateThing(params)
 

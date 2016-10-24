@@ -111,6 +111,7 @@
       },
       "errors":[
         {"shape":"InsufficientPrivilegesException"},
+        {"shape":"TooManyBucketsException"},
         {"shape":"TooManyConfigurationTemplatesException"}
       ]
     },
@@ -224,7 +225,10 @@
       "output":{
         "shape":"ConfigurationOptionsDescription",
         "resultWrapper":"DescribeConfigurationOptionsResult"
-      }
+      },
+      "errors":[
+        {"shape":"TooManyBucketsException"}
+      ]
     },
     "DescribeConfigurationSettings":{
       "name":"DescribeConfigurationSettings",
@@ -236,7 +240,10 @@
       "output":{
         "shape":"ConfigurationSettingsDescriptions",
         "resultWrapper":"DescribeConfigurationSettingsResult"
-      }
+      },
+      "errors":[
+        {"shape":"TooManyBucketsException"}
+      ]
     },
     "DescribeEnvironmentHealth":{
       "name":"DescribeEnvironmentHealth",
@@ -448,7 +455,8 @@
         "resultWrapper":"UpdateConfigurationTemplateResult"
       },
       "errors":[
-        {"shape":"InsufficientPrivilegesException"}
+        {"shape":"InsufficientPrivilegesException"},
+        {"shape":"TooManyBucketsException"}
       ]
     },
     "UpdateEnvironment":{
@@ -463,7 +471,8 @@
         "resultWrapper":"UpdateEnvironmentResult"
       },
       "errors":[
-        {"shape":"InsufficientPrivilegesException"}
+        {"shape":"InsufficientPrivilegesException"},
+        {"shape":"TooManyBucketsException"}
       ]
     },
     "ValidateConfigurationSettings":{
@@ -478,7 +487,8 @@
         "resultWrapper":"ValidateConfigurationSettingsResult"
       },
       "errors":[
-        {"shape":"InsufficientPrivilegesException"}
+        {"shape":"InsufficientPrivilegesException"},
+        {"shape":"TooManyBucketsException"}
       ]
     }
   },
@@ -567,6 +577,7 @@
         "ApplicationName":{"shape":"ApplicationName"},
         "Description":{"shape":"Description"},
         "VersionLabel":{"shape":"VersionLabel"},
+        "SourceBuildInformation":{"shape":"SourceBuildInformation"},
         "SourceBundle":{"shape":"S3Location"},
         "DateCreated":{"shape":"CreationDate"},
         "DateUpdated":{"shape":"UpdateDate"},
@@ -586,7 +597,8 @@
     "ApplicationVersionDescriptionsMessage":{
       "type":"structure",
       "members":{
-        "ApplicationVersions":{"shape":"ApplicationVersionDescriptionList"}
+        "ApplicationVersions":{"shape":"ApplicationVersionDescriptionList"},
+        "NextToken":{"shape":"Token"}
       }
     },
     "ApplicationVersionProccess":{"type":"boolean"},
@@ -801,6 +813,7 @@
         "ApplicationName":{"shape":"ApplicationName"},
         "VersionLabel":{"shape":"VersionLabel"},
         "Description":{"shape":"Description"},
+        "SourceBuildInformation":{"shape":"SourceBuildInformation"},
         "SourceBundle":{"shape":"S3Location"},
         "AutoCreateApplication":{"shape":"AutoCreateApplication"},
         "Process":{"shape":"ApplicationVersionProccess"}
@@ -914,7 +927,9 @@
       "type":"structure",
       "members":{
         "ApplicationName":{"shape":"ApplicationName"},
-        "VersionLabels":{"shape":"VersionLabelsList"}
+        "VersionLabels":{"shape":"VersionLabelsList"},
+        "MaxRecords":{"shape":"MaxRecords"},
+        "NextToken":{"shape":"Token"}
       }
     },
     "DescribeApplicationsMessage":{
@@ -1641,6 +1656,19 @@
       "type":"string",
       "max":100
     },
+    "SourceBuildInformation":{
+      "type":"structure",
+      "required":[
+        "SourceType",
+        "SourceRepository",
+        "SourceLocation"
+      ],
+      "members":{
+        "SourceType":{"shape":"SourceType"},
+        "SourceRepository":{"shape":"SourceRepository"},
+        "SourceLocation":{"shape":"SourceLocation"}
+      }
+    },
     "SourceBundleDeletionException":{
       "type":"structure",
       "members":{
@@ -1658,6 +1686,20 @@
         "ApplicationName":{"shape":"ApplicationName"},
         "TemplateName":{"shape":"ConfigurationTemplateName"}
       }
+    },
+    "SourceLocation":{
+      "type":"string",
+      "max":255,
+      "min":3,
+      "pattern":".+/.+"
+    },
+    "SourceRepository":{
+      "type":"string",
+      "enum":["CodeCommit"]
+    },
+    "SourceType":{
+      "type":"string",
+      "enum":["Git"]
     },
     "StatusCodes":{
       "type":"structure",

@@ -1,8 +1,10 @@
 package: github.com/realestate-com-au/shush
 import:
 - package: github.com/aws/aws-sdk-go
+  version: ^1.4.3
   subpackages:
   - aws
   - aws/session
   - service/kms
-- package: github.com/codegangsta/cli
+- package: github.com/urfave/cli
+  version: ^1.18.1

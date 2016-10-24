@@ -12,7 +12,30 @@ import (
 
 const opAssumeRole = "AssumeRole"
 
-// AssumeRoleRequest generates a request for the AssumeRole operation.
+// AssumeRoleRequest generates a "aws/request.Request" representing the
+// client's request for the AssumeRole operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// See AssumeRole for usage and error information.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the AssumeRole method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the AssumeRoleRequest method.
+//    req, resp := client.AssumeRoleRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *STS) AssumeRoleRequest(input *AssumeRoleInput) (req *request.Request, output *AssumeRoleOutput) {
 	op := &request.Operation{
 		Name:       opAssumeRole,
@@ -30,6 +53,8 @@ func (c *STS) AssumeRoleRequest(input *AssumeRoleInput) (req *request.Request, o
 	return
 }
 
+// AssumeRole API operation for AWS Security Token Service.
+//
 // Returns a set of temporary security credentials (consisting of an access
 // key ID, a secret access key, and a security token) that you can use to access
 // AWS resources that you might not normally have access to. Typically, you
@@ -40,8 +65,8 @@ func (c *STS) AssumeRoleRequest(input *AssumeRoleInput) (req *request.Request, o
 // in the IAM User Guide.
 //
 // Important: You cannot call AssumeRole by using AWS root account credentials;
-// access is denied. You must use IAM user credentials or temporary security
-// credentials to call AssumeRole.
+// access is denied. You must use credentials for an IAM user or an IAM role
+// to call AssumeRole.
 //
 // For cross-account access, imagine that you own multiple accounts and need
 // to access resources in each account. You could create long-term credentials
@@ -68,14 +93,14 @@ func (c *STS) AssumeRoleRequest(input *AssumeRoleInput) (req *request.Request, o
 // when calling AssumeRole, which can be from 900 seconds (15 minutes) to a
 // maximum of 3600 seconds (1 hour). The default is 1 hour.
 //
-// The temporary security credentials created by AssumeRole can be used to
-// make API calls to any AWS service with the following exception: you cannot
-// call the STS service's GetFederationToken or GetSessionToken APIs.
+// The temporary security credentials created by AssumeRole can be used to make
+// API calls to any AWS service with the following exception: you cannot call
+// the STS service's GetFederationToken or GetSessionToken APIs.
 //
-// Optionally, you can pass an IAM access policy to this operation. If you
-// choose not to pass a policy, the temporary security credentials that are
-// returned by the operation have the permissions that are defined in the access
-// policy of the role that is being assumed. If you pass a policy to this operation,
+// Optionally, you can pass an IAM access policy to this operation. If you choose
+// not to pass a policy, the temporary security credentials that are returned
+// by the operation have the permissions that are defined in the access policy
+// of the role that is being assumed. If you pass a policy to this operation,
 // the temporary security credentials that are returned by the operation have
 // the permissions that are allowed by both the access policy of the role that
 // is being assumed, and the policy that you pass. This gives you a way to further
@@ -99,7 +124,7 @@ func (c *STS) AssumeRoleRequest(input *AssumeRoleInput) (req *request.Request, o
 // a policy to the user (identical to the previous different account user),
 // or you can add the user as a principal directly in the role's trust policy
 //
-//  Using MFA with AssumeRole
+// Using MFA with AssumeRole
 //
 // You can optionally include multi-factor authentication (MFA) information
 // when you call AssumeRole. This is useful for cross-account scenarios in which
@@ -110,7 +135,7 @@ func (c *STS) AssumeRoleRequest(input *AssumeRoleInput) (req *request.Request, o
 // denied. The condition in a trust policy that tests for MFA authentication
 // might look like the following example.
 //
-//  "Condition": {"Bool": {"aws:MultiFactorAuthPresent": true}}
+// "Condition": {"Bool": {"aws:MultiFactorAuthPresent": true}}
 //
 // For more information, see Configuring MFA-Protected API Access (http://docs.aws.amazon.com/IAM/latest/UserGuide/MFAProtectedAPI.html)
 // in the IAM User Guide guide.
@@ -119,6 +144,31 @@ func (c *STS) AssumeRoleRequest(input *AssumeRoleInput) (req *request.Request, o
 // parameters. The SerialNumber value identifies the user's hardware or virtual
 // MFA device. The TokenCode is the time-based one-time password (TOTP) that
 // the MFA devices produces.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Security Token Service's
+// API operation AssumeRole for usage and error information.
+//
+// Returned Error Codes:
+//   * MalformedPolicyDocument
+//   The request was rejected because the policy document was malformed. The error
+//   message describes the specific error.
+//
+//   * PackedPolicyTooLarge
+//   The request was rejected because the policy document was too large. The error
+//   message describes how big the policy document is, in packed form, as a percentage
+//   of what the API allows.
+//
+//   * RegionDisabledException
+//   STS is not activated in the requested region for the account that is being
+//   asked to generate credentials. The account administrator must use the IAM
+//   console to activate STS in that region. For more information, see Activating
+//   and Deactivating AWS STS in an AWS Region (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_enable-regions.html)
+//   in the IAM User Guide.
+//
 func (c *STS) AssumeRole(input *AssumeRoleInput) (*AssumeRoleOutput, error) {
 	req, out := c.AssumeRoleRequest(input)
 	err := req.Send()
@@ -127,7 +177,30 @@ func (c *STS) AssumeRole(input *AssumeRoleInput) (*AssumeRoleOutput, error) {
 
 const opAssumeRoleWithSAML = "AssumeRoleWithSAML"
 
-// AssumeRoleWithSAMLRequest generates a request for the AssumeRoleWithSAML operation.
+// AssumeRoleWithSAMLRequest generates a "aws/request.Request" representing the
+// client's request for the AssumeRoleWithSAML operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// See AssumeRoleWithSAML for usage and error information.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the AssumeRoleWithSAML method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the AssumeRoleWithSAMLRequest method.
+//    req, resp := client.AssumeRoleWithSAMLRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *STS) AssumeRoleWithSAMLRequest(input *AssumeRoleWithSAMLInput) (req *request.Request, output *AssumeRoleWithSAMLOutput) {
 	op := &request.Operation{
 		Name:       opAssumeRoleWithSAML,
@@ -145,6 +218,8 @@ func (c *STS) AssumeRoleWithSAMLRequest(input *AssumeRoleWithSAMLInput) (req *re
 	return
 }
 
+// AssumeRoleWithSAML API operation for AWS Security Token Service.
+//
 // Returns a set of temporary security credentials for users who have been authenticated
 // via a SAML authentication response. This operation provides a mechanism for
 // tying an enterprise identity store or directory to role-based AWS access
@@ -164,26 +239,27 @@ func (c *STS) AssumeRoleWithSAMLRequest(input *AssumeRoleWithSAMLInput) (req *re
 // can be from 900 seconds (15 minutes) to a maximum of 3600 seconds (1 hour).
 // The default is 1 hour.
 //
-// The temporary security credentials created by AssumeRoleWithSAML can be
-// used to make API calls to any AWS service with the following exception: you
-// cannot call the STS service's GetFederationToken or GetSessionToken APIs.
+// The temporary security credentials created by AssumeRoleWithSAML can be used
+// to make API calls to any AWS service with the following exception: you cannot
+// call the STS service's GetFederationToken or GetSessionToken APIs.
 //
-// Optionally, you can pass an IAM access policy to this operation. If you
-// choose not to pass a policy, the temporary security credentials that are
-// returned by the operation have the permissions that are defined in the access
-// policy of the role that is being assumed. If you pass a policy to this operation,
+// Optionally, you can pass an IAM access policy to this operation. If you choose
+// not to pass a policy, the temporary security credentials that are returned
+// by the operation have the permissions that are defined in the access policy
+// of the role that is being assumed. If you pass a policy to this operation,
 // the temporary security credentials that are returned by the operation have
-// the permissions that are allowed by both the access policy of the role that
-// is being assumed, and the policy that you pass. This gives you a way to further
-// restrict the permissions for the resulting temporary security credentials.
-// You cannot use the passed policy to grant permissions that are in excess
-// of those allowed by the access policy of the role that is being assumed.
-// For more information, see Permissions for AssumeRole, AssumeRoleWithSAML,
-// and AssumeRoleWithWebIdentity (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_control-access_assumerole.html)
+// the permissions that are allowed by the intersection of both the access policy
+// of the role that is being assumed, and the policy that you pass. This means
+// that both policies must grant the permission for the action to be allowed.
+// This gives you a way to further restrict the permissions for the resulting
+// temporary security credentials. You cannot use the passed policy to grant
+// permissions that are in excess of those allowed by the access policy of the
+// role that is being assumed. For more information, see Permissions for AssumeRole,
+// AssumeRoleWithSAML, and AssumeRoleWithWebIdentity (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_control-access_assumerole.html)
 // in the IAM User Guide.
 //
-// Before your application can call AssumeRoleWithSAML, you must configure
-// your SAML identity provider (IdP) to issue the claims required by AWS. Additionally,
+// Before your application can call AssumeRoleWithSAML, you must configure your
+// SAML identity provider (IdP) to issue the claims required by AWS. Additionally,
 // you must use AWS Identity and Access Management (IAM) to create a SAML provider
 // entity in your AWS account that represents your identity provider, and create
 // an IAM role that specifies this SAML provider in its trust policy.
@@ -192,13 +268,65 @@ func (c *STS) AssumeRoleWithSAMLRequest(input *AssumeRoleWithSAMLInput) (req *re
 // The identity of the caller is validated by using keys in the metadata document
 // that is uploaded for the SAML provider entity for your identity provider.
 //
+// Calling AssumeRoleWithSAML can result in an entry in your AWS CloudTrail
+// logs. The entry includes the value in the NameID element of the SAML assertion.
+// We recommend that you use a NameIDType that is not associated with any personally
+// identifiable information (PII). For example, you could instead use the Persistent
+// Identifier (urn:oasis:names:tc:SAML:2.0:nameid-format:persistent).
+//
 // For more information, see the following resources:
 //
-//  About SAML 2.0-based Federation (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_saml.html)
-// in the IAM User Guide.   Creating SAML Identity Providers (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_saml.html)
-// in the IAM User Guide.   Configuring a Relying Party and Claims (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_saml_relying-party.html)
-// in the IAM User Guide.   Creating a Role for SAML 2.0 Federation (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-idp_saml.html)
-// in the IAM User Guide.
+//    * About SAML 2.0-based Federation (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_saml.html)
+//    in the IAM User Guide.
+//
+//    * Creating SAML Identity Providers (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_saml.html)
+//    in the IAM User Guide.
+//
+//    * Configuring a Relying Party and Claims (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_create_saml_relying-party.html)
+//    in the IAM User Guide.
+//
+//    * Creating a Role for SAML 2.0 Federation (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-idp_saml.html)
+//    in the IAM User Guide.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Security Token Service's
+// API operation AssumeRoleWithSAML for usage and error information.
+//
+// Returned Error Codes:
+//   * MalformedPolicyDocument
+//   The request was rejected because the policy document was malformed. The error
+//   message describes the specific error.
+//
+//   * PackedPolicyTooLarge
+//   The request was rejected because the policy document was too large. The error
+//   message describes how big the policy document is, in packed form, as a percentage
+//   of what the API allows.
+//
+//   * IDPRejectedClaim
+//   The identity provider (IdP) reported that authentication failed. This might
+//   be because the claim is invalid.
+//
+//   If this error is returned for the AssumeRoleWithWebIdentity operation, it
+//   can also mean that the claim has expired or has been explicitly revoked.
+//
+//   * InvalidIdentityToken
+//   The web identity token that was passed could not be validated by AWS. Get
+//   a new identity token from the identity provider and then retry the request.
+//
+//   * ExpiredTokenException
+//   The web identity token that was passed is expired or is not valid. Get a
+//   new identity token from the identity provider and then retry the request.
+//
+//   * RegionDisabledException
+//   STS is not activated in the requested region for the account that is being
+//   asked to generate credentials. The account administrator must use the IAM
+//   console to activate STS in that region. For more information, see Activating
+//   and Deactivating AWS STS in an AWS Region (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_enable-regions.html)
+//   in the IAM User Guide.
+//
 func (c *STS) AssumeRoleWithSAML(input *AssumeRoleWithSAMLInput) (*AssumeRoleWithSAMLOutput, error) {
 	req, out := c.AssumeRoleWithSAMLRequest(input)
 	err := req.Send()
@@ -207,7 +335,30 @@ func (c *STS) AssumeRoleWithSAML(input *AssumeRoleWithSAMLInput) (*AssumeRoleWit
 
 const opAssumeRoleWithWebIdentity = "AssumeRoleWithWebIdentity"
 
-// AssumeRoleWithWebIdentityRequest generates a request for the AssumeRoleWithWebIdentity operation.
+// AssumeRoleWithWebIdentityRequest generates a "aws/request.Request" representing the
+// client's request for the AssumeRoleWithWebIdentity operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// See AssumeRoleWithWebIdentity for usage and error information.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the AssumeRoleWithWebIdentity method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the AssumeRoleWithWebIdentityRequest method.
+//    req, resp := client.AssumeRoleWithWebIdentityRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *STS) AssumeRoleWithWebIdentityRequest(input *AssumeRoleWithWebIdentityInput) (req *request.Request, output *AssumeRoleWithWebIdentityOutput) {
 	op := &request.Operation{
 		Name:       opAssumeRoleWithWebIdentity,
@@ -225,13 +376,15 @@ func (c *STS) AssumeRoleWithWebIdentityRequest(input *AssumeRoleWithWebIdentityI
 	return
 }
 
+// AssumeRoleWithWebIdentity API operation for AWS Security Token Service.
+//
 // Returns a set of temporary security credentials for users who have been authenticated
 // in a mobile or web application with a web identity provider, such as Amazon
 // Cognito, Login with Amazon, Facebook, Google, or any OpenID Connect-compatible
 // identity provider.
 //
-//  For mobile applications, we recommend that you use Amazon Cognito. You
-// can use Amazon Cognito with the AWS SDK for iOS (http://aws.amazon.com/sdkforios/)
+// For mobile applications, we recommend that you use Amazon Cognito. You can
+// use Amazon Cognito with the AWS SDK for iOS (http://aws.amazon.com/sdkforios/)
 // and the AWS SDK for Android (http://aws.amazon.com/sdkforandroid/) to uniquely
 // identify a user and supply the user with a consistent identity throughout
 // the lifetime of an application.
@@ -241,7 +394,7 @@ func (c *STS) AssumeRoleWithWebIdentityRequest(input *AssumeRoleWithWebIdentityI
 // (http://docs.aws.amazon.com/mobile/sdkforios/developerguide/cognito-auth.html#d0e664)
 // in the AWS SDK for iOS Developer Guide.
 //
-//  Calling AssumeRoleWithWebIdentity does not require the use of AWS security
+// Calling AssumeRoleWithWebIdentity does not require the use of AWS security
 // credentials. Therefore, you can distribute an application (for example, on
 // mobile devices) that requests temporary security credentials without including
 // long-term AWS credentials in the application, and without deploying server-based
@@ -260,14 +413,14 @@ func (c *STS) AssumeRoleWithWebIdentityRequest(input *AssumeRoleWithWebIdentityI
 // AssumeRoleWithWebIdentity, which can be from 900 seconds (15 minutes) to
 // a maximum of 3600 seconds (1 hour). The default is 1 hour.
 //
-// The temporary security credentials created by AssumeRoleWithWebIdentity
-// can be used to make API calls to any AWS service with the following exception:
+// The temporary security credentials created by AssumeRoleWithWebIdentity can
+// be used to make API calls to any AWS service with the following exception:
 // you cannot call the STS service's GetFederationToken or GetSessionToken APIs.
 //
-// Optionally, you can pass an IAM access policy to this operation. If you
-// choose not to pass a policy, the temporary security credentials that are
-// returned by the operation have the permissions that are defined in the access
-// policy of the role that is being assumed. If you pass a policy to this operation,
+// Optionally, you can pass an IAM access policy to this operation. If you choose
+// not to pass a policy, the temporary security credentials that are returned
+// by the operation have the permissions that are defined in the access policy
+// of the role that is being assumed. If you pass a policy to this operation,
 // the temporary security credentials that are returned by the operation have
 // the permissions that are allowed by both the access policy of the role that
 // is being assumed, and the policy that you pass. This gives you a way to further
@@ -284,21 +437,83 @@ func (c *STS) AssumeRoleWithWebIdentityRequest(input *AssumeRoleWithWebIdentityI
 // the identity provider that is associated with the identity token. In other
 // words, the identity provider must be specified in the role's trust policy.
 //
+// Calling AssumeRoleWithWebIdentity can result in an entry in your AWS CloudTrail
+// logs. The entry includes the Subject (http://openid.net/specs/openid-connect-core-1_0.html#Claims)
+// of the provided Web Identity Token. We recommend that you avoid using any
+// personally identifiable information (PII) in this field. For example, you
+// could instead use a GUID or a pairwise identifier, as suggested in the OIDC
+// specification (http://openid.net/specs/openid-connect-core-1_0.html#SubjectIDTypes).
+//
 // For more information about how to use web identity federation and the AssumeRoleWithWebIdentity
 // API, see the following resources:
 //
-//   Using Web Identity Federation APIs for Mobile Apps (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_oidc_manual)
-// and Federation Through a Web-based Identity Provider (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html#api_assumerolewithwebidentity).
-//   Web Identity Federation Playground (https://web-identity-federation-playground.s3.amazonaws.com/index.html).
-// This interactive website lets you walk through the process of authenticating
-// via Login with Amazon, Facebook, or Google, getting temporary security credentials,
-// and then using those credentials to make a request to AWS.  AWS SDK for iOS
-// (http://aws.amazon.com/sdkforios/) and AWS SDK for Android (http://aws.amazon.com/sdkforandroid/).
-// These toolkits contain sample apps that show how to invoke the identity providers,
-// and then how to use the information from these providers to get and use temporary
-// security credentials.  Web Identity Federation with Mobile Applications (http://aws.amazon.com/articles/4617974389850313).
-// This article discusses web identity federation and shows an example of how
-// to use web identity federation to get access to content in Amazon S3.
+//    * Using Web Identity Federation APIs for Mobile Apps (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_oidc_manual)
+//    and Federation Through a Web-based Identity Provider (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html#api_assumerolewithwebidentity).
+//
+//
+//    *  Web Identity Federation Playground (https://web-identity-federation-playground.s3.amazonaws.com/index.html).
+//    This interactive website lets you walk through the process of authenticating
+//    via Login with Amazon, Facebook, or Google, getting temporary security
+//    credentials, and then using those credentials to make a request to AWS.
+//
+//
+//    * AWS SDK for iOS (http://aws.amazon.com/sdkforios/) and AWS SDK for Android
+//    (http://aws.amazon.com/sdkforandroid/). These toolkits contain sample
+//    apps that show how to invoke the identity providers, and then how to use
+//    the information from these providers to get and use temporary security
+//    credentials.
+//
+//    * Web Identity Federation with Mobile Applications (http://aws.amazon.com/articles/4617974389850313).
+//    This article discusses web identity federation and shows an example of
+//    how to use web identity federation to get access to content in Amazon
+//    S3.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Security Token Service's
+// API operation AssumeRoleWithWebIdentity for usage and error information.
+//
+// Returned Error Codes:
+//   * MalformedPolicyDocument
+//   The request was rejected because the policy document was malformed. The error
+//   message describes the specific error.
+//
+//   * PackedPolicyTooLarge
+//   The request was rejected because the policy document was too large. The error
+//   message describes how big the policy document is, in packed form, as a percentage
+//   of what the API allows.
+//
+//   * IDPRejectedClaim
+//   The identity provider (IdP) reported that authentication failed. This might
+//   be because the claim is invalid.
+//
+//   If this error is returned for the AssumeRoleWithWebIdentity operation, it
+//   can also mean that the claim has expired or has been explicitly revoked.
+//
+//   * IDPCommunicationError
+//   The request could not be fulfilled because the non-AWS identity provider
+//   (IDP) that was asked to verify the incoming identity token could not be reached.
+//   This is often a transient error caused by network conditions. Retry the request
+//   a limited number of times so that you don't exceed the request rate. If the
+//   error persists, the non-AWS identity provider might be down or not responding.
+//
+//   * InvalidIdentityToken
+//   The web identity token that was passed could not be validated by AWS. Get
+//   a new identity token from the identity provider and then retry the request.
+//
+//   * ExpiredTokenException
+//   The web identity token that was passed is expired or is not valid. Get a
+//   new identity token from the identity provider and then retry the request.
+//
+//   * RegionDisabledException
+//   STS is not activated in the requested region for the account that is being
+//   asked to generate credentials. The account administrator must use the IAM
+//   console to activate STS in that region. For more information, see Activating
+//   and Deactivating AWS STS in an AWS Region (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_enable-regions.html)
+//   in the IAM User Guide.
+//
 func (c *STS) AssumeRoleWithWebIdentity(input *AssumeRoleWithWebIdentityInput) (*AssumeRoleWithWebIdentityOutput, error) {
 	req, out := c.AssumeRoleWithWebIdentityRequest(input)
 	err := req.Send()
@@ -307,7 +522,30 @@ func (c *STS) AssumeRoleWithWebIdentity(input *AssumeRoleWithWebIdentityInput) (
 
 const opDecodeAuthorizationMessage = "DecodeAuthorizationMessage"
 
-// DecodeAuthorizationMessageRequest generates a request for the DecodeAuthorizationMessage operation.
+// DecodeAuthorizationMessageRequest generates a "aws/request.Request" representing the
+// client's request for the DecodeAuthorizationMessage operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// See DecodeAuthorizationMessage for usage and error information.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the DecodeAuthorizationMessage method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the DecodeAuthorizationMessageRequest method.
+//    req, resp := client.DecodeAuthorizationMessageRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *STS) DecodeAuthorizationMessageRequest(input *DecodeAuthorizationMessageInput) (req *request.Request, output *DecodeAuthorizationMessageOutput) {
 	op := &request.Operation{
 		Name:       opDecodeAuthorizationMessage,
@@ -325,6 +563,8 @@ func (c *STS) DecodeAuthorizationMessageRequest(input *DecodeAuthorizationMessag
 	return
 }
 
+// DecodeAuthorizationMessage API operation for AWS Security Token Service.
+//
 // Decodes additional information about the authorization status of a request
 // from an encoded message returned in response to an AWS request.
 //
@@ -333,22 +573,44 @@ func (c *STS) DecodeAuthorizationMessageRequest(input *DecodeAuthorizationMessag
 // (an HTTP 403 response). Some AWS actions additionally return an encoded message
 // that can provide details about this authorization failure.
 //
-//  Only certain AWS actions return an encoded authorization message. The documentation
+// Only certain AWS actions return an encoded authorization message. The documentation
 // for an individual action indicates whether that action returns an encoded
-// message in addition to returning an HTTP code.  The message is encoded because
-// the details of the authorization status can constitute privileged information
-// that the user who requested the action should not see. To decode an authorization
-// status message, a user must be granted permissions via an IAM policy to request
-// the DecodeAuthorizationMessage (sts:DecodeAuthorizationMessage) action.
+// message in addition to returning an HTTP code.
+//
+// The message is encoded because the details of the authorization status can
+// constitute privileged information that the user who requested the action
+// should not see. To decode an authorization status message, a user must be
+// granted permissions via an IAM policy to request the DecodeAuthorizationMessage
+// (sts:DecodeAuthorizationMessage) action.
 //
 // The decoded message includes the following type of information:
 //
-//  Whether the request was denied due to an explicit deny or due to the absence
-// of an explicit allow. For more information, see Determining Whether a Request
-// is Allowed or Denied (http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html#policy-eval-denyallow)
-// in the IAM User Guide.  The principal who made the request. The requested
-// action. The requested resource. The values of condition keys in the context
-// of the user's request.
+//    * Whether the request was denied due to an explicit deny or due to the
+//    absence of an explicit allow. For more information, see Determining Whether
+//    a Request is Allowed or Denied (http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html#policy-eval-denyallow)
+//    in the IAM User Guide.
+//
+//    * The principal who made the request.
+//
+//    * The requested action.
+//
+//    * The requested resource.
+//
+//    * The values of condition keys in the context of the user's request.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Security Token Service's
+// API operation DecodeAuthorizationMessage for usage and error information.
+//
+// Returned Error Codes:
+//   * InvalidAuthorizationMessageException
+//   The error returned if the message passed to DecodeAuthorizationMessage was
+//   invalid. This can happen if the token contains invalid characters, such as
+//   linebreaks.
+//
 func (c *STS) DecodeAuthorizationMessage(input *DecodeAuthorizationMessageInput) (*DecodeAuthorizationMessageOutput, error) {
 	req, out := c.DecodeAuthorizationMessageRequest(input)
 	err := req.Send()
@@ -357,7 +619,30 @@ func (c *STS) DecodeAuthorizationMessage(input *DecodeAuthorizationMessageInput)
 
 const opGetCallerIdentity = "GetCallerIdentity"
 
-// GetCallerIdentityRequest generates a request for the GetCallerIdentity operation.
+// GetCallerIdentityRequest generates a "aws/request.Request" representing the
+// client's request for the GetCallerIdentity operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// See GetCallerIdentity for usage and error information.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetCallerIdentity method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetCallerIdentityRequest method.
+//    req, resp := client.GetCallerIdentityRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *STS) GetCallerIdentityRequest(input *GetCallerIdentityInput) (req *request.Request, output *GetCallerIdentityOutput) {
 	op := &request.Operation{
 		Name:       opGetCallerIdentity,
@@ -375,8 +660,17 @@ func (c *STS) GetCallerIdentityRequest(input *GetCallerIdentityInput) (req *requ
 	return
 }
 
+// GetCallerIdentity API operation for AWS Security Token Service.
+//
 // Returns details about the IAM identity whose credentials are used to call
 // the API.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Security Token Service's
+// API operation GetCallerIdentity for usage and error information.
 func (c *STS) GetCallerIdentity(input *GetCallerIdentityInput) (*GetCallerIdentityOutput, error) {
 	req, out := c.GetCallerIdentityRequest(input)
 	err := req.Send()
@@ -385,7 +679,30 @@ func (c *STS) GetCallerIdentity(input *GetCallerIdentityInput) (*GetCallerIdenti
 
 const opGetFederationToken = "GetFederationToken"
 
-// GetFederationTokenRequest generates a request for the GetFederationToken operation.
+// GetFederationTokenRequest generates a "aws/request.Request" representing the
+// client's request for the GetFederationToken operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// See GetFederationToken for usage and error information.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetFederationToken method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetFederationTokenRequest method.
+//    req, resp := client.GetFederationTokenRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *STS) GetFederationTokenRequest(input *GetFederationTokenInput) (req *request.Request, output *GetFederationTokenOutput) {
 	op := &request.Operation{
 		Name:       opGetFederationToken,
@@ -403,6 +720,8 @@ func (c *STS) GetFederationTokenRequest(input *GetFederationTokenInput) (req *re
 	return
 }
 
+// GetFederationToken API operation for AWS Security Token Service.
+//
 // Returns a set of temporary security credentials (consisting of an access
 // key ID, a secret access key, and a security token) for a federated user.
 // A typical use is in a proxy application that gets temporary security credentials
@@ -415,20 +734,20 @@ func (c *STS) GetFederationTokenRequest(input *GetFederationTokenInput) (req *re
 // and Comparing the AWS STS APIs (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html#stsapi_comparison)
 // in the IAM User Guide.
 //
-//   If you are creating a mobile-based or browser-based app that can authenticate
+// If you are creating a mobile-based or browser-based app that can authenticate
 // users using a web identity provider like Login with Amazon, Facebook, Google,
 // or an OpenID Connect-compatible identity provider, we recommend that you
 // use Amazon Cognito (http://aws.amazon.com/cognito/) or AssumeRoleWithWebIdentity.
 // For more information, see Federation Through a Web-based Identity Provider
 // (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html#api_assumerolewithwebidentity).
 //
-//  The GetFederationToken action must be called by using the long-term AWS
-// security credentials of an IAM user. You can also call GetFederationToken
-// using the security credentials of an AWS root account, but we do not recommended
-// it. Instead, we recommend that you create an IAM user for the purpose of
-// the proxy application and then attach a policy to the IAM user that limits
-// federated users to only the actions and resources that they need access to.
-// For more information, see IAM Best Practices (http://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
+// The GetFederationToken action must be called by using the long-term AWS security
+// credentials of an IAM user. You can also call GetFederationToken using the
+// security credentials of an AWS root account, but we do not recommended it.
+// Instead, we recommend that you create an IAM user for the purpose of the
+// proxy application and then attach a policy to the IAM user that limits federated
+// users to only the actions and resources that they need access to. For more
+// information, see IAM Best Practices (http://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html)
 // in the IAM User Guide.
 //
 // The temporary security credentials that are obtained by using the long-term
@@ -437,29 +756,32 @@ func (c *STS) GetFederationTokenRequest(input *GetFederationTokenInput) (req *re
 // is 43200 seconds (12 hours). Temporary credentials that are obtained by using
 // AWS root account credentials have a maximum duration of 3600 seconds (1 hour).
 //
-// The temporary security credentials created by GetFederationToken can be
-// used to make API calls to any AWS service with the following exceptions:
+// The temporary security credentials created by GetFederationToken can be used
+// to make API calls to any AWS service with the following exceptions:
 //
-//   You cannot use these credentials to call any IAM APIs.
+//    * You cannot use these credentials to call any IAM APIs.
 //
-//   You cannot call any STS APIs.
+//    * You cannot call any STS APIs.
 //
-//    Permissions
+// Permissions
 //
 // The permissions for the temporary security credentials returned by GetFederationToken
 // are determined by a combination of the following:
 //
-//  The policy or policies that are attached to the IAM user whose credentials
-// are used to call GetFederationToken. The policy that is passed as a parameter
-// in the call.  The passed policy is attached to the temporary security credentials
-// that result from the GetFederationToken API call--that is, to the federated
-// user. When the federated user makes an AWS request, AWS evaluates the policy
-// attached to the federated user in combination with the policy or policies
-// attached to the IAM user whose credentials were used to call GetFederationToken.
-// AWS allows the federated user's request only when both the federated user
-// and the IAM user are explicitly allowed to perform the requested action.
-// The passed policy cannot grant more permissions than those that are defined
-// in the IAM user policy.
+//    * The policy or policies that are attached to the IAM user whose credentials
+//    are used to call GetFederationToken.
+//
+//    * The policy that is passed as a parameter in the call.
+//
+// The passed policy is attached to the temporary security credentials that
+// result from the GetFederationToken API call--that is, to the federated user.
+// When the federated user makes an AWS request, AWS evaluates the policy attached
+// to the federated user in combination with the policy or policies attached
+// to the IAM user whose credentials were used to call GetFederationToken. AWS
+// allows the federated user's request only when both the federated user and
+// the IAM user are explicitly allowed to perform the requested action. The
+// passed policy cannot grant more permissions than those that are defined in
+// the IAM user policy.
 //
 // A typical use case is that the permissions of the IAM user whose credentials
 // are used to call GetFederationToken are designed to allow access to all the
@@ -478,6 +800,31 @@ func (c *STS) GetFederationTokenRequest(input *GetFederationTokenInput) (req *re
 // For information about using GetFederationToken to create temporary security
 // credentials, see GetFederationToken—Federation Through a Custom Identity
 // Broker (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html#api_getfederationtoken).
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Security Token Service's
+// API operation GetFederationToken for usage and error information.
+//
+// Returned Error Codes:
+//   * MalformedPolicyDocument
+//   The request was rejected because the policy document was malformed. The error
+//   message describes the specific error.
+//
+//   * PackedPolicyTooLarge
+//   The request was rejected because the policy document was too large. The error
+//   message describes how big the policy document is, in packed form, as a percentage
+//   of what the API allows.
+//
+//   * RegionDisabledException
+//   STS is not activated in the requested region for the account that is being
+//   asked to generate credentials. The account administrator must use the IAM
+//   console to activate STS in that region. For more information, see Activating
+//   and Deactivating AWS STS in an AWS Region (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_enable-regions.html)
+//   in the IAM User Guide.
+//
 func (c *STS) GetFederationToken(input *GetFederationTokenInput) (*GetFederationTokenOutput, error) {
 	req, out := c.GetFederationTokenRequest(input)
 	err := req.Send()
@@ -486,7 +833,30 @@ func (c *STS) GetFederationToken(input *GetFederationTokenInput) (*GetFederation
 
 const opGetSessionToken = "GetSessionToken"
 
-// GetSessionTokenRequest generates a request for the GetSessionToken operation.
+// GetSessionTokenRequest generates a "aws/request.Request" representing the
+// client's request for the GetSessionToken operation. The "output" return
+// value can be used to capture response data after the request's "Send" method
+// is called.
+//
+// See GetSessionToken for usage and error information.
+//
+// Creating a request object using this method should be used when you want to inject
+// custom logic into the request's lifecycle using a custom handler, or if you want to
+// access properties on the request object before or after sending the request. If
+// you just want the service response, call the GetSessionToken method directly
+// instead.
+//
+// Note: You must call the "Send" method on the returned request object in order
+// to execute the request.
+//
+//    // Example sending a request using the GetSessionTokenRequest method.
+//    req, resp := client.GetSessionTokenRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
 func (c *STS) GetSessionTokenRequest(input *GetSessionTokenInput) (req *request.Request, output *GetSessionTokenOutput) {
 	op := &request.Operation{
 		Name:       opGetSessionToken,
@@ -504,6 +874,8 @@ func (c *STS) GetSessionTokenRequest(input *GetSessionTokenInput) (req *request.
 	return
 }
 
+// GetSessionToken API operation for AWS Security Token Service.
+//
 // Returns a set of temporary credentials for an AWS account or IAM user. The
 // credentials consist of an access key ID, a secret access key, and a security
 // token. Typically, you use GetSessionToken if you want to use MFA to protect
@@ -529,17 +901,17 @@ func (c *STS) GetSessionTokenRequest(input *GetSessionTokenInput) (req *request.
 // The temporary security credentials created by GetSessionToken can be used
 // to make API calls to any AWS service with the following exceptions:
 //
-//   You cannot call any IAM APIs unless MFA authentication information is
-// included in the request.
+//    * You cannot call any IAM APIs unless MFA authentication information is
+//    included in the request.
 //
-//   You cannot call any STS API except AssumeRole.
+//    * You cannot call any STS API exceptAssumeRole.
 //
-//    We recommend that you do not call GetSessionToken with root account credentials.
+// We recommend that you do not call GetSessionToken with root account credentials.
 // Instead, follow our best practices (http://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html#create-iam-users)
 // by creating one or more IAM users, giving them the necessary permissions,
 // and using IAM users for everyday interaction with AWS.
 //
-//  The permissions associated with the temporary security credentials returned
+// The permissions associated with the temporary security credentials returned
 // by GetSessionToken are based on the permissions associated with account or
 // IAM user whose credentials are used to call the action. If GetSessionToken
 // is called using root account credentials, the temporary credentials have
@@ -550,6 +922,22 @@ func (c *STS) GetSessionTokenRequest(input *GetSessionTokenInput) (req *request.
 // For more information about using GetSessionToken to create temporary credentials,
 // go to Temporary Credentials for Users in Untrusted Environments (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_request.html#api_getsessiontoken)
 // in the IAM User Guide.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Security Token Service's
+// API operation GetSessionToken for usage and error information.
+//
+// Returned Error Codes:
+//   * RegionDisabledException
+//   STS is not activated in the requested region for the account that is being
+//   asked to generate credentials. The account administrator must use the IAM
+//   console to activate STS in that region. For more information, see Activating
+//   and Deactivating AWS STS in an AWS Region (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_enable-regions.html)
+//   in the IAM User Guide.
+//
 func (c *STS) GetSessionToken(input *GetSessionTokenInput) (*GetSessionTokenOutput, error) {
 	req, out := c.GetSessionTokenRequest(input)
 	err := req.Send()
@@ -562,6 +950,14 @@ type AssumeRoleInput struct {
 	// The duration, in seconds, of the role session. The value can range from 900
 	// seconds (15 minutes) to 3600 seconds (1 hour). By default, the value is set
 	// to 3600 seconds.
+	//
+	// This is separate from the duration of a console session that you might request
+	// using the returned credentials. The request to the federation endpoint for
+	// a console sign-in token takes a SessionDuration parameter that specifies
+	// the maximum length of the console session, separately from the DurationSeconds
+	// parameter on this API. For more information, see Creating a URL that Enables
+	// Federated Users to Access the AWS Management Console (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_enable-console-custom-url.html)
+	// in the IAM User Guide.
 	DurationSeconds *int64 `min:"900" type:"integer"`
 
 	// A unique identifier that is used by third parties when assuming roles in
@@ -573,6 +969,11 @@ type AssumeRoleInput struct {
 	// created it. For more information about the external ID, see How to Use an
 	// External ID When Granting Access to Your AWS Resources to a Third Party (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_create_for-user_externalid.html)
 	// in the IAM User Guide.
+	//
+	// The format for this parameter, as described by its regex pattern, is a string
+	// of characters consisting of upper- and lower-case alphanumeric characters
+	// with no spaces. You can also include underscores or any of the following
+	// characters: =,.@:\/-
 	ExternalId *string `min:"2" type:"string"`
 
 	// An IAM policy in JSON format.
@@ -588,6 +989,12 @@ type AssumeRoleInput struct {
 	// and AssumeRoleWithWebIdentity (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_control-access_assumerole.html)
 	// in the IAM User Guide.
 	//
+	// The format for this parameter, as described by its regex pattern, is a string
+	// of characters up to 2048 characters in length. The characters can be any
+	// ASCII character from the space character to the end of the valid character
+	// list (\u0020-\u00FF). It can also include the tab (\u0009), linefeed (\u000A),
+	// and carriage return (\u000D) characters.
+	//
 	// The policy plain text must be 2048 bytes or shorter. However, an internal
 	// conversion compresses it into a packed binary format with a separate limit.
 	// The PackedPolicySize response element indicates by percentage how close to
@@ -596,6 +1003,8 @@ type AssumeRoleInput struct {
 	Policy *string `min:"1" type:"string"`
 
 	// The Amazon Resource Name (ARN) of the role to assume.
+	//
+	// RoleArn is a required field
 	RoleArn *string `min:"20" type:"string" required:"true"`
 
 	// An identifier for the assumed role session.
@@ -607,6 +1016,13 @@ type AssumeRoleInput struct {
 	// of the assumed role principal. This means that subsequent cross-account API
 	// requests using the temporary security credentials will expose the role session
 	// name to the external account in their CloudTrail logs.
+	//
+	// The format for this parameter, as described by its regex pattern, is a string
+	// of characters consisting of upper- and lower-case alphanumeric characters
+	// with no spaces. You can also include underscores or any of the following
+	// characters: =,.@-
+	//
+	// RoleSessionName is a required field
 	RoleSessionName *string `min:"2" type:"string" required:"true"`
 
 	// The identification number of the MFA device that is associated with the user
@@ -614,12 +1030,20 @@ type AssumeRoleInput struct {
 	// of the role being assumed includes a condition that requires MFA authentication.
 	// The value is either the serial number for a hardware device (such as GAHT12345678)
 	// or an Amazon Resource Name (ARN) for a virtual device (such as arn:aws:iam::123456789012:mfa/user).
+	//
+	// The format for this parameter, as described by its regex pattern, is a string
+	// of characters consisting of upper- and lower-case alphanumeric characters
+	// with no spaces. You can also include underscores or any of the following
+	// characters: =,.@-
 	SerialNumber *string `min:"9" type:"string"`
 
 	// The value provided by the MFA device, if the trust policy of the role being
 	// assumed requires MFA (that is, if the policy includes a condition that tests
 	// for MFA). If the role being assumed requires MFA and if the TokenCode value
 	// is missing or expired, the AssumeRole call returns an "access denied" error.
+	//
+	// The format for this parameter, as described by its regex pattern, is a sequence
+	// of six numeric digits.
 	TokenCode *string `min:"6" type:"string"`
 }
 
@@ -631,6 +1055,43 @@ func (s AssumeRoleInput) String() string {
 // GoString returns the string representation
 func (s AssumeRoleInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *AssumeRoleInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "AssumeRoleInput"}
+	if s.DurationSeconds != nil && *s.DurationSeconds < 900 {
+		invalidParams.Add(request.NewErrParamMinValue("DurationSeconds", 900))
+	}
+	if s.ExternalId != nil && len(*s.ExternalId) < 2 {
+		invalidParams.Add(request.NewErrParamMinLen("ExternalId", 2))
+	}
+	if s.Policy != nil && len(*s.Policy) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Policy", 1))
+	}
+	if s.RoleArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("RoleArn"))
+	}
+	if s.RoleArn != nil && len(*s.RoleArn) < 20 {
+		invalidParams.Add(request.NewErrParamMinLen("RoleArn", 20))
+	}
+	if s.RoleSessionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("RoleSessionName"))
+	}
+	if s.RoleSessionName != nil && len(*s.RoleSessionName) < 2 {
+		invalidParams.Add(request.NewErrParamMinLen("RoleSessionName", 2))
+	}
+	if s.SerialNumber != nil && len(*s.SerialNumber) < 9 {
+		invalidParams.Add(request.NewErrParamMinLen("SerialNumber", 9))
+	}
+	if s.TokenCode != nil && len(*s.TokenCode) < 6 {
+		invalidParams.Add(request.NewErrParamMinLen("TokenCode", 6))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Contains the response to a successful AssumeRole request, including temporary
@@ -648,10 +1109,10 @@ type AssumeRoleOutput struct {
 	// The temporary security credentials, which include an access key ID, a secret
 	// access key, and a security (or session) token.
 	//
-	// Note: The size of the security token that STS APIs return is not fixed.
-	// We strongly recommend that you make no assumptions about the maximum size.
-	// As of this writing, the typical size is less than 4096 bytes, but that can
-	// vary. Also, future updates to AWS might require larger sizes.
+	// Note: The size of the security token that STS APIs return is not fixed. We
+	// strongly recommend that you make no assumptions about the maximum size. As
+	// of this writing, the typical size is less than 4096 bytes, but that can vary.
+	// Also, future updates to AWS might require larger sizes.
 	Credentials *Credentials `type:"structure"`
 
 	// A percentage value that indicates the size of the policy in packed form.
@@ -679,8 +1140,13 @@ type AssumeRoleWithSAMLInput struct {
 	// response's SessionNotOnOrAfter value. The actual expiration time is whichever
 	// value is shorter.
 	//
-	// The maximum duration for a session is 1 hour, and the minimum duration is
-	// 15 minutes, even if values outside this range are specified.
+	// This is separate from the duration of a console session that you might request
+	// using the returned credentials. The request to the federation endpoint for
+	// a console sign-in token takes a SessionDuration parameter that specifies
+	// the maximum length of the console session, separately from the DurationSeconds
+	// parameter on this API. For more information, see Enabling SAML 2.0 Federated
+	// Users to Access the AWS Management Console (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_enable-console-saml.html)
+	// in the IAM User Guide.
 	DurationSeconds *int64 `min:"900" type:"integer"`
 
 	// An IAM policy in JSON format.
@@ -696,6 +1162,12 @@ type AssumeRoleWithSAMLInput struct {
 	// (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_control-access_assumerole.html)
 	// in the IAM User Guide.
 	//
+	// The format for this parameter, as described by its regex pattern, is a string
+	// of characters up to 2048 characters in length. The characters can be any
+	// ASCII character from the space character to the end of the valid character
+	// list (\u0020-\u00FF). It can also include the tab (\u0009), linefeed (\u000A),
+	// and carriage return (\u000D) characters.
+	//
 	// The policy plain text must be 2048 bytes or shorter. However, an internal
 	// conversion compresses it into a packed binary format with a separate limit.
 	// The PackedPolicySize response element indicates by percentage how close to
@@ -705,16 +1177,21 @@ type AssumeRoleWithSAMLInput struct {
 
 	// The Amazon Resource Name (ARN) of the SAML provider in IAM that describes
 	// the IdP.
+	//
+	// PrincipalArn is a required field
 	PrincipalArn *string `min:"20" type:"string" required:"true"`
 
 	// The Amazon Resource Name (ARN) of the role that the caller is assuming.
+	//
+	// RoleArn is a required field
 	RoleArn *string `min:"20" type:"string" required:"true"`
 
 	// The base-64 encoded SAML authentication response provided by the IdP.
 	//
-	// For more information, see Configuring a Relying Party and Adding Claims
-	// (http://docs.aws.amazon.com/IAM/latest/UserGuide/create-role-saml-IdP-tasks.html)
+	// For more information, see Configuring a Relying Party and Adding Claims (http://docs.aws.amazon.com/IAM/latest/UserGuide/create-role-saml-IdP-tasks.html)
 	// in the Using IAM guide.
+	//
+	// SAMLAssertion is a required field
 	SAMLAssertion *string `min:"4" type:"string" required:"true"`
 }
 
@@ -726,6 +1203,40 @@ func (s AssumeRoleWithSAMLInput) String() string {
 // GoString returns the string representation
 func (s AssumeRoleWithSAMLInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *AssumeRoleWithSAMLInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "AssumeRoleWithSAMLInput"}
+	if s.DurationSeconds != nil && *s.DurationSeconds < 900 {
+		invalidParams.Add(request.NewErrParamMinValue("DurationSeconds", 900))
+	}
+	if s.Policy != nil && len(*s.Policy) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Policy", 1))
+	}
+	if s.PrincipalArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("PrincipalArn"))
+	}
+	if s.PrincipalArn != nil && len(*s.PrincipalArn) < 20 {
+		invalidParams.Add(request.NewErrParamMinLen("PrincipalArn", 20))
+	}
+	if s.RoleArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("RoleArn"))
+	}
+	if s.RoleArn != nil && len(*s.RoleArn) < 20 {
+		invalidParams.Add(request.NewErrParamMinLen("RoleArn", 20))
+	}
+	if s.SAMLAssertion == nil {
+		invalidParams.Add(request.NewErrParamRequired("SAMLAssertion"))
+	}
+	if s.SAMLAssertion != nil && len(*s.SAMLAssertion) < 4 {
+		invalidParams.Add(request.NewErrParamMinLen("SAMLAssertion", 4))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Contains the response to a successful AssumeRoleWithSAML request, including
@@ -744,10 +1255,10 @@ type AssumeRoleWithSAMLOutput struct {
 	// The temporary security credentials, which include an access key ID, a secret
 	// access key, and a security (or session) token.
 	//
-	// Note: The size of the security token that STS APIs return is not fixed.
-	// We strongly recommend that you make no assumptions about the maximum size.
-	// As of this writing, the typical size is less than 4096 bytes, but that can
-	// vary. Also, future updates to AWS might require larger sizes.
+	// Note: The size of the security token that STS APIs return is not fixed. We
+	// strongly recommend that you make no assumptions about the maximum size. As
+	// of this writing, the typical size is less than 4096 bytes, but that can vary.
+	// Also, future updates to AWS might require larger sizes.
 	Credentials *Credentials `type:"structure"`
 
 	// The value of the Issuer element of the SAML assertion.
@@ -760,7 +1271,7 @@ type AssumeRoleWithSAMLOutput struct {
 	//
 	// The following pseudocode shows how the hash value is calculated:
 	//
-	//  BASE64 ( SHA1 ( "https://example.com/saml" + "123456789012" + "/MySAMLIdP"
+	// BASE64 ( SHA1 ( "https://example.com/saml" + "123456789012" + "/MySAMLIdP"
 	// ) )
 	NameQualifier *string `type:"string"`
 
@@ -776,7 +1287,7 @@ type AssumeRoleWithSAMLOutput struct {
 	// element of the SAML assertion. Typical examples of the format are transient
 	// or persistent.
 	//
-	//  If the format includes the prefix urn:oasis:names:tc:SAML:2.0:nameid-format,
+	// If the format includes the prefix urn:oasis:names:tc:SAML:2.0:nameid-format,
 	// that prefix is removed. For example, urn:oasis:names:tc:SAML:2.0:nameid-format:transient
 	// is returned as transient. If the format includes any other prefix, the format
 	// is returned with no modifications.
@@ -799,6 +1310,14 @@ type AssumeRoleWithWebIdentityInput struct {
 	// The duration, in seconds, of the role session. The value can range from 900
 	// seconds (15 minutes) to 3600 seconds (1 hour). By default, the value is set
 	// to 3600 seconds.
+	//
+	// This is separate from the duration of a console session that you might request
+	// using the returned credentials. The request to the federation endpoint for
+	// a console sign-in token takes a SessionDuration parameter that specifies
+	// the maximum length of the console session, separately from the DurationSeconds
+	// parameter on this API. For more information, see Creating a URL that Enables
+	// Federated Users to Access the AWS Management Console (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_providers_enable-console-custom-url.html)
+	// in the IAM User Guide.
 	DurationSeconds *int64 `min:"900" type:"integer"`
 
 	// An IAM policy in JSON format.
@@ -812,6 +1331,12 @@ type AssumeRoleWithWebIdentityInput struct {
 	// by the access policy of the role that is being assumed. For more information,
 	// see Permissions for AssumeRoleWithWebIdentity (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_control-access_assumerole.html)
 	// in the IAM User Guide.
+	//
+	// The format for this parameter, as described by its regex pattern, is a string
+	// of characters up to 2048 characters in length. The characters can be any
+	// ASCII character from the space character to the end of the valid character
+	// list (\u0020-\u00FF). It can also include the tab (\u0009), linefeed (\u000A),
+	// and carriage return (\u000D) characters.
 	//
 	// The policy plain text must be 2048 bytes or shorter. However, an internal
 	// conversion compresses it into a packed binary format with a separate limit.
@@ -830,6 +1355,8 @@ type AssumeRoleWithWebIdentityInput struct {
 	ProviderId *string `min:"4" type:"string"`
 
 	// The Amazon Resource Name (ARN) of the role that the caller is assuming.
+	//
+	// RoleArn is a required field
 	RoleArn *string `min:"20" type:"string" required:"true"`
 
 	// An identifier for the assumed role session. Typically, you pass the name
@@ -837,12 +1364,21 @@ type AssumeRoleWithWebIdentityInput struct {
 	// That way, the temporary security credentials that your application will use
 	// are associated with that user. This session name is included as part of the
 	// ARN and assumed role ID in the AssumedRoleUser response element.
+	//
+	// The format for this parameter, as described by its regex pattern, is a string
+	// of characters consisting of upper- and lower-case alphanumeric characters
+	// with no spaces. You can also include underscores or any of the following
+	// characters: =,.@-
+	//
+	// RoleSessionName is a required field
 	RoleSessionName *string `min:"2" type:"string" required:"true"`
 
 	// The OAuth 2.0 access token or OpenID Connect ID token that is provided by
 	// the identity provider. Your application must get this token by authenticating
 	// the user who is using your application with a web identity provider before
 	// the application makes an AssumeRoleWithWebIdentity call.
+	//
+	// WebIdentityToken is a required field
 	WebIdentityToken *string `min:"4" type:"string" required:"true"`
 }
 
@@ -854,6 +1390,43 @@ func (s AssumeRoleWithWebIdentityInput) String() string {
 // GoString returns the string representation
 func (s AssumeRoleWithWebIdentityInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *AssumeRoleWithWebIdentityInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "AssumeRoleWithWebIdentityInput"}
+	if s.DurationSeconds != nil && *s.DurationSeconds < 900 {
+		invalidParams.Add(request.NewErrParamMinValue("DurationSeconds", 900))
+	}
+	if s.Policy != nil && len(*s.Policy) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Policy", 1))
+	}
+	if s.ProviderId != nil && len(*s.ProviderId) < 4 {
+		invalidParams.Add(request.NewErrParamMinLen("ProviderId", 4))
+	}
+	if s.RoleArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("RoleArn"))
+	}
+	if s.RoleArn != nil && len(*s.RoleArn) < 20 {
+		invalidParams.Add(request.NewErrParamMinLen("RoleArn", 20))
+	}
+	if s.RoleSessionName == nil {
+		invalidParams.Add(request.NewErrParamRequired("RoleSessionName"))
+	}
+	if s.RoleSessionName != nil && len(*s.RoleSessionName) < 2 {
+		invalidParams.Add(request.NewErrParamMinLen("RoleSessionName", 2))
+	}
+	if s.WebIdentityToken == nil {
+		invalidParams.Add(request.NewErrParamRequired("WebIdentityToken"))
+	}
+	if s.WebIdentityToken != nil && len(*s.WebIdentityToken) < 4 {
+		invalidParams.Add(request.NewErrParamMinLen("WebIdentityToken", 4))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // Contains the response to a successful AssumeRoleWithWebIdentity request,
@@ -876,10 +1449,10 @@ type AssumeRoleWithWebIdentityOutput struct {
 	// The temporary security credentials, which include an access key ID, a secret
 	// access key, and a security token.
 	//
-	// Note: The size of the security token that STS APIs return is not fixed.
-	// We strongly recommend that you make no assumptions about the maximum size.
-	// As of this writing, the typical size is less than 4096 bytes, but that can
-	// vary. Also, future updates to AWS might require larger sizes.
+	// Note: The size of the security token that STS APIs return is not fixed. We
+	// strongly recommend that you make no assumptions about the maximum size. As
+	// of this writing, the typical size is less than 4096 bytes, but that can vary.
+	// Also, future updates to AWS might require larger sizes.
 	Credentials *Credentials `type:"structure"`
 
 	// A percentage value that indicates the size of the policy in packed form.
@@ -921,11 +1494,15 @@ type AssumedRoleUser struct {
 	// AssumeRole action. For more information about ARNs and how to use them in
 	// policies, see IAM Identifiers (http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html)
 	// in Using IAM.
+	//
+	// Arn is a required field
 	Arn *string `min:"20" type:"string" required:"true"`
 
 	// A unique identifier that contains the role ID and the role session name of
 	// the role that is being assumed. The role ID is generated by AWS when the
 	// role is created.
+	//
+	// AssumedRoleId is a required field
 	AssumedRoleId *string `min:"2" type:"string" required:"true"`
 }
 
@@ -944,15 +1521,23 @@ type Credentials struct {
 	_ struct{} `type:"structure"`
 
 	// The access key ID that identifies the temporary security credentials.
+	//
+	// AccessKeyId is a required field
 	AccessKeyId *string `min:"16" type:"string" required:"true"`
 
 	// The date on which the current credentials expire.
+	//
+	// Expiration is a required field
 	Expiration *time.Time `type:"timestamp" timestampFormat:"iso8601" required:"true"`
 
 	// The secret access key that can be used to sign requests.
+	//
+	// SecretAccessKey is a required field
 	SecretAccessKey *string `type:"string" required:"true"`
 
 	// The token that users must pass to the service API to use the temporary credentials.
+	//
+	// SessionToken is a required field
 	SessionToken *string `type:"string" required:"true"`
 }
 
@@ -970,6 +1555,8 @@ type DecodeAuthorizationMessageInput struct {
 	_ struct{} `type:"structure"`
 
 	// The encoded message that was returned with the response.
+	//
+	// EncodedMessage is a required field
 	EncodedMessage *string `min:"1" type:"string" required:"true"`
 }
 
@@ -983,14 +1570,29 @@ func (s DecodeAuthorizationMessageInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DecodeAuthorizationMessageInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DecodeAuthorizationMessageInput"}
+	if s.EncodedMessage == nil {
+		invalidParams.Add(request.NewErrParamRequired("EncodedMessage"))
+	}
+	if s.EncodedMessage != nil && len(*s.EncodedMessage) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("EncodedMessage", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // A document that contains additional information about the authorization status
 // of a request from an encoded message that is returned in response to an AWS
 // request.
 type DecodeAuthorizationMessageOutput struct {
 	_ struct{} `type:"structure"`
 
-	// An XML document that contains the decoded message. For more information,
-	// see DecodeAuthorizationMessage.
+	// An XML document that contains the decoded message.
 	DecodedMessage *string `type:"string"`
 }
 
@@ -1012,10 +1614,14 @@ type FederatedUser struct {
 	// For more information about ARNs and how to use them in policies, see IAM
 	// Identifiers (http://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html)
 	// in Using IAM.
+	//
+	// Arn is a required field
 	Arn *string `min:"20" type:"string" required:"true"`
 
 	// The string that identifies the federated user associated with the credentials,
 	// similar to the unique ID of an IAM user.
+	//
+	// FederatedUserId is a required field
 	FederatedUserId *string `min:"2" type:"string" required:"true"`
 }
 
@@ -1088,6 +1694,13 @@ type GetFederationTokenInput struct {
 	// temporary security credentials (such as Bob). For example, you can reference
 	// the federated user name in a resource-based policy, such as in an Amazon
 	// S3 bucket policy.
+	//
+	// The format for this parameter, as described by its regex pattern, is a string
+	// of characters consisting of upper- and lower-case alphanumeric characters
+	// with no spaces. You can also include underscores or any of the following
+	// characters: =,.@-
+	//
+	// Name is a required field
 	Name *string `min:"2" type:"string" required:"true"`
 
 	// An IAM policy in JSON format that is passed with the GetFederationToken call
@@ -1105,12 +1718,20 @@ type GetFederationTokenInput struct {
 	// credentials are used to access a resource that has a resource-based policy
 	// that specifically allows the federated user to access the resource.
 	//
+	// The format for this parameter, as described by its regex pattern, is a string
+	// of characters up to 2048 characters in length. The characters can be any
+	// ASCII character from the space character to the end of the valid character
+	// list (\u0020-\u00FF). It can also include the tab (\u0009), linefeed (\u000A),
+	// and carriage return (\u000D) characters.
+	//
 	// The policy plain text must be 2048 bytes or shorter. However, an internal
 	// conversion compresses it into a packed binary format with a separate limit.
 	// The PackedPolicySize response element indicates by percentage how close to
 	// the upper size limit the policy is, with 100% equaling the maximum allowed
-	// size.  For more information about how permissions work, see Permissions for
-	// GetFederationToken (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_control-access_getfederationtoken.html).
+	// size.
+	//
+	// For more information about how permissions work, see Permissions for GetFederationToken
+	// (http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_control-access_getfederationtoken.html).
 	Policy *string `min:"1" type:"string"`
 }
 
@@ -1124,6 +1745,28 @@ func (s GetFederationTokenInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetFederationTokenInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetFederationTokenInput"}
+	if s.DurationSeconds != nil && *s.DurationSeconds < 900 {
+		invalidParams.Add(request.NewErrParamMinValue("DurationSeconds", 900))
+	}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 2 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 2))
+	}
+	if s.Policy != nil && len(*s.Policy) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Policy", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains the response to a successful GetFederationToken request, including
 // temporary AWS credentials that can be used to make AWS requests.
 type GetFederationTokenOutput struct {
@@ -1132,10 +1775,10 @@ type GetFederationTokenOutput struct {
 	// The temporary security credentials, which include an access key ID, a secret
 	// access key, and a security (or session) token.
 	//
-	// Note: The size of the security token that STS APIs return is not fixed.
-	// We strongly recommend that you make no assumptions about the maximum size.
-	// As of this writing, the typical size is less than 4096 bytes, but that can
-	// vary. Also, future updates to AWS might require larger sizes.
+	// Note: The size of the security token that STS APIs return is not fixed. We
+	// strongly recommend that you make no assumptions about the maximum size. As
+	// of this writing, the typical size is less than 4096 bytes, but that can vary.
+	// Also, future updates to AWS might require larger sizes.
 	Credentials *Credentials `type:"structure"`
 
 	// Identifiers for the federated user associated with the credentials (such
@@ -1178,6 +1821,11 @@ type GetSessionTokenInput struct {
 	// Name (ARN) for a virtual device (such as arn:aws:iam::123456789012:mfa/user).
 	// You can find the device for an IAM user by going to the AWS Management Console
 	// and viewing the user's security credentials.
+	//
+	// The format for this parameter, as described by its regex pattern, is a string
+	// of characters consisting of upper- and lower-case alphanumeric characters
+	// with no spaces. You can also include underscores or any of the following
+	// characters: =,.@-
 	SerialNumber *string `min:"9" type:"string"`
 
 	// The value provided by the MFA device, if MFA is required. If any policy requires
@@ -1185,6 +1833,9 @@ type GetSessionTokenInput struct {
 	// is required, and the user does not provide a code when requesting a set of
 	// temporary security credentials, the user will receive an "access denied"
 	// response when requesting resources that require MFA authentication.
+	//
+	// The format for this parameter, as described by its regex pattern, is a sequence
+	// of six numeric digits.
 	TokenCode *string `min:"6" type:"string"`
 }
 
@@ -1198,6 +1849,25 @@ func (s GetSessionTokenInput) GoString() string {
 	return s.String()
 }
 
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetSessionTokenInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetSessionTokenInput"}
+	if s.DurationSeconds != nil && *s.DurationSeconds < 900 {
+		invalidParams.Add(request.NewErrParamMinValue("DurationSeconds", 900))
+	}
+	if s.SerialNumber != nil && len(*s.SerialNumber) < 9 {
+		invalidParams.Add(request.NewErrParamMinLen("SerialNumber", 9))
+	}
+	if s.TokenCode != nil && len(*s.TokenCode) < 6 {
+		invalidParams.Add(request.NewErrParamMinLen("TokenCode", 6))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
 // Contains the response to a successful GetSessionToken request, including
 // temporary AWS credentials that can be used to make AWS requests.
 type GetSessionTokenOutput struct {
@@ -1206,10 +1876,10 @@ type GetSessionTokenOutput struct {
 	// The temporary security credentials, which include an access key ID, a secret
 	// access key, and a security (or session) token.
 	//
-	// Note: The size of the security token that STS APIs return is not fixed.
-	// We strongly recommend that you make no assumptions about the maximum size.
-	// As of this writing, the typical size is less than 4096 bytes, but that can
-	// vary. Also, future updates to AWS might require larger sizes.
+	// Note: The size of the security token that STS APIs return is not fixed. We
+	// strongly recommend that you make no assumptions about the maximum size. As
+	// of this writing, the typical size is less than 4096 bytes, but that can vary.
+	// Also, future updates to AWS might require larger sizes.
 	Credentials *Credentials `type:"structure"`
 }
 
