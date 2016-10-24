@@ -30,7 +30,7 @@ func main() {
 	app.Usage = "KMS encryption and decryption"
 
 	app.Flags = []cli.Flag{
-		cli.StringFlag{
+		cli.StringSliceFlag{
 			Name:   "context, C",
 			Usage:  "encryption context",
 			EnvVar: "KMS_ENCRYPTION_CONTEXT",
@@ -53,7 +53,7 @@ func main() {
 				key := c.Args().First()
 				handle, err := makeKmsHandle(
 					c.GlobalString("region"),
-					c.GlobalString("context"),
+					c.GlobalStringSlice("context"),
 				)
 				if err != nil {
 					abort(usageError, err)
@@ -75,7 +75,7 @@ func main() {
 			Action: func(c *cli.Context) {
 				handle, err := makeKmsHandle(
 					c.GlobalString("region"),
-					c.GlobalString("context"),
+					c.GlobalStringSlice("context"),
 				)
 				if err != nil {
 					abort(usageError, err)
@@ -113,7 +113,7 @@ func main() {
 				if foundEncrypted {
 					handle, err := makeKmsHandle(
 						c.GlobalString("region"),
-						c.GlobalString("context"),
+						c.GlobalStringSlice("context"),
 					)
 					if err != nil {
 						abort(usageError, err)
@@ -150,10 +150,10 @@ type kmsHandle struct {
 	Context kmsEncryptionContext
 }
 
-func makeKmsHandle(region string, contextString string) (ops *kmsHandle, err error) {
-	encryptionContext, err := parseEncryptionContext(contextString)
+func makeKmsHandle(region string, context []string) (ops *kmsHandle, err error) {
+	encryptionContext, err := parseEncryptionContext(context)
 	if err != nil {
-		return
+		return nil, fmt.Errorf("could not parse encryption context: %v", err)
 	}
 	if region == "" {
 		region = awsmeta.GetRegion()
@@ -170,16 +170,14 @@ func makeKmsHandle(region string, contextString string) (ops *kmsHandle, err err
 	return
 }
 
-func parseEncryptionContext(contextString string) (kmsEncryptionContext, error) {
-	if contextString == "" {
-		return kmsEncryptionContext{}, nil
-	}
-	parts := strings.Split(contextString, "=")
-	if len(parts) < 2 {
-		return kmsEncryptionContext{}, errors.New("context must be provided in KEY=VALUE format")
-	}
-	var context = kmsEncryptionContext{
-		parts[0]: &parts[1],
+func parseEncryptionContext(contextStrings []string) (kmsEncryptionContext, error) {
+	context := make(kmsEncryptionContext, len(contextStrings))
+	for _, s := range contextStrings {
+		parts := strings.SplitN(s, "=", 2)
+		if len(parts) < 2 {
+			return nil, fmt.Errorf("context must be provided in NAME=VALUE format")
+		}
+		context[parts[0]] = &parts[1]
 	}
 	return context, nil
 }
@@ -227,7 +225,7 @@ func getPayload(args []string) (string, error) {
 }
 
 func abort(status int, message interface{}) {
-	fmt.Fprintf(os.Stderr, "ERROR: %s", message)
+	fmt.Fprintf(os.Stderr, "ERROR: %s\n", message)
 	os.Exit(status)
 }
 
