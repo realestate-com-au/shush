@@ -1,8 +1,8 @@
-hash: 05c549cfb981e9696a1b91f1eb4588def0a862e448cac80c0d484a271abbe91b
-updated: 2016-10-25T09:30:17.467555818+11:00
+hash: 7879dff296fc931810ade9610644b21b859237e862661ff63c4c4bd544346fa9
+updated: 2016-11-28T10:05:13.903767568+11:00
 imports:
 - name: github.com/aws/aws-sdk-go
-  version: 22a2bfb1277b927a7b89145317f2bab829d679d6
+  version: 4a6ff995f57ee4f8994db17ae83f01a9c9cc2274
   subpackages:
   - aws
   - aws/awserr
@@ -30,9 +30,9 @@ imports:
   - service/kms
   - service/sts
 - name: github.com/go-ini/ini
-  version: 6e4869b434bd001f6983749881c7ead3545887d8
+  version: 2ba15ac2dc9cdf88c110ec2dc0ced7fa45f5678c
 - name: github.com/jmespath/go-jmespath
   version: bd40a432e4c76585ef6b72d3fd96fb9b6dc7b68d
 - name: github.com/urfave/cli
-  version: a14d7d367bc02b1f57d88de97926727f2d936387
+  version: 0bdeddeeb0f650497d603c4ad7b20cfe685682f6
 testImports: []
