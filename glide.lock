@@ -1,8 +1,8 @@
 hash: 7879dff296fc931810ade9610644b21b859237e862661ff63c4c4bd544346fa9
-updated: 2016-11-28T10:05:13.903767568+11:00
+updated: 2017-05-30T12:18:50.247673324+10:00
 imports:
 - name: github.com/aws/aws-sdk-go
-  version: 4a6ff995f57ee4f8994db17ae83f01a9c9cc2274
+  version: e0cdae7a65ba3a5e66a0af747a7b3967ddac099c
   subpackages:
   - aws
   - aws/awserr
@@ -16,10 +16,10 @@ imports:
   - aws/credentials/stscreds
   - aws/defaults
   - aws/ec2metadata
+  - aws/endpoints
   - aws/request
   - aws/session
   - aws/signer/v4
-  - private/endpoints
   - private/protocol
   - private/protocol/json/jsonutil
   - private/protocol/jsonrpc
@@ -30,7 +30,7 @@ imports:
   - service/kms
   - service/sts
 - name: github.com/go-ini/ini
-  version: 2ba15ac2dc9cdf88c110ec2dc0ced7fa45f5678c
+  version: afbc45e87f3ba324c532d12c71918ef52e0fb194
 - name: github.com/jmespath/go-jmespath
   version: bd40a432e4c76585ef6b72d3fd96fb9b6dc7b68d
 - name: github.com/urfave/cli
