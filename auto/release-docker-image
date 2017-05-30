@@ -4,7 +4,7 @@
 
 cd $(dirname $0)/..
 
-REPOSITORY=realestate/stackup
+REPOSITORY=realestate/shush
 VERSION=$(sed -ne '/app.Version/ s/.*"\(..*\)"/\1/ p' < main.go)
 
 echo "--- Check that we're releasing from master"
