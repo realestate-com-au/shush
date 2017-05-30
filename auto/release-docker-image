@@ -1,0 +1,25 @@
+#! /bin/bash -eu
+#
+# Release Shush
+
+cd $(dirname $0)/..
+
+REPOSITORY=realestate/stackup
+VERSION=$(sed -ne '/app.Version/ s/.*"\(..*\)"/\1/ p' < main.go)
+
+echo "--- Check that we're releasing from master"
+git fetch origin
+git diff origin/master --exit-code
+
+echo "--- Build Docker image"
+docker build .
+
+echo "--- Tagging Git repo"
+git tag v${VERSION}
+git push origin v${VERSION}
+
+echo "--- Releasing Docker image"
+docker build -t ${REPOSITORY}:latest .
+docker tag ${REPOSITORY}:latest ${REPOSITORY}:${VERSION}
+docker push ${REPOSITORY}:${VERSION}
+docker push ${REPOSITORY}:latest
