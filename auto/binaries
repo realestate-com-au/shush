@@ -1,0 +1,9 @@
+#! /bin/bash -e -o pipefail
+
+cd $(dirname $0)/..
+
+docker build -f Dockerfile.xcompile .
+xcompile_image=$(docker build -f Dockerfile.xcompile -q .)
+
+mkdir -p target
+docker run --rm $xcompile_image sh -c 'tar cf - shush_*' | (cd target && tar xvf -)

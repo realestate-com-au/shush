@@ -1,2 +1,7 @@
 .git
+.gitignore
+Dockerfile*
+auto
+shush
 shush_*
+target
