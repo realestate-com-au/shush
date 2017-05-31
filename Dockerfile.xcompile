@@ -2,6 +2,8 @@ FROM golang:1.7.5
 
 RUN go get github.com/mitchellh/gox
 
+ENV CGO_ENABLED=0
+
 COPY . /go/src/github.com/realestate-com-au/shush
 WORKDIR /go/src/github.com/realestate-com-au/shush
 RUN gox -osarch "linux/amd64 darwin/amd64 windows/amd64"
