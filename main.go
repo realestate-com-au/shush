@@ -9,13 +9,9 @@ import (
 	"syscall"
 
 	"github.com/realestate-com-au/shush/kms"
+	"github.com/realestate-com-au/shush/sys"
 	"github.com/urfave/cli"
 )
-
-const usageError = 64            // incorrect usage of "shush"
-const kmsError = 69              // KMS encrypt/decrypt issues
-const execError = 126            // cannot execute the specified command
-const commandNotFoundError = 127 // cannot find the specified command
 
 func main() {
 
@@ -43,7 +39,7 @@ func main() {
 			Usage: "Encrypt with a KMS key",
 			Action: func(c *cli.Context) {
 				if len(c.Args()) == 0 {
-					abort(usageError, "no key specified")
+					abort(sys.UsageError, "no key specified")
 				}
 				key := c.Args().First()
 				handle, err := kms.NewHandle(
@@ -51,15 +47,15 @@ func main() {
 					c.GlobalStringSlice("context"),
 				)
 				if err != nil {
-					abort(usageError, err)
+					abort(sys.UsageError, err)
 				}
 				plaintext, err := getPayload(c.Args()[1:])
 				if err != nil {
-					abort(usageError, err)
+					abort(sys.UsageError, err)
 				}
 				ciphertext, err := handle.Encrypt(plaintext, key)
 				if err != nil {
-					abort(kmsError, err)
+					abort(sys.KmsError, err)
 				}
 				fmt.Println(ciphertext)
 			},
@@ -73,15 +69,15 @@ func main() {
 					c.GlobalStringSlice("context"),
 				)
 				if err != nil {
-					abort(usageError, err)
+					abort(sys.UsageError, err)
 				}
 				ciphertext, err := getPayload(c.Args())
 				if err != nil {
-					abort(usageError, err)
+					abort(sys.UsageError, err)
 				}
 				plaintext, err := handle.Decrypt(ciphertext)
 				if err != nil {
-					abort(kmsError, err)
+					abort(sys.KmsError, err)
 				}
 				fmt.Print(plaintext)
 			},
@@ -111,7 +107,7 @@ func main() {
 						c.GlobalStringSlice("context"),
 					)
 					if err != nil {
-						abort(usageError, err)
+						abort(sys.UsageError, err)
 					}
 					for _, e := range os.Environ() {
 						keyValuePair := strings.SplitN(e, "=", 2)
@@ -121,7 +117,7 @@ func main() {
 							plaintextKey := key[len(encryptedVarPrefix):len(key)]
 							plaintext, err := handle.Decrypt(ciphertext)
 							if err != nil {
-								abort(kmsError, fmt.Sprintf("cannot decrypt $%s; %s\n", key, err))
+								abort(sys.KmsError, fmt.Sprintf("cannot decrypt $%s; %s\n", key, err))
 							}
 							os.Setenv(plaintextKey, plaintext)
 						}
@@ -155,15 +151,15 @@ func abort(status int, message interface{}) {
 
 func execCommand(args []string) {
 	if len(args) == 0 {
-		abort(usageError, "no command specified")
+		abort(sys.UsageError, "no command specified")
 	}
 	commandName := args[0]
 	commandPath, err := exec.LookPath(commandName)
 	if err != nil {
-		abort(commandNotFoundError, fmt.Sprintf("cannot find '%s'\n", commandName))
+		abort(sys.CommandNotFoundError, fmt.Sprintf("cannot find '%s'\n", commandName))
 	}
 	err = syscall.Exec(commandPath, args, os.Environ())
 	if err != nil {
-		abort(execError, err)
+		abort(sys.ExecError, err)
 	}
 }
