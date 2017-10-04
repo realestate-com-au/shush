@@ -2,11 +2,8 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"os"
-	"os/exec"
 	"strings"
-	"syscall"
 
 	"github.com/realestate-com-au/shush/kms"
 	"github.com/realestate-com-au/shush/sys"
@@ -39,7 +36,7 @@ func main() {
 			Usage: "Encrypt with a KMS key",
 			Action: func(c *cli.Context) {
 				if len(c.Args()) == 0 {
-					abort(sys.UsageError, "no key specified")
+					sys.Abort(sys.UsageError, "no key specified")
 				}
 				key := c.Args().First()
 				handle, err := kms.NewHandle(
@@ -47,15 +44,15 @@ func main() {
 					c.GlobalStringSlice("context"),
 				)
 				if err != nil {
-					abort(sys.UsageError, err)
+					sys.Abort(sys.UsageError, err)
 				}
-				plaintext, err := getPayload(c.Args()[1:])
+				plaintext, err := sys.GetPayload(c.Args()[1:])
 				if err != nil {
-					abort(sys.UsageError, err)
+					sys.Abort(sys.UsageError, err)
 				}
 				ciphertext, err := handle.Encrypt(plaintext, key)
 				if err != nil {
-					abort(sys.KmsError, err)
+					sys.Abort(sys.KmsError, err)
 				}
 				fmt.Println(ciphertext)
 			},
@@ -69,15 +66,15 @@ func main() {
 					c.GlobalStringSlice("context"),
 				)
 				if err != nil {
-					abort(sys.UsageError, err)
+					sys.Abort(sys.UsageError, err)
 				}
-				ciphertext, err := getPayload(c.Args())
+				ciphertext, err := sys.GetPayload(c.Args())
 				if err != nil {
-					abort(sys.UsageError, err)
+					sys.Abort(sys.UsageError, err)
 				}
 				plaintext, err := handle.Decrypt(ciphertext)
 				if err != nil {
-					abort(sys.KmsError, err)
+					sys.Abort(sys.KmsError, err)
 				}
 				fmt.Print(plaintext)
 			},
@@ -107,7 +104,7 @@ func main() {
 						c.GlobalStringSlice("context"),
 					)
 					if err != nil {
-						abort(sys.UsageError, err)
+						sys.Abort(sys.UsageError, err)
 					}
 					for _, e := range os.Environ() {
 						keyValuePair := strings.SplitN(e, "=", 2)
@@ -117,49 +114,17 @@ func main() {
 							plaintextKey := key[len(encryptedVarPrefix):len(key)]
 							plaintext, err := handle.Decrypt(ciphertext)
 							if err != nil {
-								abort(sys.KmsError, fmt.Sprintf("cannot decrypt $%s; %s\n", key, err))
+								sys.Abort(sys.KmsError, fmt.Sprintf("cannot decrypt $%s; %s\n", key, err))
 							}
 							os.Setenv(plaintextKey, plaintext)
 						}
 					}
 				}
-				execCommand(c.Args())
+				sys.ExecCommand(c.Args())
 			},
 		},
 	}
 
 	app.Run(os.Args)
 
-}
-
-// Get input, from command-line (if present) or STDIN.
-func getPayload(args []string) (string, error) {
-	if len(args) >= 1 {
-		return args[0], nil
-	}
-	input, err := ioutil.ReadAll(os.Stdin)
-	if err != nil {
-		return "", err
-	}
-	return string(input), nil
-}
-
-func abort(status int, message interface{}) {
-	fmt.Fprintf(os.Stderr, "ERROR: %s\n", message)
-	os.Exit(status)
-}
-
-func execCommand(args []string) {
-	if len(args) == 0 {
-		abort(sys.UsageError, "no command specified")
-	}
-	commandName := args[0]
-	commandPath, err := exec.LookPath(commandName)
-	if err != nil {
-		abort(sys.CommandNotFoundError, fmt.Sprintf("cannot find '%s'\n", commandName))
-	}
-	err = syscall.Exec(commandPath, args, os.Environ())
-	if err != nil {
-		abort(sys.ExecError, err)
-	}
 }
