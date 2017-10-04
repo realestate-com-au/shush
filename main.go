@@ -89,6 +89,7 @@ func main() {
 					Value: "KMS_ENCRYPTED_",
 				},
 			},
+			SkipArgReorder: true,
 			Action: func(c *cli.Context) {
 				encryptedVarPrefix := c.String("prefix")
 				foundEncrypted := false
