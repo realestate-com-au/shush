@@ -1,4 +1,4 @@
-FROM golang:1.7.5
+FROM golang:1.8@sha256:32c769bf92205580d6579d5b93c3c705f787f6c648105f00bb88a35024c7f8e4
 
 RUN go get github.com/mitchellh/gox
 
