@@ -18,7 +18,7 @@ import (
 type EncryptionContext map[string]*string
 
 // Handle Structure encapsulating stuff common to encrypt and decrypt.
-type Handle struct {
+type Handler struct {
 	Client       *kms.KMS
 	Context      EncryptionContext
 	Prefix       string
@@ -55,7 +55,7 @@ func ParseEncryptionContext(contextStrings []string) (EncryptionContext, error) 
 }
 
 // Encrypt plaintext using specified key.
-func (h *Handle) Encrypt() (string, error) {
+func (h *Handler) Encrypt() (string, error) {
 	// keyID := h.KeyID
 	// plaintext := h.Plaintext
 	output, err := h.Client.Encrypt(&kms.EncryptInput{
@@ -71,7 +71,7 @@ func (h *Handle) Encrypt() (string, error) {
 }
 
 // Decrypt ciphertext.
-func (h *Handle) Decrypt() (string, error) {
+func (h *Handler) Decrypt() (string, error) {
 	ciphertextBlob, err := base64.StdEncoding.DecodeString(h.CipherKey)
 	if err != nil {
 		return "", err
@@ -87,7 +87,7 @@ func (h *Handle) Decrypt() (string, error) {
 }
 
 // DecryptEnv update the local environment variable with decrypted keys
-func (h *Handle) DecryptEnv() {
+func (h *Handler) DecryptEnv() {
 
 	plaintext, err := h.Decrypt()
 	sys.CheckError(err, sys.KmsError)

@@ -52,14 +52,14 @@ func encrypt(s SecretManager) (string, error) {
 }
 
 // envDrive structure the data to for environment variable decryptions
-type envDrive struct {
+type envDriver struct {
 	variables, contexts []string
 	encryptedVarPrefix  string
 	region              string
 }
 
 // driver scans all env variables to decrypt
-func (e *envDrive) driver() {
+func (e *envDriver) drive() {
 
 	for _, secret := range e.variables {
 		keyValuePair := strings.SplitN(secret, "=", 2)
@@ -74,7 +74,7 @@ func (e *envDrive) driver() {
 			sys.CheckError(err, sys.KmsError)
 			encryptionContext, err := kms.ParseEncryptionContext(e.contexts)
 			sys.CheckError(err, sys.KmsError)
-			execEnv(&kms.Handle{
+			execEnv(&kms.Handler{
 				Client:       c,
 				Context:      encryptionContext,
 				Prefix:       KMSPrefix,
@@ -86,7 +86,7 @@ func (e *envDrive) driver() {
 			plaintextKey := key[len(SSMPrefix):len(key)]
 			c, err := ssm.Client(e.region)
 			sys.CheckError(err, sys.SsmError)
-			execEnv(&ssm.Handle{
+			execEnv(&ssm.Handler{
 				Client:       c,
 				Prefix:       SSMPrefix,
 				CipherKey:    ciphertext,
@@ -94,4 +94,5 @@ func (e *envDrive) driver() {
 			})
 		}
 	}
+
 }

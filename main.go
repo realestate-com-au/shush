@@ -45,7 +45,7 @@ func main() {
 				sys.CheckError(err, sys.KmsError)
 				encryptionContext, err := kms.ParseEncryptionContext(c.GlobalStringSlice("context"))
 				sys.CheckError(err, sys.KmsError)
-				ciphertext, err := encrypt(&kms.Handle{
+				ciphertext, err := encrypt(&kms.Handler{
 					Client:    kc,
 					Context:   encryptionContext,
 					CipherKey: plaintext,
@@ -66,7 +66,7 @@ func main() {
 				sys.CheckError(err, sys.KmsError)
 				encryptionContext, err := kms.ParseEncryptionContext(c.GlobalStringSlice("context"))
 				sys.CheckError(err, sys.KmsError)
-				plaintext, err := decrypt(&kms.Handle{
+				plaintext, err := decrypt(&kms.Handler{
 					Client:    kc,
 					Context:   encryptionContext,
 					CipherKey: ciphertext,
@@ -83,7 +83,7 @@ func main() {
 				sys.CheckError(err, sys.UsageError)
 				sc, err := ssm.Client(c.GlobalString("region"))
 				sys.CheckError(err, sys.SsmError)
-				plaintext, err := decrypt(&ssm.Handle{
+				plaintext, err := decrypt(&ssm.Handler{
 					Client:    sc,
 					CipherKey: ssmkey,
 				})
@@ -103,12 +103,12 @@ func main() {
 			},
 			SkipArgReorder: true,
 			Action: func(c *cli.Context) {
-				(&envDrive{
+				(&envDriver{
 					variables:          os.Environ(),
 					contexts:           c.GlobalStringSlice("context"),
 					region:             c.GlobalString("region"),
 					encryptedVarPrefix: c.String("prefix"),
-				}).driver()
+				}).drive()
 				sys.ExecCommand(c.Args())
 			},
 		},

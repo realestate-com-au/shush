@@ -13,7 +13,7 @@ import (
 )
 
 // Handle structure the client for the Secret Manager
-type Handle struct {
+type Handler struct {
 	Client       *ssm.SSM
 	Prefix       string
 	CipherKey    string
@@ -35,12 +35,12 @@ func Client(region string) (client *ssm.SSM, err error) {
 	return
 }
 
-func (h *Handle) Encrypt() (string, error) {
+func (h *Handler) Encrypt() (string, error) {
 	return "", nil
 }
 
 // Decrypt reveal the value of the SSM key
-func (h *Handle) Decrypt() (string, error) {
+func (h *Handler) Decrypt() (string, error) {
 	var (
 		cipherkey      = h.CipherKey
 		withDecryption = true
@@ -59,7 +59,7 @@ func (h *Handle) Decrypt() (string, error) {
 }
 
 // DecryptEnv update the local environment variable with decrypted keys
-func (h *Handle) DecryptEnv() {
+func (h *Handler) DecryptEnv() {
 
 	plaintext, err := h.Decrypt()
 	sys.CheckError(err, sys.SsmError)
