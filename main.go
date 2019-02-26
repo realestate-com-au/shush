@@ -45,12 +45,13 @@ func main() {
 				sys.CheckError(err, sys.KmsError)
 				encryptionContext, err := kms.ParseEncryptionContext(c.GlobalStringSlice("context"))
 				sys.CheckError(err, sys.KmsError)
-				handle := &kms.Handle{
+				ciphertext, err := encrypt(&kms.Handle{
 					Client:    kc,
 					Context:   encryptionContext,
 					CipherKey: plaintext,
-				}
-				ciphertext, err := handle.Encrypt(plaintext, key)
+					KeyID:     key,
+					Plaintext: plaintext,
+				})
 				sys.CheckError(err, sys.KmsError)
 				fmt.Println(ciphertext)
 			},

@@ -24,6 +24,8 @@ type Handle struct {
 	Prefix       string
 	CipherKey    string
 	PlaintextKey string
+	KeyID        string
+	Plaintext    string
 }
 
 // Client establish a session to AWS
@@ -53,11 +55,13 @@ func ParseEncryptionContext(contextStrings []string) (EncryptionContext, error) 
 }
 
 // Encrypt plaintext using specified key.
-func (h *Handle) Encrypt(plaintext string, keyID string) (string, error) {
+func (h *Handle) Encrypt() (string, error) {
+	// keyID := h.KeyID
+	// plaintext := h.Plaintext
 	output, err := h.Client.Encrypt(&kms.EncryptInput{
-		KeyId:             &keyID,
+		KeyId:             &h.KeyID,
 		EncryptionContext: h.Context,
-		Plaintext:         []byte(plaintext),
+		Plaintext:         []byte(h.Plaintext),
 	})
 	if err != nil {
 		return "", err

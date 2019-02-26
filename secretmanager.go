@@ -31,8 +31,23 @@ func isKMSHandler(key string, customPrefix string) bool {
 
 // SecretManager defines interfaces for all secret providers
 type SecretManager interface {
+	Encrypt() (string, error)
 	Decrypt() (string, error)
 	DecryptEnv()
+}
+
+// execEnv implement update env variable as per secret provider
+func execEnv(s SecretManager) {
+	s.DecryptEnv()
+}
+
+// decrypt implement decrypt secret as per secret provider
+func decrypt(s SecretManager) (string, error) {
+	return s.Decrypt()
+}
+
+func encrypt(s SecretManager) (string, error) {
+	return s.Encrypt()
 }
 
 // driver scans all env variables to decrypt
@@ -72,14 +87,4 @@ func driver(variables []string, region string, encryptedVarPrefix string, contex
 			})
 		}
 	}
-}
-
-// execEnv implement update env variable as per secret provider
-func execEnv(s SecretManager) {
-	s.DecryptEnv()
-}
-
-// decrypt implement decrypt secret as per secret provider
-func decrypt(s SecretManager) (string, error) {
-	return s.Decrypt()
 }

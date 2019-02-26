@@ -18,6 +18,8 @@ type Handle struct {
 	Prefix       string
 	CipherKey    string
 	PlaintextKey string
+	KeyID        string
+	Plaintext    string
 }
 
 // Client establish a session to AWS
@@ -31,6 +33,10 @@ func Client(region string) (client *ssm.SSM, err error) {
 	}
 	client = ssm.New(session.New(), aws.NewConfig().WithRegion(region))
 	return
+}
+
+func (h *Handle) Encrypt() (string, error) {
+	return "", nil
 }
 
 // Decrypt reveal the value of the SSM key
