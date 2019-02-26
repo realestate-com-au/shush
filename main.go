@@ -65,12 +65,11 @@ func main() {
 				sys.CheckError(err, sys.KmsError)
 				encryptionContext, err := kms.ParseEncryptionContext(c.GlobalStringSlice("context"))
 				sys.CheckError(err, sys.KmsError)
-				handle := &kms.Handle{
+				plaintext, err := decrypt(&kms.Handle{
 					Client:    kc,
 					Context:   encryptionContext,
 					CipherKey: ciphertext,
-				}
-				plaintext, err := handle.Decrypt()
+				})
 				sys.CheckError(err, sys.KmsError)
 				fmt.Print(plaintext)
 			},
@@ -83,13 +82,12 @@ func main() {
 				sys.CheckError(err, sys.UsageError)
 				sc, err := ssm.Client(c.GlobalString("region"))
 				sys.CheckError(err, sys.SsmError)
-				handle := &ssm.Handle{
+				plaintext, err := decrypt(&ssm.Handle{
 					Client:    sc,
 					CipherKey: ssmkey,
-				}
-				output, err := decrypt(handle)
+				})
 				sys.CheckError(err, sys.SsmError)
-				fmt.Print(output)
+				fmt.Print(plaintext)
 			},
 		},
 		{
