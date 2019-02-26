@@ -54,7 +54,7 @@ func (h *Handle) Decrypt() (string, error) {
 		WithDecryption: &withDecryption,
 	})
 	if err != nil {
-		log.Println("Error Decrypt SSM key")
+		log.Printf("Error Decrypt SSM key: %v", err)
 		return "", err
 	}
 
@@ -63,10 +63,8 @@ func (h *Handle) Decrypt() (string, error) {
 
 // DecryptEnv update the local environment variable with decrypted keys
 func (h *Handle) DecryptEnv() {
-	plaintext, err := h.Decrypt()
 
-	if err != nil {
-		sys.Abort(sys.UsageError, err)
-	}
+	plaintext, err := h.Decrypt()
+	sys.CheckError(err, sys.SsmError)
 	os.Setenv(h.PlaintextKey, plaintext)
 }

@@ -5,26 +5,30 @@ import (
 	"os"
 	"strings"
 
+	"github.com/realestate-com-au/shush/kms"
 	"github.com/realestate-com-au/shush/ssm"
 	"github.com/realestate-com-au/shush/sys"
 )
 
-const (
-	defaultSSMPrefix = "SSM_PS_"
-	defaultKMSPrefix = "KMS_ENCRYPTED_"
+var (
+	// SSMPrefix the default
+	SSMPrefix = "SSM_PS_"
+	// KMSPrefix the default
+	KMSPrefix = "KMS_ENCRYPTED_"
 )
 
 func isSSMHander(key string) bool {
-
-	return strings.HasPrefix(key, defaultSSMPrefix)
+	return strings.HasPrefix(key, SSMPrefix)
 }
 
 func isKMSHandler(key string, customPrefix string) bool {
-	if customPrefix != "" {
+
+	if customPrefix != KMSPrefix {
+		KMSPrefix = customPrefix
 		return strings.HasPrefix(key, customPrefix)
 	}
 
-	return strings.HasPrefix(key, defaultKMSPrefix)
+	return strings.HasPrefix(key, KMSPrefix)
 }
 
 // SecretManager defines interfaces for all secret providers
@@ -44,12 +48,23 @@ func driver(variables []string, region string, encryptedVarPrefix string, contex
 
 		switch {
 		case isKMSHandler(secret, encryptedVarPrefix):
-			log.Printf("Found kms: %v", secret)
+
+			plaintextKey := key[len(KMSPrefix):len(key)]
+			handle, err := kms.New(
+				region,
+				contexts,
+				KMSPrefix,
+				ciphertext,
+				plaintextKey,
+			)
+			sys.CheckError(err, sys.KmsError)
+			execEnv(handle)
 		case isSSMHander(secret):
-			plaintextKey := key[len(defaultSSMPrefix):len(key)]
+
+			plaintextKey := key[len(SSMPrefix):len(key)]
 			handle, err := ssm.New(
 				region,
-				defaultSSMPrefix,
+				SSMPrefix,
 				ciphertext,
 				plaintextKey,
 			)
@@ -58,6 +73,7 @@ func driver(variables []string, region string, encryptedVarPrefix string, contex
 
 		}
 	}
+	log.Printf("Updated env KMS: %v", os.Getenv("ABCD"))
 	log.Printf("Updated env DUY: %v", os.Getenv("DUY"))
 }
 

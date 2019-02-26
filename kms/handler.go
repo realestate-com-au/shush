@@ -4,24 +4,29 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/kms"
 	"github.com/realestate-com-au/shush/awsmeta"
+	"github.com/realestate-com-au/shush/sys"
 )
 
 type kmsEncryptionContext map[string]*string
 
 // Structure encapsulating stuff common to encrypt and decrypt.
 //
-type KmsHandle struct {
-	Client  *kms.KMS
-	Context kmsEncryptionContext
+type Handle struct {
+	Client       *kms.KMS
+	Context      kmsEncryptionContext
+	Prefix       string
+	CipherKey    string
+	PlaintextKey string
 }
 
-func NewHandle(region string, context []string) (ops *KmsHandle, err error) {
+func New(region string, context []string, prefix string, cipherkey string, plaintextKey string) (ops *Handle, err error) {
 	encryptionContext, err := parseEncryptionContext(context)
 	if err != nil {
 		return nil, fmt.Errorf("could not parse encryption context: %v", err)
@@ -34,9 +39,12 @@ func NewHandle(region string, context []string) (ops *KmsHandle, err error) {
 		}
 	}
 	client := kms.New(session.New(), aws.NewConfig().WithRegion(region))
-	ops = &KmsHandle{
-		Client:  client,
-		Context: encryptionContext,
+	ops = &Handle{
+		Client:       client,
+		Context:      encryptionContext,
+		Prefix:       prefix,
+		CipherKey:    cipherkey,
+		PlaintextKey: plaintextKey,
 	}
 	return
 }
@@ -54,7 +62,7 @@ func parseEncryptionContext(contextStrings []string) (kmsEncryptionContext, erro
 }
 
 // Encrypt plaintext using specified key.
-func (h *KmsHandle) Encrypt(plaintext string, keyID string) (string, error) {
+func (h *Handle) Encrypt(plaintext string, keyID string) (string, error) {
 	output, err := h.Client.Encrypt(&kms.EncryptInput{
 		KeyId:             &keyID,
 		EncryptionContext: h.Context,
@@ -68,8 +76,8 @@ func (h *KmsHandle) Encrypt(plaintext string, keyID string) (string, error) {
 }
 
 // Decrypt ciphertext.
-func (h *KmsHandle) Decrypt(ciphertext string) (string, error) {
-	ciphertextBlob, err := base64.StdEncoding.DecodeString(ciphertext)
+func (h *Handle) Decrypt() (string, error) {
+	ciphertextBlob, err := base64.StdEncoding.DecodeString(h.CipherKey)
 	if err != nil {
 		return "", err
 	}
@@ -81,4 +89,12 @@ func (h *KmsHandle) Decrypt(ciphertext string) (string, error) {
 		return "", err
 	}
 	return string(output.Plaintext), nil
+}
+
+// DecryptEnv update the local environment variable with decrypted keys
+func (h *Handle) DecryptEnv() {
+
+	plaintext, err := h.Decrypt()
+	sys.CheckError(err, sys.KmsError)
+	os.Setenv(h.PlaintextKey, plaintext)
 }
