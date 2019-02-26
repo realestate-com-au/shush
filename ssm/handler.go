@@ -3,22 +3,25 @@ package ssm
 import (
 	"errors"
 	"log"
+	"os"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ssm"
 	"github.com/realestate-com-au/shush/awsmeta"
+	"github.com/realestate-com-au/shush/sys"
 )
 
 // Handle structure the client for the Secret Manager
 type Handle struct {
-	Client    *ssm.SSM
-	Prefix    string
-	CipherKey string
+	Client       *ssm.SSM
+	Prefix       string
+	CipherKey    string
+	PlaintextKey string
 }
 
 // New returns the reference to Handle object
-func New(region string, prefix string, cipherkey string) (ops *Handle, err error) {
+func New(region string, prefix string, cipherkey string, plaintextKey string) (ops *Handle, err error) {
 
 	if region == "" {
 		region = awsmeta.GetRegion()
@@ -30,10 +33,12 @@ func New(region string, prefix string, cipherkey string) (ops *Handle, err error
 	// Create a SSM client with additional configuration
 	client := ssm.New(session.New(), aws.NewConfig().WithRegion(region))
 	ops = &Handle{
-		Client:    client,
-		Prefix:    prefix,
-		CipherKey: cipherkey,
+		Client:       client,
+		Prefix:       prefix,
+		CipherKey:    cipherkey,
+		PlaintextKey: plaintextKey,
 	}
+
 	return
 }
 
@@ -56,7 +61,12 @@ func (h *Handle) Decrypt() (string, error) {
 	return *output.Parameter.Value, nil
 }
 
-// DecryptEnv
+// DecryptEnv update the local environment variable with decrypted keys
 func (h *Handle) DecryptEnv() {
+	plaintext, err := h.Decrypt()
 
+	if err != nil {
+		sys.Abort(sys.UsageError, err)
+	}
+	os.Setenv(h.PlaintextKey, plaintext)
 }
