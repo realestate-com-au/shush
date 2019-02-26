@@ -1,6 +1,23 @@
 package sys
 
-const UsageError = 64            // incorrect usage of "shush"
-const KmsError = 69              // KMS encrypt/decrypt issues
-const ExecError = 126            // cannot execute the specified command
-const CommandNotFoundError = 127 // cannot find the specified command
+// UsageError indicate incorrect usage of "shush"
+const UsageError = 64
+
+// KmsError indicate KMS encrypt/decrypt issues
+const KmsError = 69
+
+// SsmError indicate SSM decrypt issues
+const SsmError = 70 // SSM decrypt issues
+
+// ExecError indicate error to execute the command
+const ExecError = 126
+
+// CommandNotFoundError indicate cannot find the specified command
+const CommandNotFoundError = 127
+
+// CheckError abort the service
+func CheckError(err error, code int) {
+	if err != nil {
+		Abort(code, err)
+	}
+}
