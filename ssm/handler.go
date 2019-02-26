@@ -20,9 +20,8 @@ type Handle struct {
 	PlaintextKey string
 }
 
-// New returns the reference to Handle object
-func New(region string, prefix string, cipherkey string, plaintextKey string) (ops *Handle, err error) {
-
+// Client establish a session to AWS
+func Client(region string) (client *ssm.SSM, err error) {
 	if region == "" {
 		region = awsmeta.GetRegion()
 		if region == "" {
@@ -30,17 +29,31 @@ func New(region string, prefix string, cipherkey string, plaintextKey string) (o
 			return
 		}
 	}
-	// Create a SSM client with additional configuration
-	client := ssm.New(session.New(), aws.NewConfig().WithRegion(region))
-	ops = &Handle{
-		Client:       client,
-		Prefix:       prefix,
-		CipherKey:    cipherkey,
-		PlaintextKey: plaintextKey,
-	}
-
+	client = ssm.New(session.New(), aws.NewConfig().WithRegion(region))
 	return
 }
+
+// New returns the reference to Handle object
+// func New(region string, prefix string, cipherkey string, plaintextKey string) (ops *Handle, err error) {
+
+// 	if region == "" {
+// 		region = awsmeta.GetRegion()
+// 		if region == "" {
+// 			err = errors.New("please specify region (--region or $AWS_DEFAULT_REGION)")
+// 			return
+// 		}
+// 	}
+// 	// Create a SSM client with additional configuration
+// 	client := ssm.New(session.New(), aws.NewConfig().WithRegion(region))
+// 	ops = &Handle{
+// 		Client:       client,
+// 		Prefix:       prefix,
+// 		CipherKey:    cipherkey,
+// 		PlaintextKey: plaintextKey,
+// 	}
+
+// 	return
+// }
 
 // Decrypt reveal the value of the SSM key
 func (h *Handle) Decrypt() (string, error) {

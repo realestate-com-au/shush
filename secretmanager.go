@@ -46,29 +46,30 @@ func driver(variables []string, region string, encryptedVarPrefix string, contex
 
 		switch {
 		case isKMSHandler(secret, encryptedVarPrefix):
-
+			// Update per KMS environment variable
 			plaintextKey := key[len(KMSPrefix):len(key)]
-			handle, err := kms.New(
-				region,
-				contexts,
-				KMSPrefix,
-				ciphertext,
-				plaintextKey,
-			)
+			c, err := kms.Client(region)
 			sys.CheckError(err, sys.KmsError)
-			execEnv(handle)
+			encryptionContext, err := kms.ParseEncryptionContext(contexts)
+			sys.CheckError(err, sys.KmsError)
+			execEnv(&kms.Handle{
+				Client:       c,
+				Context:      encryptionContext,
+				Prefix:       KMSPrefix,
+				CipherKey:    ciphertext,
+				PlaintextKey: plaintextKey,
+			})
 		case isSSMHander(secret):
-
+			// Update per SSM environment variable
 			plaintextKey := key[len(SSMPrefix):len(key)]
-			handle, err := ssm.New(
-				region,
-				SSMPrefix,
-				ciphertext,
-				plaintextKey,
-			)
+			c, err := ssm.Client(region)
 			sys.CheckError(err, sys.SsmError)
-			execEnv(handle)
-
+			execEnv(&ssm.Handle{
+				Client:       c,
+				Prefix:       SSMPrefix,
+				CipherKey:    ciphertext,
+				PlaintextKey: plaintextKey,
+			})
 		}
 	}
 }

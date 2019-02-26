@@ -14,23 +14,20 @@ import (
 	"github.com/realestate-com-au/shush/sys"
 )
 
-type kmsEncryptionContext map[string]*string
+// EncryptionContext define the format required for kms encryption context
+type EncryptionContext map[string]*string
 
-// Structure encapsulating stuff common to encrypt and decrypt.
-//
+// Handle Structure encapsulating stuff common to encrypt and decrypt.
 type Handle struct {
 	Client       *kms.KMS
-	Context      kmsEncryptionContext
+	Context      EncryptionContext
 	Prefix       string
 	CipherKey    string
 	PlaintextKey string
 }
 
-func New(region string, context []string, prefix string, cipherkey string, plaintextKey string) (ops *Handle, err error) {
-	encryptionContext, err := parseEncryptionContext(context)
-	if err != nil {
-		return nil, fmt.Errorf("could not parse encryption context: %v", err)
-	}
+// Client establish a session to AWS
+func Client(region string) (client *kms.KMS, err error) {
 	if region == "" {
 		region = awsmeta.GetRegion()
 		if region == "" {
@@ -38,19 +35,13 @@ func New(region string, context []string, prefix string, cipherkey string, plain
 			return
 		}
 	}
-	client := kms.New(session.New(), aws.NewConfig().WithRegion(region))
-	ops = &Handle{
-		Client:       client,
-		Context:      encryptionContext,
-		Prefix:       prefix,
-		CipherKey:    cipherkey,
-		PlaintextKey: plaintextKey,
-	}
+	client = kms.New(session.New(), aws.NewConfig().WithRegion(region))
 	return
 }
 
-func parseEncryptionContext(contextStrings []string) (kmsEncryptionContext, error) {
-	context := make(kmsEncryptionContext, len(contextStrings))
+// ParseEncryptionContext encryption context is required to decrypt the data
+func ParseEncryptionContext(contextStrings []string) (EncryptionContext, error) {
+	context := make(EncryptionContext, len(contextStrings))
 	for _, s := range contextStrings {
 		parts := strings.SplitN(s, "=", 2)
 		if len(parts) < 2 {

@@ -39,15 +39,17 @@ func main() {
 					sys.Abort(sys.UsageError, "no key specified")
 				}
 				plaintext, err := sys.GetPayload(c.Args()[1:])
-				key := c.Args().First()
-				handle, err := kms.New(
-					c.GlobalString("region"),
-					c.GlobalStringSlice("context"),
-					"",
-					plaintext,
-					"",
-				)
 				sys.CheckError(err, sys.UsageError)
+				key := c.Args().First()
+				kc, err := kms.Client(c.GlobalString("region"))
+				sys.CheckError(err, sys.KmsError)
+				encryptionContext, err := kms.ParseEncryptionContext(c.GlobalStringSlice("context"))
+				sys.CheckError(err, sys.KmsError)
+				handle := &kms.Handle{
+					Client:    kc,
+					Context:   encryptionContext,
+					CipherKey: plaintext,
+				}
 				ciphertext, err := handle.Encrypt(plaintext, key)
 				sys.CheckError(err, sys.KmsError)
 				fmt.Println(ciphertext)
@@ -59,14 +61,15 @@ func main() {
 			Action: func(c *cli.Context) {
 				ciphertext, err := sys.GetPayload(c.Args())
 				sys.CheckError(err, sys.UsageError)
-				handle, err := kms.New(
-					c.GlobalString("region"),
-					c.GlobalStringSlice("context"),
-					"",
-					ciphertext,
-					"",
-				)
-				sys.CheckError(err, sys.UsageError)
+				kc, err := kms.Client(c.GlobalString("region"))
+				sys.CheckError(err, sys.KmsError)
+				encryptionContext, err := kms.ParseEncryptionContext(c.GlobalStringSlice("context"))
+				sys.CheckError(err, sys.KmsError)
+				handle := &kms.Handle{
+					Client:    kc,
+					Context:   encryptionContext,
+					CipherKey: ciphertext,
+				}
 				plaintext, err := handle.Decrypt()
 				sys.CheckError(err, sys.KmsError)
 				fmt.Print(plaintext)
@@ -78,13 +81,12 @@ func main() {
 			Action: func(c *cli.Context) {
 				ssmkey, err := sys.GetPayload(c.Args())
 				sys.CheckError(err, sys.UsageError)
-				handle, err := ssm.New(
-					c.GlobalString("region"),
-					"",
-					ssmkey,
-					"",
-				)
-				sys.CheckError(err, sys.KmsError)
+				sc, err := ssm.Client(c.GlobalString("region"))
+				sys.CheckError(err, sys.SsmError)
+				handle := &ssm.Handle{
+					Client:    sc,
+					CipherKey: ssmkey,
+				}
 				output, err := decrypt(handle)
 				sys.CheckError(err, sys.SsmError)
 				fmt.Print(output)
