@@ -1,8 +1,6 @@
 package main
 
 import (
-	"log"
-	"os"
 	"strings"
 
 	"github.com/realestate-com-au/shush/kms"
@@ -73,8 +71,6 @@ func driver(variables []string, region string, encryptedVarPrefix string, contex
 
 		}
 	}
-	log.Printf("Updated env KMS: %v", os.Getenv("ABCD"))
-	log.Printf("Updated env DUY: %v", os.Getenv("DUY"))
 }
 
 // execEnv implement update env variable as per secret provider
