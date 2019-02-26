@@ -46,6 +46,7 @@ func decrypt(s SecretManager) (string, error) {
 	return s.Decrypt()
 }
 
+// encrypt implement encrypt secret as per secret provider
 func encrypt(s SecretManager) (string, error) {
 	return s.Encrypt()
 }
