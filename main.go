@@ -103,11 +103,12 @@ func main() {
 			},
 			SkipArgReorder: true,
 			Action: func(c *cli.Context) {
-				driver(os.Environ(),
-					c.GlobalString("region"),
-					c.String("prefix"),
-					c.GlobalStringSlice("context"),
-				)
+				(&envDrive{
+					variables:          os.Environ(),
+					contexts:           c.GlobalStringSlice("context"),
+					region:             c.GlobalString("region"),
+					encryptedVarPrefix: c.String("prefix"),
+				}).driver()
 				sys.ExecCommand(c.Args())
 			},
 		},

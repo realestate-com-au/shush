@@ -51,22 +51,28 @@ func encrypt(s SecretManager) (string, error) {
 	return s.Encrypt()
 }
 
+// envDrive structure the data to for environment variable decryptions
+type envDrive struct {
+	variables, contexts []string
+	encryptedVarPrefix  string
+	region              string
+}
+
 // driver scans all env variables to decrypt
-func driver(variables []string, region string, encryptedVarPrefix string, contexts []string) {
+func (e *envDrive) driver() {
 
-	for _, secret := range variables {
-
+	for _, secret := range e.variables {
 		keyValuePair := strings.SplitN(secret, "=", 2)
 		key := keyValuePair[0]
 		ciphertext := keyValuePair[1]
 
 		switch {
-		case isKMSHandler(secret, encryptedVarPrefix):
+		case isKMSHandler(secret, e.encryptedVarPrefix):
 			// Update per KMS environment variable
 			plaintextKey := key[len(KMSPrefix):len(key)]
-			c, err := kms.Client(region)
+			c, err := kms.Client(e.region)
 			sys.CheckError(err, sys.KmsError)
-			encryptionContext, err := kms.ParseEncryptionContext(contexts)
+			encryptionContext, err := kms.ParseEncryptionContext(e.contexts)
 			sys.CheckError(err, sys.KmsError)
 			execEnv(&kms.Handle{
 				Client:       c,
@@ -78,7 +84,7 @@ func driver(variables []string, region string, encryptedVarPrefix string, contex
 		case isSSMHander(secret):
 			// Update per SSM environment variable
 			plaintextKey := key[len(SSMPrefix):len(key)]
-			c, err := ssm.Client(region)
+			c, err := ssm.Client(e.region)
 			sys.CheckError(err, sys.SsmError)
 			execEnv(&ssm.Handle{
 				Client:       c,
