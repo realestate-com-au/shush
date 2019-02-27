@@ -104,8 +104,9 @@ func main() {
 			},
 		},
 		{
-			Name:  "decryptssm",
-			Usage: "Decrypt SSM cipherkey",
+			Name:      "decryptssm",
+			Usage:     "Decrypt SSM cipherkey",
+			UsageText: "shush decryptssm <Parameter key name>",
 			Action: func(c *cli.Context) {
 				ssmkey, err := sys.GetPayload(c.Args())
 				sys.CheckError(err, sys.UsageError)
