@@ -14,7 +14,7 @@ func main() {
 
 	app := cli.NewApp()
 	app.Name = "shush"
-	app.Version = "1.3.5"
+	app.Version = "1.4.0"
 	app.Usage = "KMS & SSM Parameter Store encryption and decryption"
 
 	app.Flags = []cli.Flag{
@@ -74,7 +74,7 @@ func main() {
 		{
 			Name:      "encryptssm",
 			Usage:     "Encrypt SSM Parameter (kms encryption is optional)",
-			UsageText: "shush encryptssm --kms <kms key> <Parameter key name> <Parameter Value>",
+			UsageText: "shush encryptssm --kms <kms key> <Parameter name> <Parameter Value>",
 			Flags: []cli.Flag{
 				cli.StringFlag{
 					Name:  "kms",
@@ -102,7 +102,7 @@ func main() {
 		{
 			Name:      "decryptssm",
 			Usage:     "Decrypt SSM cipherkey",
-			UsageText: "shush decryptssm <Parameter key name>",
+			UsageText: "shush decryptssm <Parameter name>",
 			Action: func(c *cli.Context) {
 				ssmkey, err := sys.GetPayload(c.Args())
 				sys.CheckError(err, sys.UsageError)

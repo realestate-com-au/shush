@@ -6,6 +6,8 @@
 
 ### Encrypting things
 
+**KMS**
+
 Encrypt secrets like this:
 
     shush encrypt KEY-ID < secret.txt > secret.encrypted
@@ -18,13 +20,29 @@ Plaintext input can also be provided on the command-line, e.g.
 
     shush encrypt KEY-ID 'this is a secret' > secret.encrypted
 
+**SSM Parameter Store**
+
+Create a parameter without encryption:
+
+    shush encryptssm PARAMETER-NAME <value>
+
+Create and encrypt a parameter like this:
+
+    shush encryptssm --kms KEY-ID PARAMETER-NAME <value>
+
 ### Decrypting things
 
 Encrypted secrets are easy to decrypt, like this:
 
+**KMS**
+
     shush decrypt < secret.encrypted > secret.txt
 
-There's no need to specify a KEY-ID here, as it's encoded in the ciphertext.
+**SSM Parameter Store**
+
+    shush decryptssm PARAMETER-NAME
+
+There's no need to specify a KMS KEY-ID here, as it's encoded in the ciphertext.
 
 ### Credentials and region
 
@@ -40,6 +58,8 @@ Outside EC2, you'll need to specify it, via `--region` or by setting `$AWS_DEFAU
     shush --context app=myapp encrypt KEY-ID secret.txt > secret.encrypted
     shush --context app=myapp decrypt < secret.encrypted > secret.txt
 
+SSM Parameter store feature does not support Encryption Contexts, yet.
+
 ### Limitations
 
 "shush" can only encrypt small amounts of data; up to 4 KB.
@@ -49,6 +69,8 @@ Outside EC2, you'll need to specify it, via `--region` or by setting `$AWS_DEFAU
 "shush exec" is a command shim that makes it easy to use secrets transported
 via the (Unix) process environment.  It decrypts any environment variables
 prefixed by "`KMS_ENCRYPTED_`", and executes a specified command.
+
+`SSM_PS_` for SSM parameter store environment variables
 
 For example:
 
@@ -70,9 +92,11 @@ In this example, "shush exec":
 
     # Include "shush" to decode KMS_ENCRYPTED_STUFF
     RUN curl -sL -o /usr/local/bin/shush \
-        https://github.com/realestate-com-au/shush/releases/download/v1.3.0/shush_linux_amd64 \
+        https://github.com/realestate-com-au/shush/releases/download/v1.4.0/shush_linux_amd64 \
      && chmod +x /usr/local/bin/shush
     ENTRYPOINT ["/usr/local/bin/shush", "exec", "--"]
+
+Use the same command "shush exec" for SSM parameter store decryption.
 
 ## Installation
 
@@ -82,11 +106,11 @@ If you want to compile it from source, try:
 
     $ go get github.com/realestate-com-au/shush
     
-For Unix/Linux users, you can install `shush` using the following command. You may want to change the version number in the command below from `v1.3.4` to whichever version you want:
+For Unix/Linux users, you can install `shush` using the following command. You may want to change the version number in the command below from `v1.4.0` to whichever version you want:
 
 ```
 curl -sL -o /usr/local/bin/shush \
-    https://github.com/realestate-com-au/shush/releases/download/v1.3.4/shush_linux_amd64 \
+    https://github.com/realestate-com-au/shush/releases/download/v1.4.0/shush_linux_amd64 \
  && chmod +x /usr/local/bin/shush
 ```
 
