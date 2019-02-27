@@ -15,7 +15,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "shush"
 	app.Version = "1.3.5"
-	app.Usage = "KMS & SSM encryption and decryption"
+	app.Usage = "KMS & SSM Parameter Store encryption and decryption"
 
 	app.Flags = []cli.Flag{
 		cli.StringSliceFlag{
