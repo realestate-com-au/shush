@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"strings"
 	"syscall"
 )
 
@@ -18,7 +19,7 @@ func GetPayload(args []string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return string(input), nil
+	return strings.TrimSpace(string(input)), nil
 }
 
 // Abort - exit with status and message

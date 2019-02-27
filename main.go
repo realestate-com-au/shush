@@ -91,10 +91,12 @@ func main() {
 				}
 				sc, err := ssm.Client(c.GlobalString("region"))
 				sys.CheckError(err, sys.SsmError)
+				paramVal, err := sys.GetPayload(c.Args()[1:])
+				sys.CheckError(err, sys.UsageError)
 				output, err := encrypt(&ssm.Handler{
 					Client:           sc,
 					ParameterKeyName: c.Args().First(),
-					ParameterValue:   c.Args()[1],
+					ParameterValue:   paramVal,
 					KMSKeyID:         c.String("kms"),
 				})
 				sys.CheckError(err, sys.SsmError)
