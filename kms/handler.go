@@ -19,8 +19,9 @@ type EncryptionContext map[string]*string
 
 // Handler Structure encapsulating stuff common to encrypt and decrypt.
 type Handler struct {
-	Client       *kms.KMS
-	Context      EncryptionContext
+	Client *kms.KMS
+	// Context      EncryptionContext
+	Context      []string
 	Prefix       string
 	CipherKey    string
 	PlaintextKey string
@@ -42,9 +43,9 @@ func Client(region string) (client *kms.KMS, err error) {
 }
 
 // ParseEncryptionContext encryption context is required to decrypt the data
-func ParseEncryptionContext(contextStrings []string) (EncryptionContext, error) {
-	context := make(EncryptionContext, len(contextStrings))
-	for _, s := range contextStrings {
+func (h *Handler) ParseEncryptionContext() (EncryptionContext, error) {
+	context := make(EncryptionContext, len(h.Context))
+	for _, s := range h.Context {
 		parts := strings.SplitN(s, "=", 2)
 		if len(parts) < 2 {
 			return nil, fmt.Errorf("context must be provided in NAME=VALUE format")
@@ -57,9 +58,13 @@ func ParseEncryptionContext(contextStrings []string) (EncryptionContext, error) 
 // Encrypt plaintext using specified key.
 func (h *Handler) Encrypt() (string, error) {
 
+	ec, err := h.ParseEncryptionContext()
+	if err != nil {
+		return "", err
+	}
 	output, err := h.Client.Encrypt(&kms.EncryptInput{
 		KeyId:             &h.KeyID,
-		EncryptionContext: h.Context,
+		EncryptionContext: ec,
 		Plaintext:         []byte(h.Plaintext),
 	})
 	if err != nil {
@@ -75,8 +80,12 @@ func (h *Handler) Decrypt() (string, error) {
 	if err != nil {
 		return "", err
 	}
+	ec, err := h.ParseEncryptionContext()
+	if err != nil {
+		return "", err
+	}
 	output, err := h.Client.Decrypt(&kms.DecryptInput{
-		EncryptionContext: h.Context,
+		EncryptionContext: ec,
 		CiphertextBlob:    ciphertextBlob,
 	})
 	if err != nil {
@@ -87,7 +96,6 @@ func (h *Handler) Decrypt() (string, error) {
 
 // DecryptEnv update the local environment variable with decrypted keys
 func (h *Handler) DecryptEnv() {
-
 	plaintext, err := h.Decrypt()
 	sys.CheckError(err, sys.KmsError)
 	os.Setenv(h.PlaintextKey, plaintext)

@@ -72,11 +72,9 @@ func (e *envDriver) drive() {
 			plaintextKey := key[len(KMSPrefix):len(key)]
 			c, err := kms.Client(e.region)
 			sys.CheckError(err, sys.KmsError)
-			encryptionContext, err := kms.ParseEncryptionContext(e.contexts)
-			sys.CheckError(err, sys.KmsError)
 			execEnv(&kms.Handler{
 				Client:       c,
-				Context:      encryptionContext,
+				Context:      e.contexts,
 				Prefix:       KMSPrefix,
 				CipherKey:    value,
 				PlaintextKey: plaintextKey,
