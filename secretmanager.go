@@ -54,11 +54,11 @@ func encrypt(s SecretManager) (string, error) {
 // envDrive structure the data to for environment variable decryptions
 type envDriver struct {
 	variables, contexts []string
-	encryptedVarPrefix  string
+	customPrefix        string // Support KMS custom prefix to be backward compatible
 	region              string
 }
 
-// driver scans env variables prefix with encryptedVarPrefix for decryption
+// driver scans env variables prefix with customPrefix for decryption
 func (e *envDriver) drive() {
 
 	for _, secret := range e.variables {
@@ -67,7 +67,7 @@ func (e *envDriver) drive() {
 		value := keyValuePair[1] //KMS encrypted value or SSM parameter key name
 
 		switch {
-		case isKMSHandler(secret, e.encryptedVarPrefix):
+		case isKMSHandler(secret, e.customPrefix):
 			// Update per KMS environment variable
 			plaintextKey := key[len(KMSPrefix):len(key)]
 			c, err := kms.Client(e.region)

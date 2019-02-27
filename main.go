@@ -125,6 +125,7 @@ func main() {
 			Usage: "Execute a command",
 			Flags: []cli.Flag{
 				cli.StringFlag{
+					// Support KMS custom prefix to be backward compatible
 					Name:  "prefix",
 					Usage: "additional environment variable prefix",
 					Value: KMSPrefix,
@@ -133,10 +134,10 @@ func main() {
 			SkipArgReorder: true,
 			Action: func(c *cli.Context) {
 				(&envDriver{
-					variables:          os.Environ(),
-					contexts:           c.GlobalStringSlice("context"),
-					region:             c.GlobalString("region"),
-					encryptedVarPrefix: c.String("prefix"),
+					variables:    os.Environ(),
+					contexts:     c.GlobalStringSlice("context"),
+					region:       c.GlobalString("region"),
+					customPrefix: c.String("prefix"),
 				}).drive()
 				sys.ExecCommand(c.Args())
 			},
