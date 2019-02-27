@@ -86,7 +86,7 @@ func main() {
 				},
 			},
 			Action: func(c *cli.Context) {
-				if len(c.Args()) != 2 {
+				if len(c.Args()) == 0 {
 					sys.Abort(sys.UsageError, "Much specify a parameter key and a value")
 				}
 				sc, err := ssm.Client(c.GlobalString("region"))
