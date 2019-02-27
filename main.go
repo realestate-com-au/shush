@@ -76,6 +76,32 @@ func main() {
 			},
 		},
 		{
+			Name:      "encryptssm",
+			Usage:     "Encrypt SSM Parameter (kms encryption is optional)",
+			UsageText: "shush encryptssm --kms <kms key> <Parameter key name> <Parameter Value>",
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:  "kms",
+					Usage: "Use KMS to encrypt the parameter",
+				},
+			},
+			Action: func(c *cli.Context) {
+				if len(c.Args()) != 2 {
+					sys.Abort(sys.UsageError, "Much specify a parameter key and a value")
+				}
+				sc, err := ssm.Client(c.GlobalString("region"))
+				sys.CheckError(err, sys.SsmError)
+				output, err := encrypt(&ssm.Handler{
+					Client:           sc,
+					ParameterKeyName: c.Args().First(),
+					ParameterValue:   c.Args()[1],
+					KMSKeyID:         c.String("kms"),
+				})
+				sys.CheckError(err, sys.SsmError)
+				fmt.Println(output)
+			},
+		},
+		{
 			Name:  "decryptssm",
 			Usage: "Decrypt SSM cipherkey",
 			Action: func(c *cli.Context) {
@@ -84,8 +110,8 @@ func main() {
 				sc, err := ssm.Client(c.GlobalString("region"))
 				sys.CheckError(err, sys.SsmError)
 				plaintext, err := decrypt(&ssm.Handler{
-					Client:    sc,
-					CipherKey: ssmkey,
+					Client:           sc,
+					ParameterKeyName: ssmkey,
 				})
 				sys.CheckError(err, sys.SsmError)
 				fmt.Print(plaintext)

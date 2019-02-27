@@ -58,13 +58,13 @@ type envDriver struct {
 	region              string
 }
 
-// driver scans all env variables to decrypt
+// driver scans env variables prefix with encryptedVarPrefix for decryption
 func (e *envDriver) drive() {
 
 	for _, secret := range e.variables {
 		keyValuePair := strings.SplitN(secret, "=", 2)
 		key := keyValuePair[0]
-		ciphertext := keyValuePair[1]
+		value := keyValuePair[1] //KMS encrypted value or SSM parameter key name
 
 		switch {
 		case isKMSHandler(secret, e.encryptedVarPrefix):
@@ -78,7 +78,7 @@ func (e *envDriver) drive() {
 				Client:       c,
 				Context:      encryptionContext,
 				Prefix:       KMSPrefix,
-				CipherKey:    ciphertext,
+				CipherKey:    value,
 				PlaintextKey: plaintextKey,
 			})
 		case isSSMHander(secret):
@@ -87,10 +87,10 @@ func (e *envDriver) drive() {
 			c, err := ssm.Client(e.region)
 			sys.CheckError(err, sys.SsmError)
 			execEnv(&ssm.Handler{
-				Client:       c,
-				Prefix:       SSMPrefix,
-				CipherKey:    ciphertext,
-				PlaintextKey: plaintextKey,
+				Client:           c,
+				Prefix:           SSMPrefix,
+				ParameterKeyName: value,
+				PlaintextKey:     plaintextKey,
 			})
 		}
 	}

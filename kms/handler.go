@@ -17,7 +17,7 @@ import (
 // EncryptionContext define the format required for kms encryption context
 type EncryptionContext map[string]*string
 
-// Handle Structure encapsulating stuff common to encrypt and decrypt.
+// Handler Structure encapsulating stuff common to encrypt and decrypt.
 type Handler struct {
 	Client       *kms.KMS
 	Context      EncryptionContext
@@ -56,8 +56,7 @@ func ParseEncryptionContext(contextStrings []string) (EncryptionContext, error) 
 
 // Encrypt plaintext using specified key.
 func (h *Handler) Encrypt() (string, error) {
-	// keyID := h.KeyID
-	// plaintext := h.Plaintext
+
 	output, err := h.Client.Encrypt(&kms.EncryptInput{
 		KeyId:             &h.KeyID,
 		EncryptionContext: h.Context,
