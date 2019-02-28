@@ -41,10 +41,8 @@ func main() {
 				plaintext, err := sys.GetPayload(c.Args()[1:])
 				sys.CheckError(err, sys.UsageError)
 				key := c.Args().First()
-				kc, err := kms.Client(c.GlobalString("region"))
-				sys.CheckError(err, sys.KmsError)
 				ciphertext, err := encrypt(&kms.Handler{
-					Client:    kc,
+					Service:   kms.Client(c.GlobalString("region")),
 					Context:   c.GlobalStringSlice("context"),
 					CipherKey: plaintext,
 					KeyID:     key,
@@ -60,10 +58,8 @@ func main() {
 			Action: func(c *cli.Context) {
 				ciphertext, err := sys.GetPayload(c.Args())
 				sys.CheckError(err, sys.UsageError)
-				kc, err := kms.Client(c.GlobalString("region"))
-				sys.CheckError(err, sys.KmsError)
 				plaintext, err := decrypt(&kms.Handler{
-					Client:    kc,
+					Service:   kms.Client(c.GlobalString("region")),
 					Context:   c.GlobalStringSlice("context"),
 					CipherKey: ciphertext,
 				})
@@ -85,12 +81,10 @@ func main() {
 				if len(c.Args()) == 0 {
 					sys.Abort(sys.UsageError, "Much specify a parameter key and a value")
 				}
-				sc, err := ssm.Client(c.GlobalString("region"))
-				sys.CheckError(err, sys.SsmError)
 				paramVal, err := sys.GetPayload(c.Args()[1:])
 				sys.CheckError(err, sys.UsageError)
 				output, err := encrypt(&ssm.Handler{
-					Client:           sc,
+					Service:          ssm.Client(c.GlobalString("region")),
 					ParameterKeyName: c.Args().First(),
 					ParameterValue:   paramVal,
 					KMSKeyID:         c.String("kms"),
@@ -106,10 +100,8 @@ func main() {
 			Action: func(c *cli.Context) {
 				ssmkey, err := sys.GetPayload(c.Args())
 				sys.CheckError(err, sys.UsageError)
-				sc, err := ssm.Client(c.GlobalString("region"))
-				sys.CheckError(err, sys.SsmError)
 				plaintext, err := decrypt(&ssm.Handler{
-					Client:           sc,
+					Service:          ssm.Client(c.GlobalString("region")),
 					ParameterKeyName: ssmkey,
 				})
 				sys.CheckError(err, sys.SsmError)

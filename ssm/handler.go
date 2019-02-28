@@ -1,7 +1,6 @@
 package ssm
 
 import (
-	"errors"
 	"log"
 	"os"
 
@@ -14,7 +13,7 @@ import (
 
 // Handler structure the client for the Secret Manager
 type Handler struct {
-	Client           *ssm.SSM
+	Service          AWSIface
 	Prefix           string
 	PlaintextKey     string
 	KMSKeyID         string
@@ -24,17 +23,36 @@ type Handler struct {
 	ParameterType    string
 }
 
-// Client establish a session to AWS
-func Client(region string) (client *ssm.SSM, err error) {
+// Client prepare AWS config
+func Client(region string) *ssm.SSM {
 	if region == "" {
 		region = awsmeta.GetRegion()
 		if region == "" {
-			err = errors.New("please specify region (--region or $AWS_DEFAULT_REGION)")
-			return
+			log.Fatalln("please specify region (--region or $AWS_DEFAULT_REGION)")
 		}
 	}
-	client = ssm.New(session.New(), aws.NewConfig().WithRegion(region))
-	return
+	return ssm.New(session.New(), aws.NewConfig().WithRegion(region))
+}
+
+// AWSIface abstract AWS SDK required method
+type AWSIface interface {
+	PutParameter(*ssm.PutParameterInput) (*ssm.PutParameterOutput, error)
+	GetParameter(*ssm.GetParameterInput) (*ssm.GetParameterOutput, error)
+}
+
+// AWSImpl indicate SSM client
+type AWSImpl struct {
+	*ssm.SSM
+}
+
+// PutParameter implement AWS SDK SSM service
+func (impl *AWSImpl) PutParameter(input *ssm.PutParameterInput) (*ssm.PutParameterOutput, error) {
+	return impl.SSM.PutParameter(input)
+}
+
+// GetParameter implement AWS SDK SSM service
+func (impl *AWSImpl) GetParameter(input *ssm.GetParameterInput) (*ssm.GetParameterOutput, error) {
+	return impl.SSM.GetParameter(input)
 }
 
 // Encrypt the SSM parameter value
@@ -44,7 +62,6 @@ func (h *Handler) Encrypt() (string, error) {
 	var (
 		overwrite = true
 		err       error
-		input     *ssm.PutParameterInput
 	)
 
 	// Initial PutParameterInput
@@ -52,24 +69,24 @@ func (h *Handler) Encrypt() (string, error) {
 	case len(h.KMSKeyID) != 0:
 		// Encrypted Parameter keys
 		h.setParameterType("SecureString")
-		input = &ssm.PutParameterInput{
+		_, err = h.Service.PutParameter(&ssm.PutParameterInput{
 			Name:      &(h.ParameterKeyName),
 			KeyId:     &(h.KMSKeyID),
 			Type:      &(h.ParameterType),
 			Value:     &(h.ParameterValue),
 			Overwrite: &overwrite,
-		}
+		})
 	default:
 		// Unencrypted Parameter keys
 		h.setParameterType("String")
-		input = &ssm.PutParameterInput{
+		_, err = h.Service.PutParameter(&ssm.PutParameterInput{
 			Name:      &(h.ParameterKeyName),
 			Type:      &(h.ParameterType),
 			Value:     &(h.ParameterValue),
 			Overwrite: &overwrite,
-		}
+		})
 	}
-	_, err = h.Client.PutParameter(input)
+
 	if err != nil {
 		log.Printf("Error Encrypt the SSM value: %v", err)
 		return "", err
@@ -87,7 +104,7 @@ func (h *Handler) Decrypt() (string, error) {
 
 	withDecryption := true
 
-	output, err := h.Client.GetParameter(&ssm.GetParameterInput{
+	output, err := h.Service.GetParameter(&ssm.GetParameterInput{
 		Name:           &(h.ParameterKeyName),
 		WithDecryption: &withDecryption,
 	})

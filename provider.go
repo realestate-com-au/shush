@@ -5,7 +5,6 @@ import (
 
 	"github.com/realestate-com-au/shush/kms"
 	"github.com/realestate-com-au/shush/ssm"
-	"github.com/realestate-com-au/shush/sys"
 )
 
 var (
@@ -70,10 +69,8 @@ func (e *envDriver) drive() {
 		case isKMSHandler(secret, e.customPrefix):
 			// Update per KMS environment variable
 			plaintextKey := key[len(KMSPrefix):len(key)]
-			c, err := kms.Client(e.region)
-			sys.CheckError(err, sys.KmsError)
 			execEnv(&kms.Handler{
-				Client:       c,
+				Service:      kms.Client(e.region),
 				Context:      e.contexts,
 				Prefix:       KMSPrefix,
 				CipherKey:    value,
@@ -82,10 +79,9 @@ func (e *envDriver) drive() {
 		case isSSMHander(secret):
 			// Update per SSM environment variable
 			plaintextKey := key[len(SSMPrefix):len(key)]
-			c, err := ssm.Client(e.region)
-			sys.CheckError(err, sys.SsmError)
+
 			execEnv(&ssm.Handler{
-				Client:           c,
+				Service:          ssm.Client(e.region),
 				Prefix:           SSMPrefix,
 				ParameterKeyName: value,
 				PlaintextKey:     plaintextKey,
