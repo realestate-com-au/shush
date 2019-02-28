@@ -5,9 +5,10 @@
 package mock_kms
 
 import (
+	reflect "reflect"
+
 	kms "github.com/aws/aws-sdk-go/service/kms"
 	gomock "github.com/golang/mock/gomock"
-	reflect "reflect"
 )
 
 // MockAWSIface is a mock of AWSIface interface
@@ -37,7 +38,7 @@ func (m *MockAWSIface) EXPECT() *MockAWSIfaceMockRecorder {
 func (m *MockAWSIface) Encrypt(arg0 *kms.EncryptInput) (*kms.EncryptOutput, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Encrypt", arg0)
-	ret0, _ := ret[0].(*kms.EncryptOutput)
+	ret0 := CustomMockEncryptOutput()
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -52,7 +53,7 @@ func (mr *MockAWSIfaceMockRecorder) Encrypt(arg0 interface{}) *gomock.Call {
 func (m *MockAWSIface) Decrypt(arg0 *kms.DecryptInput) (*kms.DecryptOutput, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Decrypt", arg0)
-	ret0, _ := ret[0].(*kms.DecryptOutput)
+	ret0 := CustomMockDecryptOutput()
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -61,4 +62,18 @@ func (m *MockAWSIface) Decrypt(arg0 *kms.DecryptInput) (*kms.DecryptOutput, erro
 func (mr *MockAWSIfaceMockRecorder) Decrypt(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Decrypt", reflect.TypeOf((*MockAWSIface)(nil).Decrypt), arg0)
+}
+
+func CustomMockEncryptOutput() *kms.EncryptOutput {
+	v := "This is a kms secret"
+	return &kms.EncryptOutput{
+		CiphertextBlob: []byte(v),
+	}
+}
+
+func CustomMockDecryptOutput() *kms.DecryptOutput {
+	v := "This is a plain text"
+	return &kms.DecryptOutput{
+		Plaintext: []byte(v),
+	}
 }

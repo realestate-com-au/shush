@@ -11,6 +11,12 @@ import (
 	"github.com/realestate-com-au/shush/ssm/mock_ssm"
 )
 
+func TestClient(t *testing.T) {
+	output := Client("ap-southeast-2")
+	var s *ssm.SSM
+	assert.IsType(t, s, output, "Client should be SSM")
+	assert.Equal(t, "https://ssm.ap-southeast-2.amazonaws.com", output.Endpoint, "Should be ssm API endpoint")
+}
 func TestEncrypt(t *testing.T) {
 	ctrl := gomock.NewController(t)
 
