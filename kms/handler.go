@@ -2,8 +2,8 @@ package kms
 
 import (
 	"encoding/base64"
-	"errors"
 	"fmt"
+	"log"
 	"os"
 	"strings"
 
@@ -19,8 +19,7 @@ type EncryptionContext map[string]*string
 
 // Handler Structure encapsulating stuff common to encrypt and decrypt.
 type Handler struct {
-	Client *kms.KMS
-	// Context      EncryptionContext
+	Service      AWSIface
 	Context      []string
 	Prefix       string
 	CipherKey    string
@@ -30,16 +29,35 @@ type Handler struct {
 }
 
 // Client establish a session to AWS
-func Client(region string) (client *kms.KMS, err error) {
+func Client(region string) *kms.KMS {
 	if region == "" {
 		region = awsmeta.GetRegion()
 		if region == "" {
-			err = errors.New("please specify region (--region or $AWS_DEFAULT_REGION)")
-			return
+			log.Fatalln("please specify region (--region or $AWS_DEFAULT_REGION)")
 		}
 	}
-	client = kms.New(session.New(), aws.NewConfig().WithRegion(region))
-	return
+	return kms.New(session.New(), aws.NewConfig().WithRegion(region))
+}
+
+// AWSIface abstract AWS SDK required method
+type AWSIface interface {
+	Encrypt(*kms.EncryptInput) (*kms.EncryptOutput, error)
+	Decrypt(*kms.DecryptInput) (*kms.DecryptOutput, error)
+}
+
+// AWSImpl indicate KMS client
+type AWSImpl struct {
+	*kms.KMS
+}
+
+// Encrypt implement AWS SDK
+func (impl *AWSImpl) Encrypt(input *kms.EncryptInput) (*kms.EncryptOutput, error) {
+	return impl.KMS.Encrypt(input)
+}
+
+// Decrypt implement AWS SDK
+func (impl *AWSImpl) Decrypt(input *kms.DecryptInput) (*kms.DecryptOutput, error) {
+	return impl.KMS.Decrypt(input)
 }
 
 // ParseEncryptionContext encryption context is required to decrypt the data
@@ -62,7 +80,7 @@ func (h *Handler) Encrypt() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	output, err := h.Client.Encrypt(&kms.EncryptInput{
+	output, err := h.Service.Encrypt(&kms.EncryptInput{
 		KeyId:             &h.KeyID,
 		EncryptionContext: ec,
 		Plaintext:         []byte(h.Plaintext),
@@ -84,7 +102,7 @@ func (h *Handler) Decrypt() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	output, err := h.Client.Decrypt(&kms.DecryptInput{
+	output, err := h.Service.Decrypt(&kms.DecryptInput{
 		EncryptionContext: ec,
 		CiphertextBlob:    ciphertextBlob,
 	})

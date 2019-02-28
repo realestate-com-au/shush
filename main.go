@@ -41,10 +41,8 @@ func main() {
 				plaintext, err := sys.GetPayload(c.Args()[1:])
 				sys.CheckError(err, sys.UsageError)
 				key := c.Args().First()
-				kc, err := kms.Client(c.GlobalString("region"))
-				sys.CheckError(err, sys.KmsError)
 				ciphertext, err := encrypt(&kms.Handler{
-					Client:    kc,
+					Service:   kms.Client(c.GlobalString("region")),
 					Context:   c.GlobalStringSlice("context"),
 					CipherKey: plaintext,
 					KeyID:     key,
@@ -60,10 +58,8 @@ func main() {
 			Action: func(c *cli.Context) {
 				ciphertext, err := sys.GetPayload(c.Args())
 				sys.CheckError(err, sys.UsageError)
-				kc, err := kms.Client(c.GlobalString("region"))
-				sys.CheckError(err, sys.KmsError)
 				plaintext, err := decrypt(&kms.Handler{
-					Client:    kc,
+					Service:   kms.Client(c.GlobalString("region")),
 					Context:   c.GlobalStringSlice("context"),
 					CipherKey: ciphertext,
 				})
