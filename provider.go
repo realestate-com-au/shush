@@ -29,25 +29,25 @@ func isKMSHandler(key string, customPrefix string) bool {
 	return strings.HasPrefix(key, KMSPrefix)
 }
 
-// SecretManager defines interfaces for all secret providers
-type SecretManager interface {
+// Provider defines interfaces for all service providers
+type Provider interface {
 	Encrypt() (string, error)
 	Decrypt() (string, error)
 	DecryptEnv()
 }
 
-// execEnv implement update env variable as per secret provider
-func execEnv(s SecretManager) {
+// execEnv implement update env variable as per service provider
+func execEnv(s Provider) {
 	s.DecryptEnv()
 }
 
-// decrypt implement decrypt secret as per secret provider
-func decrypt(s SecretManager) (string, error) {
+// decrypt implement decrypt secret as per service provider
+func decrypt(s Provider) (string, error) {
 	return s.Decrypt()
 }
 
-// encrypt implement encrypt secret as per secret provider
-func encrypt(s SecretManager) (string, error) {
+// encrypt implement encrypt secret as per service provider
+func encrypt(s Provider) (string, error) {
 	return s.Encrypt()
 }
 
