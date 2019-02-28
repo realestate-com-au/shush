@@ -5,9 +5,10 @@
 package mock_ssm
 
 import (
+	reflect "reflect"
+
 	ssm "github.com/aws/aws-sdk-go/service/ssm"
 	gomock "github.com/golang/mock/gomock"
-	reflect "reflect"
 )
 
 // MockAWSIface is a mock of AWSIface interface
@@ -52,7 +53,7 @@ func (mr *MockAWSIfaceMockRecorder) PutParameter(arg0 interface{}) *gomock.Call 
 func (m *MockAWSIface) GetParameter(arg0 *ssm.GetParameterInput) (*ssm.GetParameterOutput, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetParameter", arg0)
-	ret0, _ := ret[0].(*ssm.GetParameterOutput)
+	ret0 := CustomMockParameterOutput()
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -61,4 +62,14 @@ func (m *MockAWSIface) GetParameter(arg0 *ssm.GetParameterInput) (*ssm.GetParame
 func (mr *MockAWSIfaceMockRecorder) GetParameter(arg0 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetParameter", reflect.TypeOf((*MockAWSIface)(nil).GetParameter), arg0)
+}
+
+// CustomMockParameterOutput mock the response of *ssm.GetParameterOutput
+func CustomMockParameterOutput() *ssm.GetParameterOutput {
+	v := "This is a secret"
+	return &ssm.GetParameterOutput{
+		Parameter: &ssm.Parameter{
+			Value: &v,
+		},
+	}
 }
