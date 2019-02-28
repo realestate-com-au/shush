@@ -82,10 +82,9 @@ func (e *envDriver) drive() {
 		case isSSMHander(secret):
 			// Update per SSM environment variable
 			plaintextKey := key[len(SSMPrefix):len(key)]
-			c, err := ssm.Client(e.region)
-			sys.CheckError(err, sys.SsmError)
+
 			execEnv(&ssm.Handler{
-				Client:           c,
+				Service:          ssm.Client(e.region),
 				Prefix:           SSMPrefix,
 				ParameterKeyName: value,
 				PlaintextKey:     plaintextKey,
