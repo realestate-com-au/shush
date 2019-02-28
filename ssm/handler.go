@@ -23,7 +23,7 @@ type Handler struct {
 	ParameterType    string
 }
 
-// Client establish a session to AWS
+// Client prepare AWS config
 func Client(region string) *ssm.SSM {
 	if region == "" {
 		region = awsmeta.GetRegion()

@@ -28,7 +28,7 @@ type Handler struct {
 	Plaintext    string
 }
 
-// Client establish a session to AWS
+// Client prepare AWS config
 func Client(region string) *kms.KMS {
 	if region == "" {
 		region = awsmeta.GetRegion()
