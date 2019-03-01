@@ -19,13 +19,24 @@ type EncryptionContext map[string]*string
 
 // Handler Structure encapsulating stuff common to encrypt and decrypt.
 type Handler struct {
-	Service      AWSIface
-	Context      []string
-	Prefix       string
-	CipherKey    string
+	// Service provide interfaces for AWS SDK features
+	Service AWSIface
+
+	// Context defines encryption context which is a set of non-secret key-value pairs that you can pass to AWS KMS
+	// For more information see https://docs.aws.amazon.com/kms/latest/developerguide/encryption-context.html
+	Context []string
+
+	// CipherKey is the KMS encrypted hash key
+	CipherKey string
+
+	// PlaintextKey used in environment variables as the key without the prefix
 	PlaintextKey string
-	KeyID        string
-	Plaintext    string
+
+	// KeyID is the KMS key ID such as 123ab456-a4c2-44cb-95fd-b781f32fbb37
+	KeyID string
+
+	// Plaintext is the decrypted secret
+	Plaintext string
 }
 
 // Client prepare AWS config

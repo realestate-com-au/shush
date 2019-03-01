@@ -13,13 +13,28 @@ import (
 
 // Handler structure the client for the Secret Manager
 type Handler struct {
-	Service          AWSIface
-	PlaintextKey     string
-	KMSKeyID         string
-	Plaintext        string
+	// Service provide interfaces for AWS SDK features
+	Service AWSIface
+
+	// PlaintextKey used in environment variables as the key without the prefix
+	PlaintextKey string
+
+	// KMSKeyID is the ID for KMS key, used in parameter store encryption
+	KMSKeyID string
+
+	// Plaintext is the decrypted secret
+	Plaintext string
+
+	// ParameterKeyName is the name of the parameter. For information about valid values for parameter names, see https://docs.aws.amazon.com/systems-manager/latest/userguide/sysman-parameter-name-constraints.html
 	ParameterKeyName string
-	ParameterValue   string
-	ParameterType    string
+
+	// ParameterValue must not nest another parameter. Do not use {{}} in the value.
+	ParameterValue string
+
+	// The type of parameter. Valid values include the following: String or SecureString.
+	// NOTE: AWS CloudFormation doesn't support the SecureString parameter type.
+	// For more information see https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ssm-parameter.html
+	ParameterType string
 }
 
 // Client prepare AWS config
