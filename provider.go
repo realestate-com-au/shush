@@ -14,17 +14,18 @@ var (
 	KMSPrefix = "KMS_ENCRYPTED_"
 )
 
+// isSSMHander return true if prefix with SSM_PS_
 func isSSMHander(key string) bool {
 	return strings.HasPrefix(key, SSMPrefix)
 }
 
+// isKMSHandler return true if prefix with KMS_ENCRYPTED_
 func isKMSHandler(key string, customPrefix string) bool {
 
 	if customPrefix != KMSPrefix {
 		KMSPrefix = customPrefix
 		return strings.HasPrefix(key, customPrefix)
 	}
-
 	return strings.HasPrefix(key, KMSPrefix)
 }
 
