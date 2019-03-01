@@ -35,20 +35,20 @@ type Provider interface {
 	DecryptEnv()
 }
 
-// execEnv implement update env variable as per service provider
-func execEnv(s Provider) {
-	s.DecryptEnv()
-}
+// // execEnv implement update env variable as per service provider
+// func execEnv(s Provider) {
+// 	s.DecryptEnv()
+// }
 
-// decrypt implement decrypt secret as per service provider
-func decrypt(s Provider) (string, error) {
-	return s.Decrypt()
-}
+// // decrypt implement decrypt secret as per service provider
+// func decrypt(s Provider) (string, error) {
+// 	return s.Decrypt()
+// }
 
-// encrypt implement encrypt secret as per service provider
-func encrypt(s Provider) (string, error) {
-	return s.Encrypt()
-}
+// // encrypt implement encrypt secret as per service provider
+// func encrypt(s Provider) (string, error) {
+// 	return s.Encrypt()
+// }
 
 // envDrive structure the data to for environment variable decryptions
 type envDriver struct {
@@ -69,23 +69,22 @@ func (e *envDriver) drive() {
 		case isKMSHandler(secret, e.customPrefix):
 			// Update per KMS environment variable
 			plaintextKey := key[len(KMSPrefix):len(key)]
-			execEnv(&kms.Handler{
+			(&kms.Handler{
 				Service:      kms.Client(e.region),
 				Context:      e.contexts,
 				Prefix:       KMSPrefix,
 				CipherKey:    value,
 				PlaintextKey: plaintextKey,
-			})
+			}).DecryptEnv()
 		case isSSMHander(secret):
 			// Update per SSM environment variable
 			plaintextKey := key[len(SSMPrefix):len(key)]
-
-			execEnv(&ssm.Handler{
+			(&ssm.Handler{
 				Service:          ssm.Client(e.region),
 				Prefix:           SSMPrefix,
 				ParameterKeyName: value,
 				PlaintextKey:     plaintextKey,
-			})
+			}).DecryptEnv()
 		}
 	}
 

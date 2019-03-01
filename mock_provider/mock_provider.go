@@ -2,11 +2,12 @@
 // Source: provider.go
 
 // Package mock_main is a generated GoMock package.
-package mock_main
+package mock_provider
 
 import (
-	gomock "github.com/golang/mock/gomock"
 	reflect "reflect"
+
+	gomock "github.com/golang/mock/gomock"
 )
 
 // MockProvider is a mock of Provider interface
