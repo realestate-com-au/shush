@@ -1,8 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
+	"github.com/realestate-com-au/shush/kms"
+	"github.com/realestate-com-au/shush/ssm"
 	"github.com/realestate-com-au/shush/sys"
 	"github.com/urfave/cli"
 )
@@ -29,14 +32,40 @@ func main() {
 
 	app.Commands = []cli.Command{
 		{
-			Name:   "encrypt",
-			Usage:  "Encrypt with a KMS key",
-			Action: KMSEncrytAction,
+			Name:  "encrypt",
+			Usage: "Encrypt with a KMS key",
+			Action: func(c *cli.Context) {
+				if len(c.Args()) == 0 {
+					sys.Abort(sys.UsageError, "no key specified")
+				}
+				plaintext, err := sys.GetPayload(c.Args()[1:])
+				sys.CheckError(err, sys.UsageError)
+				key := c.Args().First()
+				ciphertext, err := (&kms.Handler{
+					Service:   kms.Client(c.GlobalString("region")),
+					Context:   c.GlobalStringSlice("context"),
+					CipherKey: plaintext,
+					KeyID:     key,
+					Plaintext: plaintext,
+				}).Encrypt()
+				sys.CheckError(err, sys.KmsError)
+				fmt.Println(ciphertext)
+			},
 		},
 		{
-			Name:   "decrypt",
-			Usage:  "Decrypt KMS ciphertext",
-			Action: KMSDecryptAction,
+			Name:  "decrypt",
+			Usage: "Decrypt KMS ciphertext",
+			Action: func(c *cli.Context) {
+				ciphertext, err := sys.GetPayload(c.Args())
+				sys.CheckError(err, sys.UsageError)
+				plaintext, err := (&kms.Handler{
+					Service:   kms.Client(c.GlobalString("region")),
+					Context:   c.GlobalStringSlice("context"),
+					CipherKey: ciphertext,
+				}).Decrypt()
+				sys.CheckError(err, sys.KmsError)
+				fmt.Print(plaintext)
+			},
 		},
 		{
 			Name:      "encryptssm",
@@ -48,13 +77,36 @@ func main() {
 					Usage: "Use KMS to encrypt the parameter",
 				},
 			},
-			Action: SSMEncryptAction,
+			Action: func(c *cli.Context) {
+				if len(c.Args()) == 0 {
+					sys.Abort(sys.UsageError, "Much specify a parameter key and a value")
+				}
+				paramVal, err := sys.GetPayload(c.Args()[1:])
+				sys.CheckError(err, sys.UsageError)
+				output, err := (&ssm.Handler{
+					Service:          ssm.Client(c.GlobalString("region")),
+					ParameterKeyName: c.Args().First(),
+					ParameterValue:   paramVal,
+					KMSKeyID:         c.String("kms"),
+				}).Encrypt()
+				sys.CheckError(err, sys.SsmError)
+				fmt.Println(output)
+			},
 		},
 		{
 			Name:      "decryptssm",
 			Usage:     "Decrypt SSM cipherkey",
 			UsageText: "shush decryptssm <Parameter name>",
-			Action:    SSMDecryptAction,
+			Action: func(c *cli.Context) {
+				ssmkey, err := sys.GetPayload(c.Args())
+				sys.CheckError(err, sys.UsageError)
+				plaintext, err := (&ssm.Handler{
+					Service:          ssm.Client(c.GlobalString("region")),
+					ParameterKeyName: ssmkey,
+				}).Decrypt()
+				sys.CheckError(err, sys.SsmError)
+				fmt.Print(plaintext)
+			},
 		},
 		{
 			Name:  "exec",
