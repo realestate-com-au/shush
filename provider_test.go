@@ -3,6 +3,8 @@ package main
 import (
 	"testing"
 
+	"github.com/golang/mock/gomock"
+	"github.com/realestate-com-au/shush/mock_provider"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -38,4 +40,18 @@ func TestIsKMSHander(t *testing.T) {
 		assert.Equal(t, k.expected, isKMSHandler(k.key, k.custom), "KMS should be selected as true")
 		assert.Equal(t, k.custom, KMSPrefix, "Custom prefix overwrite KMSPrefix")
 	}
+}
+
+func TestEnvDrive(t *testing.T) {
+	ctrl := gomock.NewController(t)
+
+	defer ctrl.Finish()
+
+	m := mock_provider.NewMockProvider(ctrl)
+
+	m.EXPECT().KMSDecryptEnv("helloworld", "KMS_ENCRYPTED_ABCD")
+
+	(&envDriver{
+		variables: []string{"KMS_ENCRYPTED_ABCD=helloworld"},
+	}).drive(m)
 }

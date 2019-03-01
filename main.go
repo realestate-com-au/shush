@@ -123,10 +123,11 @@ func main() {
 			Action: func(c *cli.Context) {
 				(&envDriver{
 					variables:    os.Environ(),
-					contexts:     c.GlobalStringSlice("context"),
-					region:       c.GlobalString("region"),
 					customPrefix: c.String("prefix"),
-				}).drive()
+				}).drive(&ProviderImpl{
+					region:   c.GlobalString("region"),
+					contexts: c.GlobalStringSlice("context"),
+				})
 				sys.ExecCommand(c.Args())
 			},
 		},

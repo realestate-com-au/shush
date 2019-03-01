@@ -14,51 +14,62 @@ var (
 	KMSPrefix = "KMS_ENCRYPTED_"
 )
 
+// isSSMHander return true if prefix with SSM_PS_
 func isSSMHander(key string) bool {
 	return strings.HasPrefix(key, SSMPrefix)
 }
 
+// isKMSHandler return true if prefix with KMS_ENCRYPTED_
 func isKMSHandler(key string, customPrefix string) bool {
 
 	if customPrefix != KMSPrefix {
 		KMSPrefix = customPrefix
 		return strings.HasPrefix(key, customPrefix)
 	}
-
 	return strings.HasPrefix(key, KMSPrefix)
 }
 
 // Provider defines interfaces for all service providers
 type Provider interface {
-	Encrypt() (string, error)
-	Decrypt() (string, error)
-	DecryptEnv()
+	KMSDecryptEnv(string, string)
+	SSMDecryptEnv(string, string)
 }
 
-// // execEnv implement update env variable as per service provider
-// func execEnv(s Provider) {
-// 	s.DecryptEnv()
-// }
+// ProviderImpl structure data for provider
+type ProviderImpl struct {
+	region   string
+	contexts []string
+}
 
-// // decrypt implement decrypt secret as per service provider
-// func decrypt(s Provider) (string, error) {
-// 	return s.Decrypt()
-// }
+// KMSDecryptEnv implement decrypt env
+func (pi *ProviderImpl) KMSDecryptEnv(value string, plaintextKey string) {
+	(&kms.Handler{
+		Service:      kms.Client(pi.region),
+		Context:      pi.contexts,
+		Prefix:       KMSPrefix,
+		CipherKey:    value,
+		PlaintextKey: plaintextKey,
+	}).DecryptEnv()
+}
 
-// // encrypt implement encrypt secret as per service provider
-// func encrypt(s Provider) (string, error) {
-// 	return s.Encrypt()
-// }
+// SSMDecryptEnv implement decrypt env
+func (pi *ProviderImpl) SSMDecryptEnv(value string, plaintextKey string) {
+	(&ssm.Handler{
+		Service:          ssm.Client(pi.region),
+		Prefix:           SSMPrefix,
+		ParameterKeyName: value,
+		PlaintextKey:     plaintextKey,
+	}).DecryptEnv()
+}
 
 // envDrive structure the data to for environment variable decryptions
 type envDriver struct {
-	variables, contexts []string
-	customPrefix        string // Support KMS custom prefix to be backward compatible
-	region              string
+	variables    []string
+	customPrefix string // Support KMS custom prefix to be backward compatible
 }
 
 // driver scans env variables prefix with customPrefix for decryption
-func (e *envDriver) drive() {
+func (e *envDriver) drive(p Provider) {
 
 	for _, secret := range e.variables {
 		keyValuePair := strings.SplitN(secret, "=", 2)
@@ -69,22 +80,11 @@ func (e *envDriver) drive() {
 		case isKMSHandler(secret, e.customPrefix):
 			// Update per KMS environment variable
 			plaintextKey := key[len(KMSPrefix):len(key)]
-			(&kms.Handler{
-				Service:      kms.Client(e.region),
-				Context:      e.contexts,
-				Prefix:       KMSPrefix,
-				CipherKey:    value,
-				PlaintextKey: plaintextKey,
-			}).DecryptEnv()
+			p.KMSDecryptEnv(value, plaintextKey)
 		case isSSMHander(secret):
 			// Update per SSM environment variable
 			plaintextKey := key[len(SSMPrefix):len(key)]
-			(&ssm.Handler{
-				Service:          ssm.Client(e.region),
-				Prefix:           SSMPrefix,
-				ParameterKeyName: value,
-				PlaintextKey:     plaintextKey,
-			}).DecryptEnv()
+			p.SSMDecryptEnv(value, plaintextKey)
 		}
 	}
 
