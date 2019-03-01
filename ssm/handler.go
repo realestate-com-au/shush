@@ -40,21 +40,6 @@ type AWSIface interface {
 	GetParameter(*ssm.GetParameterInput) (*ssm.GetParameterOutput, error)
 }
 
-// AWSImpl indicate SSM client
-type AWSImpl struct {
-	*ssm.SSM
-}
-
-// PutParameter implement AWS SDK SSM service
-func (impl *AWSImpl) PutParameter(input *ssm.PutParameterInput) (*ssm.PutParameterOutput, error) {
-	return impl.SSM.PutParameter(input)
-}
-
-// GetParameter implement AWS SDK SSM service
-func (impl *AWSImpl) GetParameter(input *ssm.GetParameterInput) (*ssm.GetParameterOutput, error) {
-	return impl.SSM.GetParameter(input)
-}
-
 // Encrypt the SSM parameter value
 func (h *Handler) Encrypt() (string, error) {
 

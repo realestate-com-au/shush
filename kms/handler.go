@@ -45,21 +45,6 @@ type AWSIface interface {
 	Decrypt(*kms.DecryptInput) (*kms.DecryptOutput, error)
 }
 
-// AWSImpl indicate KMS client
-type AWSImpl struct {
-	*kms.KMS
-}
-
-// Encrypt implement AWS SDK
-func (impl *AWSImpl) Encrypt(input *kms.EncryptInput) (*kms.EncryptOutput, error) {
-	return impl.KMS.Encrypt(input)
-}
-
-// Decrypt implement AWS SDK
-func (impl *AWSImpl) Decrypt(input *kms.DecryptInput) (*kms.DecryptOutput, error) {
-	return impl.KMS.Decrypt(input)
-}
-
 // ParseEncryptionContext encryption context is required to decrypt the data
 func (h *Handler) ParseEncryptionContext() (EncryptionContext, error) {
 	context := make(EncryptionContext, len(h.Context))
