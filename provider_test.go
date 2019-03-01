@@ -38,20 +38,71 @@ func TestIsKMSHander(t *testing.T) {
 	}
 	for _, k := range keys {
 		assert.Equal(t, k.expected, isKMSHandler(k.key, k.custom), "KMS should be selected as true")
-		assert.Equal(t, k.custom, KMSPrefix, "Custom prefix overwrite KMSPrefix")
 	}
 }
 
-func TestEnvDrive(t *testing.T) {
+func TestEnvDriveKMS(t *testing.T) {
 	ctrl := gomock.NewController(t)
 
 	defer ctrl.Finish()
 
 	m := mock_provider.NewMockProvider(ctrl)
 
-	m.EXPECT().KMSDecryptEnv("helloworld", "KMS_ENCRYPTED_ABCD")
+	m.EXPECT().KMSDecryptEnv("helloworld", "ABCD")
 
 	(&envDriver{
 		variables: []string{"KMS_ENCRYPTED_ABCD=helloworld"},
+	}).drive(m)
+}
+
+func TestEnvDriveKMSCustomPrefix(t *testing.T) {
+	ctrl := gomock.NewController(t)
+
+	defer ctrl.Finish()
+
+	m := mock_provider.NewMockProvider(ctrl)
+
+	m.EXPECT().KMSDecryptEnv("okayworld", "EFGH")
+
+	(&envDriver{
+		variables: []string{
+			"KMS_ENCRYPTED_ABCD=helloworld",
+			"KMS_OKAY_EFGH=okayworld",
+		},
+		customPrefix: "KMS_OKAY_",
+	}).drive(m)
+}
+
+func TestEnvDriveSSM(t *testing.T) {
+	ctrl := gomock.NewController(t)
+
+	defer ctrl.Finish()
+
+	m := mock_provider.NewMockProvider(ctrl)
+
+	m.EXPECT().SSMDecryptEnv("helloworld", "ABCD")
+
+	(&envDriver{
+		variables: []string{"SSM_PS_ABCD=helloworld"},
+	}).drive(m)
+}
+
+func TestEnvDriveCoExist(t *testing.T) {
+	ctrl := gomock.NewController(t)
+
+	defer ctrl.Finish()
+
+	m := mock_provider.NewMockProvider(ctrl)
+
+	m.EXPECT().SSMDecryptEnv("helloworld", "ABCD")
+	m.EXPECT().KMSDecryptEnv("helloworld", "EDCE")
+	// m.EXPECT().KMSDecryptEnv("World", "HELLO")
+
+	(&envDriver{
+		variables: []string{
+			"SSM_PS_ABCD=helloworld",
+			"KMS_ENCRYPTED_EDCE=helloworld",
+			"HELLO=World",
+		},
 	}).drive(m)
 }

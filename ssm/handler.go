@@ -14,7 +14,6 @@ import (
 // Handler structure the client for the Secret Manager
 type Handler struct {
 	Service          AWSIface
-	Prefix           string
 	PlaintextKey     string
 	KMSKeyID         string
 	Plaintext        string

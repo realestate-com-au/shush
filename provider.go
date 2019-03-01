@@ -7,30 +7,15 @@ import (
 	"github.com/realestate-com-au/shush/ssm"
 )
 
-var (
-	// SSMPrefix the default
-	SSMPrefix = "SSM_PS_"
-	// KMSPrefix the default
-	KMSPrefix = "KMS_ENCRYPTED_"
+const (
+	// DefaultSSMPrefix used in environment variables
+	DefaultSSMPrefix = "SSM_PS_"
+	// DefaultKMSPrefix used in environment variables
+	DefaultKMSPrefix = "KMS_ENCRYPTED_"
 )
 
-// isSSMHander return true if prefix with SSM_PS_
-func isSSMHander(key string) bool {
-	return strings.HasPrefix(key, SSMPrefix)
-}
-
-// isKMSHandler return true if prefix with KMS_ENCRYPTED_
-func isKMSHandler(key string, customPrefix string) bool {
-
-	if customPrefix != KMSPrefix {
-		KMSPrefix = customPrefix
-		return strings.HasPrefix(key, customPrefix)
-	}
-	return strings.HasPrefix(key, KMSPrefix)
-}
-
-// Provider defines interfaces for all service providers
-type Provider interface {
+// ProviderIface defines interfaces for all service providers
+type ProviderIface interface {
 	KMSDecryptEnv(string, string)
 	SSMDecryptEnv(string, string)
 }
@@ -46,7 +31,6 @@ func (pi *ProviderImpl) KMSDecryptEnv(value string, plaintextKey string) {
 	(&kms.Handler{
 		Service:      kms.Client(pi.region),
 		Context:      pi.contexts,
-		Prefix:       KMSPrefix,
 		CipherKey:    value,
 		PlaintextKey: plaintextKey,
 	}).DecryptEnv()
@@ -56,7 +40,6 @@ func (pi *ProviderImpl) KMSDecryptEnv(value string, plaintextKey string) {
 func (pi *ProviderImpl) SSMDecryptEnv(value string, plaintextKey string) {
 	(&ssm.Handler{
 		Service:          ssm.Client(pi.region),
-		Prefix:           SSMPrefix,
 		ParameterKeyName: value,
 		PlaintextKey:     plaintextKey,
 	}).DecryptEnv()
@@ -69,7 +52,12 @@ type envDriver struct {
 }
 
 // driver scans env variables prefix with customPrefix for decryption
-func (e *envDriver) drive(p Provider) {
+func (e *envDriver) drive(p ProviderIface) {
+
+	// Ensure CustomPrefix specified
+	if e.customPrefix == "" {
+		e.customPrefix = DefaultKMSPrefix
+	}
 
 	for _, secret := range e.variables {
 		keyValuePair := strings.SplitN(secret, "=", 2)
@@ -79,13 +67,23 @@ func (e *envDriver) drive(p Provider) {
 		switch {
 		case isKMSHandler(secret, e.customPrefix):
 			// Update per KMS environment variable
-			plaintextKey := key[len(KMSPrefix):len(key)]
+			plaintextKey := key[len(e.customPrefix):len(key)]
 			p.KMSDecryptEnv(value, plaintextKey)
 		case isSSMHander(secret):
 			// Update per SSM environment variable
-			plaintextKey := key[len(SSMPrefix):len(key)]
+			plaintextKey := key[len(DefaultSSMPrefix):len(key)]
 			p.SSMDecryptEnv(value, plaintextKey)
 		}
 	}
 
+}
+
+// isSSMHander return true if prefix with SSM_PS_
+func isSSMHander(key string) bool {
+	return strings.HasPrefix(key, DefaultSSMPrefix)
+}
+
+// isKMSHandler return true if prefix with KMS_ENCRYPTED_
+func isKMSHandler(key string, customPrefix string) bool {
+	return strings.HasPrefix(key, customPrefix)
 }

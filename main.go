@@ -116,7 +116,7 @@ func main() {
 					// Support KMS custom prefix to be backward compatible
 					Name:  "prefix",
 					Usage: "additional environment variable prefix",
-					Value: KMSPrefix,
+					Value: DefaultKMSPrefix,
 				},
 			},
 			SkipArgReorder: true,
