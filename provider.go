@@ -41,10 +41,10 @@ type ProviderImpl struct {
 }
 
 // KMSDecryptEnv implement decrypt env
-func (kmsImpl *ProviderImpl) KMSDecryptEnv(value string, plaintextKey string) {
+func (pi *ProviderImpl) KMSDecryptEnv(value string, plaintextKey string) {
 	(&kms.Handler{
-		Service:      kms.Client(kmsImpl.region),
-		Context:      kmsImpl.contexts,
+		Service:      kms.Client(pi.region),
+		Context:      pi.contexts,
 		Prefix:       KMSPrefix,
 		CipherKey:    value,
 		PlaintextKey: plaintextKey,
@@ -52,9 +52,9 @@ func (kmsImpl *ProviderImpl) KMSDecryptEnv(value string, plaintextKey string) {
 }
 
 // SSMDecryptEnv implement decrypt env
-func (ssmImpl *ProviderImpl) SSMDecryptEnv(value string, plaintextKey string) {
+func (pi *ProviderImpl) SSMDecryptEnv(value string, plaintextKey string) {
 	(&ssm.Handler{
-		Service:          ssm.Client(ssmImpl.region),
+		Service:          ssm.Client(pi.region),
 		Prefix:           SSMPrefix,
 		ParameterKeyName: value,
 		PlaintextKey:     plaintextKey,
