@@ -33,44 +33,26 @@ func (m *MockProvider) EXPECT() *MockProviderMockRecorder {
 	return m.recorder
 }
 
-// Encrypt mocks base method
-func (m *MockProvider) Encrypt() (string, error) {
+// KMSDecryptEnv mocks base method
+func (m *MockProvider) KMSDecryptEnv(arg0, arg1 string) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Encrypt")
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	m.ctrl.Call(m, "KMSDecryptEnv", arg0, arg1)
 }
 
-// Encrypt indicates an expected call of Encrypt
-func (mr *MockProviderMockRecorder) Encrypt() *gomock.Call {
+// KMSDecryptEnv indicates an expected call of KMSDecryptEnv
+func (mr *MockProviderMockRecorder) KMSDecryptEnv(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Encrypt", reflect.TypeOf((*MockProvider)(nil).Encrypt))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "KMSDecryptEnv", reflect.TypeOf((*MockProvider)(nil).KMSDecryptEnv), arg0, arg1)
 }
 
-// Decrypt mocks base method
-func (m *MockProvider) Decrypt() (string, error) {
+// SSMDecryptEnv mocks base method
+func (m *MockProvider) SSMDecryptEnv(arg0, arg1 string) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Decrypt")
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
+	m.ctrl.Call(m, "SSMDecryptEnv", arg0, arg1)
 }
 
-// Decrypt indicates an expected call of Decrypt
-func (mr *MockProviderMockRecorder) Decrypt() *gomock.Call {
+// SSMDecryptEnv indicates an expected call of SSMDecryptEnv
+func (mr *MockProviderMockRecorder) SSMDecryptEnv(arg0, arg1 interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Decrypt", reflect.TypeOf((*MockProvider)(nil).Decrypt))
-}
-
-// DecryptEnv mocks base method
-func (m *MockProvider) DecryptEnv() {
-	m.ctrl.T.Helper()
-	m.ctrl.Call(m, "DecryptEnv")
-}
-
-// DecryptEnv indicates an expected call of DecryptEnv
-func (mr *MockProviderMockRecorder) DecryptEnv() *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DecryptEnv", reflect.TypeOf((*MockProvider)(nil).DecryptEnv))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SSMDecryptEnv", reflect.TypeOf((*MockProvider)(nil).SSMDecryptEnv), arg0, arg1)
 }
