@@ -1,10 +1,13 @@
 package main
 
 import (
+	"fmt"
 	"strings"
 
 	"github.com/realestate-com-au/shush/kms"
 	"github.com/realestate-com-au/shush/ssm"
+	"github.com/realestate-com-au/shush/sys"
+	"github.com/urfave/cli"
 )
 
 var (
@@ -41,10 +44,10 @@ type ProviderImpl struct {
 }
 
 // KMSDecryptEnv implement decrypt env
-func (kmsImpl *ProviderImpl) KMSDecryptEnv(value string, plaintextKey string) {
+func (pi *ProviderImpl) KMSDecryptEnv(value string, plaintextKey string) {
 	(&kms.Handler{
-		Service:      kms.Client(kmsImpl.region),
-		Context:      kmsImpl.contexts,
+		Service:      kms.Client(pi.region),
+		Context:      pi.contexts,
 		Prefix:       KMSPrefix,
 		CipherKey:    value,
 		PlaintextKey: plaintextKey,
@@ -52,9 +55,9 @@ func (kmsImpl *ProviderImpl) KMSDecryptEnv(value string, plaintextKey string) {
 }
 
 // SSMDecryptEnv implement decrypt env
-func (ssmImpl *ProviderImpl) SSMDecryptEnv(value string, plaintextKey string) {
+func (pi *ProviderImpl) SSMDecryptEnv(value string, plaintextKey string) {
 	(&ssm.Handler{
-		Service:          ssm.Client(ssmImpl.region),
+		Service:          ssm.Client(pi.region),
 		Prefix:           SSMPrefix,
 		ParameterKeyName: value,
 		PlaintextKey:     plaintextKey,
@@ -87,4 +90,61 @@ func (e *envDriver) drive(p Provider) {
 		}
 	}
 
+}
+
+func KMSEncrytAction(c *cli.Context) {
+	if len(c.Args()) == 0 {
+		sys.Abort(sys.UsageError, "no key specified")
+	}
+	plaintext, err := sys.GetPayload(c.Args()[1:])
+	sys.CheckError(err, sys.UsageError)
+	key := c.Args().First()
+	ciphertext, err := (&kms.Handler{
+		Service:   kms.Client(c.GlobalString("region")),
+		Context:   c.GlobalStringSlice("context"),
+		CipherKey: plaintext,
+		KeyID:     key,
+		Plaintext: plaintext,
+	}).Encrypt()
+	sys.CheckError(err, sys.KmsError)
+	fmt.Println(ciphertext)
+}
+
+func KMSDecryptAction(c *cli.Context) {
+	ciphertext, err := sys.GetPayload(c.Args())
+	sys.CheckError(err, sys.UsageError)
+	plaintext, err := (&kms.Handler{
+		Service:   kms.Client(c.GlobalString("region")),
+		Context:   c.GlobalStringSlice("context"),
+		CipherKey: ciphertext,
+	}).Decrypt()
+	sys.CheckError(err, sys.KmsError)
+	fmt.Print(plaintext)
+}
+
+func SSMEncryptAction(c *cli.Context) {
+	if len(c.Args()) == 0 {
+		sys.Abort(sys.UsageError, "Much specify a parameter key and a value")
+	}
+	paramVal, err := sys.GetPayload(c.Args()[1:])
+	sys.CheckError(err, sys.UsageError)
+	output, err := (&ssm.Handler{
+		Service:          ssm.Client(c.GlobalString("region")),
+		ParameterKeyName: c.Args().First(),
+		ParameterValue:   paramVal,
+		KMSKeyID:         c.String("kms"),
+	}).Encrypt()
+	sys.CheckError(err, sys.SsmError)
+	fmt.Println(output)
+}
+
+func SSMDecryptAction(c *cli.Context) {
+	ssmkey, err := sys.GetPayload(c.Args())
+	sys.CheckError(err, sys.UsageError)
+	plaintext, err := (&ssm.Handler{
+		Service:          ssm.Client(c.GlobalString("region")),
+		ParameterKeyName: ssmkey,
+	}).Decrypt()
+	sys.CheckError(err, sys.SsmError)
+	fmt.Print(plaintext)
 }
