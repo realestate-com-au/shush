@@ -96,7 +96,6 @@ func TestEnvDriveCoExist(t *testing.T) {
 
 	m.EXPECT().SSMDecryptEnv("helloworld", "ABCD")
 	m.EXPECT().KMSDecryptEnv("helloworld", "EDCE")
-	// m.EXPECT().KMSDecryptEnv("World", "HELLO")
 
 	(&envDriver{
 		variables: []string{
