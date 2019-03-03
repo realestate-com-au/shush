@@ -98,6 +98,19 @@ In this example, "shush exec":
 
 Use the same command "shush exec" for SSM parameter store decryption.
 
+
+**Ec2 instance IAM**
+
+```yaml
+iam_policy_statements:
+- Effect: Allow
+  Action:
+  - ssm:GetParameter
+  Resource:
+  - arn:aws:ssm:ap-southeast-2:xxxxxxxxxxxx:parameter/KEY-NAME-1
+  - arn:aws:ssm:ap-southeast-2:xxxxxxxxxxxx:parameter/KEY-NAME-2
+```
+
 ## Installation
 
 Binaries for official releases may be downloaded from the [releases page on GitHub](https://github.com/realestate-com-au/shush/releases).
