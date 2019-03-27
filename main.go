@@ -60,6 +60,12 @@ func main() {
 		{
 			Name:  "decrypt",
 			Usage: "Decrypt KMS ciphertext",
+			Flags: []cli.Flag{
+				cli.BoolFlag{
+					Name:  "print-key",
+					Usage: "Print the key instead of the deciphered text",
+				},
+			},
 			Action: func(c *cli.Context) {
 				handle, err := kms.NewHandle(
 					c.GlobalString("region"),
@@ -72,11 +78,15 @@ func main() {
 				if err != nil {
 					sys.Abort(sys.UsageError, err)
 				}
-				plaintext, err := handle.Decrypt(ciphertext)
+				plaintext, keyId, err := handle.Decrypt(ciphertext)
 				if err != nil {
 					sys.Abort(sys.KmsError, err)
 				}
-				fmt.Print(plaintext)
+				if c.Bool("print-key") {
+					fmt.Print(keyId)
+				} else {
+					fmt.Print(plaintext)
+				}
 			},
 		},
 		{
@@ -113,7 +123,7 @@ func main() {
 						if strings.HasPrefix(key, encryptedVarPrefix) {
 							ciphertext := keyValuePair[1]
 							plaintextKey := key[len(encryptedVarPrefix):len(key)]
-							plaintext, err := handle.Decrypt(ciphertext)
+							plaintext, _, err := handle.Decrypt(ciphertext)
 							if err != nil {
 								sys.Abort(sys.KmsError, fmt.Sprintf("cannot decrypt $%s; %s\n", key, err))
 							}
