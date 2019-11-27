@@ -34,6 +34,12 @@ func main() {
 		{
 			Name:  "encrypt",
 			Usage: "Encrypt with a KMS key",
+			Flags: []cli.Flag{
+				cli.BoolFlag{
+					Name: "trim, t",
+					Usage: "If set, remove leading and trailing whitespace from plaintext",
+				},
+			},
 			Action: func(c *cli.Context) {
 				if len(c.Args()) == 0 {
 					sys.Abort(sys.UsageError, "no key specified")
@@ -49,6 +55,9 @@ func main() {
 				plaintext, err := sys.GetPayload(c.Args()[1:])
 				if err != nil {
 					sys.Abort(sys.UsageError, err)
+				}
+				if(c.Bool("trim")) {
+					plaintext = strings.TrimSpace(plaintext)
 				}
 				ciphertext, err := handle.Encrypt(plaintext, key)
 				if err != nil {

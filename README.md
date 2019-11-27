@@ -18,6 +18,10 @@ Plaintext input can also be provided on the command-line, e.g.
 
     shush encrypt KEY-ID 'this is a secret' > secret.encrypted
 
+With the `-t` or `--trim` flag, `encrypt` will automatically remove leading and trailing whitespace from the plaintext. This can be especially useful when piping input from commands which always leave a trailing newline.
+
+    shush encrypt -t KEY_ID ' I don't really need this whitespace ' > secret.encrypted
+
 ### Decrypting things
 
 Encrypted secrets are easy to decrypt, like this:
@@ -30,7 +34,7 @@ There's no need to specify a KEY-ID here, as it's encoded in the ciphertext.
 
 Appropriate AWS credentials must be provided by one of the [mechanisms supported by aws-sdk-go](https://github.com/aws/aws-sdk-go/wiki/Getting-Started-Credentials), e.g. environment variables, or EC2 instance profile.
 
-When used within EC2, `shush` selects the appropriate region automatically.  
+When used within EC2, `shush` selects the appropriate region automatically.
 Outside EC2, you'll need to specify it, via `--region` or by setting `$AWS_DEFAULT_REGION`.
 
 ### Encryption context
@@ -81,7 +85,7 @@ Binaries for official releases may be downloaded from the [releases page on GitH
 If you want to compile it from source, try:
 
     $ go get github.com/realestate-com-au/shush
-    
+
 For Unix/Linux users, you can install `shush` using the following command. You may want to change the version number in the command below from `v1.3.4` to whichever version you want:
 
 ```
