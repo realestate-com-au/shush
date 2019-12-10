@@ -8,11 +8,11 @@
 
 Encrypt secrets like this:
 
-    shush encrypt KEY-ID < secret.txt > secret.encrypted
+    shush encrypt KEY-ID-OR-ALIAS < secret.txt > secret.encrypted
 
 The output of `encrypt` is Base64-encoded ciphertext.
 
-KEY-ID can be the id or ARN of a KMS master key, or alias prefixed by "alias/".  See documentation on [Encrypt](http://docs.aws.amazon.com/kms/latest/APIReference/API_Encrypt.html) for more details.
+KEY-ID-OR-ALIAS can be the id or ARN of a KMS master key, or alias prefixed by "alias/", or simply just the alias.
 
 Plaintext input can also be provided on the command-line, e.g.
 
@@ -131,7 +131,7 @@ Or, you can just use `bash`, `base64`, and the AWS CLI:
 
 ## License
 
-Copyright (c) 2015 REA Group Ltd.
+Copyright (c) 2019 REA Group Ltd.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

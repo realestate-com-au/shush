@@ -50,7 +50,7 @@ func TestItEncryptsAndDecrypts(t *testing.T) {
 		t.FailNow()
 	}
 
-	keysToCheck := []string{key, alias}
+	keysToCheck := []string{key, alias, fmt.Sprintf("alias/%s", alias)}
 
 	for k := range keysToCheck {
 		encryptedValue := encryptValue(t, keysToCheck[k], expectedValue)
