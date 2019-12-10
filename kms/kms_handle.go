@@ -68,17 +68,22 @@ func (h *KmsHandle) Encrypt(plaintext string, keyID string) (string, error) {
 }
 
 // Decrypt ciphertext.
-func (h *KmsHandle) Decrypt(ciphertext string) (string, error) {
+func (h *KmsHandle) Decrypt(ciphertext string) (string, string, error) {
 	ciphertextBlob, err := base64.StdEncoding.DecodeString(ciphertext)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	output, err := h.Client.Decrypt(&kms.DecryptInput{
 		EncryptionContext: h.Context,
 		CiphertextBlob:    ciphertextBlob,
 	})
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
-	return string(output.Plaintext), nil
+
+	keyId := ""
+	if output.KeyId != nil {
+		keyId = *output.KeyId
+	}
+	return string(output.Plaintext), keyId, nil
 }
