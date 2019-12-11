@@ -10,6 +10,7 @@ Assuming the tests pass and you want to proceed with the release...
 
 * Change desired version in `main.go`
 * Commit and push to master
+* Log into docker hub `docker login`. Your Docker ID needs to be in the `realestate` organisation on Docker hub.
 * Run `auto/release-docker-image`
 * Run `auto/binaries`
 * Create a new release in Github with your desired release notes, pointed at the version tag created by `auto/release-docker-image`
