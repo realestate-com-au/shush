@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/google/uuid"
 	"github.com/realestate-com-au/shush/kms"
 	"github.com/realestate-com-au/shush/sys"
 	"github.com/urfave/cli"
@@ -14,7 +15,7 @@ func main() {
 
 	app := cli.NewApp()
 	app.Name = "shush"
-	app.Version = "1.3.4"
+	app.Version = "1.4.0"
 	app.Usage = "KMS encryption and decryption"
 
 	app.Flags = []cli.Flag{
@@ -45,6 +46,13 @@ func main() {
 					sys.Abort(sys.UsageError, "no key specified")
 				}
 				key := c.Args().First()
+
+				if !isValidUUID(key) {
+					if !strings.HasPrefix(key, "alias/") {
+						key = "alias/" + key
+					}
+				}
+
 				handle, err := kms.NewHandle(
 					c.GlobalString("region"),
 					c.GlobalStringSlice("context"),
@@ -147,4 +155,9 @@ func main() {
 
 	app.Run(os.Args)
 
+}
+
+func isValidUUID(u string) bool {
+	_, err := uuid.Parse(u)
+	return err == nil
 }

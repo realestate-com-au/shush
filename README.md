@@ -8,11 +8,11 @@
 
 Encrypt secrets like this:
 
-    shush encrypt KEY-ID < secret.txt > secret.encrypted
+    shush encrypt KEY-ID-OR-ALIAS < secret.txt > secret.encrypted
 
 The output of `encrypt` is Base64-encoded ciphertext.
 
-KEY-ID can be the id or ARN of a KMS master key, or alias prefixed by "alias/".  See documentation on [Encrypt](http://docs.aws.amazon.com/kms/latest/APIReference/API_Encrypt.html) for more details.
+KEY-ID-OR-ALIAS can be the id or ARN of a KMS master key, or alias prefixed by "alias/", or simply just the alias.
 
 Plaintext input can also be provided on the command-line, e.g.
 
@@ -29,6 +29,12 @@ Encrypted secrets are easy to decrypt, like this:
     shush decrypt < secret.encrypted > secret.txt
 
 There's no need to specify a KEY-ID here, as it's encoded in the ciphertext.
+
+## Finding the key that was used
+
+If you want to see the ARN of the key used to encrypt the secret, add the `--print-key` flag
+
+    shush decrypt --print-key < secret.encrypted
 
 ### Credentials and region
 
@@ -74,7 +80,7 @@ In this example, "shush exec":
 
     # Include "shush" to decode KMS_ENCRYPTED_STUFF
     RUN curl -sL -o /usr/local/bin/shush \
-        https://github.com/realestate-com-au/shush/releases/download/v1.3.4/shush_linux_amd64 \
+        https://github.com/realestate-com-au/shush/releases/download/v1.4.0/shush_linux_amd64 \
      && chmod +x /usr/local/bin/shush
     ENTRYPOINT ["/usr/local/bin/shush", "exec", "--"]
 
@@ -86,11 +92,11 @@ If you want to compile it from source, try:
 
     $ go get github.com/realestate-com-au/shush
 
-For Unix/Linux users, you can install `shush` using the following command. You may want to change the version number in the command below from `v1.3.4` to whichever version you want:
+For Unix/Linux users, you can install `shush` using the following command. You may want to change the version number in the command below from `v1.4.0` to whichever version you want:
 
 ```
 curl -sL -o /usr/local/bin/shush \
-    https://github.com/realestate-com-au/shush/releases/download/v1.3.4/shush_linux_amd64 \
+    https://github.com/realestate-com-au/shush/releases/download/v1.4.0/shush_linux_amd64 \
  && chmod +x /usr/local/bin/shush
 ```
 
@@ -129,9 +135,13 @@ Or, you can just use `bash`, `base64`, and the AWS CLI:
     base64 -d < secrets.encrypted > /tmp/secrets.bin
     aws kms decrypt --ciphertext-blob fileb:///tmp/secrets.bin --output text --query Plaintext | base64 -d > secrets.txt
 
+## Releasing a new version
+
+Please see [docs/releasing.md](docs/releasing.md)
+
 ## License
 
-Copyright (c) 2015 REA Group Ltd.
+Copyright (c) 2019 REA Group Ltd.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
