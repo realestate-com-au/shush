@@ -80,7 +80,7 @@ In this example, "shush exec":
 
     # Include "shush" to decode KMS_ENCRYPTED_STUFF
     RUN curl -sL -o /usr/local/bin/shush \
-        https://github.com/realestate-com-au/shush/releases/download/v1.3.4/shush_linux_amd64 \
+        https://github.com/realestate-com-au/shush/releases/download/v1.4.0/shush_linux_amd64 \
      && chmod +x /usr/local/bin/shush
     ENTRYPOINT ["/usr/local/bin/shush", "exec", "--"]
 
@@ -92,11 +92,11 @@ If you want to compile it from source, try:
 
     $ go get github.com/realestate-com-au/shush
 
-For Unix/Linux users, you can install `shush` using the following command. You may want to change the version number in the command below from `v1.3.4` to whichever version you want:
+For Unix/Linux users, you can install `shush` using the following command. You may want to change the version number in the command below from `v1.4.0` to whichever version you want:
 
 ```
 curl -sL -o /usr/local/bin/shush \
-    https://github.com/realestate-com-au/shush/releases/download/v1.3.4/shush_linux_amd64 \
+    https://github.com/realestate-com-au/shush/releases/download/v1.4.0/shush_linux_amd64 \
  && chmod +x /usr/local/bin/shush
 ```
 
