@@ -135,6 +135,10 @@ Or, you can just use `bash`, `base64`, and the AWS CLI:
     base64 -d < secrets.encrypted > /tmp/secrets.bin
     aws kms decrypt --ciphertext-blob fileb:///tmp/secrets.bin --output text --query Plaintext | base64 -d > secrets.txt
 
+## Releasing a new version
+
+Please see [docs/releasing.md](docs/releasing.md)
+
 ## License
 
 Copyright (c) 2019 REA Group Ltd.
