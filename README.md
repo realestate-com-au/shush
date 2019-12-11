@@ -30,6 +30,12 @@ Encrypted secrets are easy to decrypt, like this:
 
 There's no need to specify a KEY-ID here, as it's encoded in the ciphertext.
 
+## Finding the key that was used
+
+If you want to see the ARN of the key used to encrypt the secret, add the `--print-key` flag
+
+    shush decrypt --print-key < secret.encrypted
+
 ### Credentials and region
 
 Appropriate AWS credentials must be provided by one of the [mechanisms supported by aws-sdk-go](https://github.com/aws/aws-sdk-go/wiki/Getting-Started-Credentials), e.g. environment variables, or EC2 instance profile.

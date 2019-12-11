@@ -6,6 +6,7 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"strings"
 	"testing"
 )
 
@@ -41,7 +42,7 @@ func TestItEncryptsAndDecrypts(t *testing.T) {
 	alias := os.Getenv("SHUSH_ALIAS")
 
 	if alias == "" {
-		t.Error("SHUSH_ALIAS was not found in environment. Please set this to the alias of a usable KMS key and re-run the test with appropriate AWS credentials")
+		t.Error("SHUSH_ALIAS was not found in environment. Please set this to the alias of the key you specified as SHUSH_KEY and re-run the test")
 		t.FailNow()
 	}
 
@@ -55,6 +56,30 @@ func TestItEncryptsAndDecrypts(t *testing.T) {
 	for k := range keysToCheck {
 		encryptedValue := encryptValue(t, keysToCheck[k], expectedValue)
 		decryptValue(t, encryptedValue)
+		validateKey(t, encryptedValue)
+	}
+}
+
+func validateKey(t *testing.T, secret string) {
+	dir, err := os.Getwd()
+	if err != nil {
+		t.Fatal(err)
+	}
+	decryption := exec.Command(path.Join(dir, "shush"), "decrypt", "--print-key", secret)
+	var stdoutDecryption bytes.Buffer
+	var stderrDecryption bytes.Buffer
+	decryption.Stdout = &stdoutDecryption
+	decryption.Stderr = &stderrDecryption
+	err = decryption.Run()
+	if err != nil {
+		t.Errorf("Failed to print the key: %v\n%s", err, stderrDecryption.String())
+	}
+
+	keyArn := stdoutDecryption.String()
+	keyId := os.Getenv("SHUSH_KEY")
+
+	if !strings.HasSuffix(keyArn, keyId) {
+		t.Errorf("Expected '%s' to end with %s", keyArn, keyId)
 	}
 }
 
