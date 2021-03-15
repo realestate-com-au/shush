@@ -1,28 +1,28 @@
 package kms
 
 import (
+	"context"
 	"encoding/base64"
 	"errors"
 	"fmt"
 	"strings"
 
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/kms"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/kms"
 	"github.com/realestate-com-au/shush/awsmeta"
 )
 
-type kmsEncryptionContext map[string]*string
+type kmsEncryptionContext map[string]string
 
 // Structure encapsulating stuff common to encrypt and decrypt.
 //
 type KmsHandle struct {
-	Client  *kms.KMS
+	Client  *kms.Client
 	Context kmsEncryptionContext
 }
 
-func NewHandle(region string, context []string) (ops *KmsHandle, err error) {
-	encryptionContext, err := parseEncryptionContext(context)
+func NewHandle(region string, encryptionContextData []string) (ops *KmsHandle, err error) {
+	encryptionContext, err := parseEncryptionContext(encryptionContextData)
 	if err != nil {
 		return nil, fmt.Errorf("could not parse encryption context: %v", err)
 	}
@@ -33,7 +33,14 @@ func NewHandle(region string, context []string) (ops *KmsHandle, err error) {
 			return
 		}
 	}
-	client := kms.New(session.New(), aws.NewConfig().WithRegion(region))
+
+	conf, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
+
+	if err != nil {
+		return nil, fmt.Errorf("could not create AWS session: %v", err)
+	}
+
+	client := kms.NewFromConfig(conf)
 	ops = &KmsHandle{
 		Client:  client,
 		Context: encryptionContext,
@@ -48,14 +55,14 @@ func parseEncryptionContext(contextStrings []string) (kmsEncryptionContext, erro
 		if len(parts) < 2 {
 			return nil, fmt.Errorf("context must be provided in NAME=VALUE format")
 		}
-		context[parts[0]] = &parts[1]
+		context[parts[0]] = parts[1]
 	}
 	return context, nil
 }
 
 // Encrypt plaintext using specified key.
 func (h *KmsHandle) Encrypt(plaintext string, keyID string) (string, error) {
-	output, err := h.Client.Encrypt(&kms.EncryptInput{
+	output, err := h.Client.Encrypt(context.TODO(), &kms.EncryptInput{
 		KeyId:             &keyID,
 		EncryptionContext: h.Context,
 		Plaintext:         []byte(plaintext),
@@ -73,7 +80,7 @@ func (h *KmsHandle) Decrypt(ciphertext string) (string, string, error) {
 	if err != nil {
 		return "", "", err
 	}
-	output, err := h.Client.Decrypt(&kms.DecryptInput{
+	output, err := h.Client.Decrypt(context.TODO(), &kms.DecryptInput{
 		EncryptionContext: h.Context,
 		CiphertextBlob:    ciphertextBlob,
 	})
