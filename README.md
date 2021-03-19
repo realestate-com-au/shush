@@ -95,9 +95,9 @@ If you want to compile it from source, try:
 For Unix/Linux users, you can install `shush` using the following command. You may want to change the version number in the command below from `v1.4.0` to whichever version you want:
 
 ```
-curl -sL -o /usr/local/bin/shush \
+sudo curl -L -o /usr/local/bin/shush \
     https://github.com/realestate-com-au/shush/releases/download/v1.4.0/shush_linux_amd64 \
- && chmod +x /usr/local/bin/shush
+ && sudo chmod +x /usr/local/bin/shush
 ```
 
 ## Examples
