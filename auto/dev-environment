@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+set -eu -o pipefail
+
+cd $(dirname $0)/..
+
+IMAGE="shush:dev"
+
+docker build -t "${IMAGE}" -f Dockerfile.dev .
+exec docker run --rm -it \
+  -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN -e AWS_ACCESS_KEY_ID -e AWS_DEFAULT_REGION \
+  -e SHUSH_KEY -e SHUSH_ALIAS \
+  "${IMAGE}" "${@:-bash}"
