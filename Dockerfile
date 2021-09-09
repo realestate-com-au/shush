@@ -1,10 +1,10 @@
-FROM golang:1.16-alpine@sha256:3411aef9ae9cb0fe3534fe2a4d1a9745d952d9a5ed1e20a11ff10549731156e8 as build
+FROM golang:1.16-alpine
 
 WORKDIR /go/src/github.com/realestate-com-au/shush
 COPY . /go/src/github.com/realestate-com-au/shush
 RUN go mod vendor && go install
 
-FROM alpine:3.13@sha256:a75afd8b57e7f34e4dad8d65e2c7ba2e1975c795ce1ee22fa34f8cf46f96a3be
+FROM alpine:3.13@sha256:e1c082e3d3c45cccac829840a25941e679c25d438cc8412c2fa221cf1a824e6a
 
 RUN mkdir -p /go/bin
 
