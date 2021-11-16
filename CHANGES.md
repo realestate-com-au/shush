@@ -1,5 +1,10 @@
 # CHANGES
 
+## 1.5.2
+
+- Bugfix: fully qualified KMS Key ARNs were being treated as aliases, this meant
+  cross account encryption wasn't possible.
+
 ## 1.5.1
 
 - Support for darwin/arm64.
