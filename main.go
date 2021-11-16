@@ -47,7 +47,7 @@ func main() {
 				}
 				key := c.Args().First()
 
-				if !isValidUUID(key) {
+				if !isValidUUID(key) && !strings.HasPrefix(key, "arn:aws:kms") {
 					if !strings.HasPrefix(key, "alias/") {
 						key = "alias/" + key
 					}
