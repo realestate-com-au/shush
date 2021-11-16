@@ -9,6 +9,6 @@ xcompile_image="$(docker build -f Dockerfile.xcompile -q .)"
 mkdir -p target
 docker run --rm "$xcompile_image" sh -c 'tar cf - shush_*' | (cd target && tar xvf -)
 
-( cd target && sha256sum shush_{linux,darwin,windows}* ) > target/shush_checksums.txt
+( cd target && sha256sum shush_{darwin,linux,windows}* ) > target/shush_checksums.txt
 
 exit 0
