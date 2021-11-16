@@ -47,8 +47,8 @@ func main() {
 				}
 				key := c.Args().First()
 
-				if !isValidUUID(key) && !strings.HasPrefix(key, "arn:aws:kms") {
-					if !strings.HasPrefix(key, "alias/") {
+				if !isValidUUID(key) && !isArn(key) {
+					if !isAlias(key) {
 						key = "alias/" + key
 					}
 				}
@@ -160,4 +160,12 @@ func main() {
 func isValidUUID(u string) bool {
 	_, err := uuid.Parse(u)
 	return err == nil
+}
+
+func isArn(u string) bool {
+	return strings.HasPrefix(u, "arn:aws:kms")
+}
+
+func isAlias(u string) bool {
+	return strings.HasPrefix(u, "alias/")
 }
