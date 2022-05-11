@@ -97,7 +97,7 @@ For Unix/Linux users, you can install `shush` using the following command. You m
 
 ```
 sudo curl -fsSL -o /usr/local/bin/shush \
-    https://github.com/realestate-com-au/shush/releases/download/v1.5.2/shush_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_/amd/' | sed 's/aarch/arm/') \
+    "https://github.com/realestate-com-au/shush/releases/download/v1.5.2/shush_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_/amd/' | sed 's/aarch/arm/')" \
  && sudo chmod +x /usr/local/bin/shush
 ```
 
