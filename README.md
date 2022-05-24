@@ -63,7 +63,7 @@ prefixed by "`KMS_ENCRYPTED_`", and executes a specified command.
 For example:
 
 ```
-$ export KMS_ENCRYPTED_DB_PASSWORD=$(shush encrypt alias/app-secrets 'seasame')
+$ export KMS_ENCRYPTED_DB_PASSWORD=$(shush encrypt alias/app-secrets 'sesame')
 $ shush exec -- env | grep PASSWORD
 KMS_ENCRYPTED_DB_PASSWORD=CiAbQLOo2VC4QTV/Ng986wsDSJ0srAe6oZnLyzRT6pDFWRKOAQEBAgB4G0CzqNlQuEE1fzYPfOsLA0idLKwHuqGZy8s0U+qQxVkAAABlMGMGCSqGSIb3DQEHBqBWMFQCAQAwTwYJKoZIhvcNAQcBMB4GCWCGSAFlAwQBLjARBAzfFR0tsHRq18JUhMcCARCAImvuMNYuHUut3BT7sZs9a31qWcmOBUBXYEsD+kx2GxUxBPE=
 DB_PASSWORD=seasame
@@ -79,9 +79,8 @@ In this example, "shush exec":
 "shush exec" works well as an entrypoint for Docker images, e.g.
 
     # Include "shush" to decode KMS_ENCRYPTED_STUFF
-    ARG TARGETARCH
     RUN curl -fsSL -o /usr/local/bin/shush \
-        https://github.com/realestate-com-au/shush/releases/download/v1.5.2/shush_linux_${TARGETARCH} \
+        https://github.com/realestate-com-au/shush/releases/download/v1.5.2/shush_linux_$(uname -m | sed 's/x86_/amd/' | sed 's/aarch/arm/') \
      && chmod +x /usr/local/bin/shush
     ENTRYPOINT ["/usr/local/bin/shush", "exec", "--"]
 
@@ -142,7 +141,7 @@ Please see [docs/releasing.md](docs/releasing.md)
 
 ## License
 
-Copyright (c) 2019 REA Group Ltd.
+Copyright (c) 2022 REA Group Ltd.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
