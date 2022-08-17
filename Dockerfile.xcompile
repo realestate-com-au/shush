@@ -1,6 +1,6 @@
 FROM golang:1.18
 
-RUN go get github.com/mitchellh/gox
+RUN go install github.com/mitchellh/gox@latest
 
 ENV CGO_ENABLED=0
 
