@@ -1,5 +1,9 @@
 # CHANGES
 
+## 1.5.3
+
+- Upgraded the AWS SDK KMS component to v1.18.4.
+
 ## 1.5.2
 
 - Bugfix: fully qualified KMS Key ARNs were being treated as aliases, this meant
