@@ -1,5 +1,14 @@
 # CHANGES
 
+## 1.5.4
+
+- Upgraded Go from 1.18 to 1.20.
+- Upgraded base docker image to alpine:3.18.2.
+- Upgraded the AWS SDK KMS component to v1.24.1.
+- Upgraded the AWS SDK config component to v1.18.32.
+- Upgraded the Google/uuid library to v1.3.0.
+- Upgraded the urfave/cli library to v1.22.14.
+
 ## 1.5.3
 
 - Upgraded base docker image to alpine:3.16.2
