@@ -81,7 +81,7 @@ In this example, "shush exec":
     # Include "shush" to decode KMS_ENCRYPTED_STUFF
     ARG TARGETARCH
     RUN curl -fsSL -o /usr/local/bin/shush \
-        https://github.com/realestate-com-au/shush/releases/download/v1.5.3/shush_linux_${TARGETARCH} \
+        https://github.com/realestate-com-au/shush/releases/download/v1.5.4/shush_linux_${TARGETARCH} \
      && chmod +x /usr/local/bin/shush
     ENTRYPOINT ["/usr/local/bin/shush", "exec", "--"]
 
@@ -93,11 +93,11 @@ If you want to compile it from source, try:
 
     $ go get github.com/realestate-com-au/shush
 
-For Unix/Linux users, you can install `shush` using the following command. You may want to change the version number in the command below from `v1.5.3` to whichever version you want:
+For Unix/Linux users, you can install `shush` using the following command. You may want to change the version number in the command below from `v1.5.4` to whichever version you want:
 
 ```
 sudo curl -fsSL -o /usr/local/bin/shush \
-    "https://github.com/realestate-com-au/shush/releases/download/v1.5.3/shush_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_/amd/' | sed 's/aarch/arm/')" \
+    "https://github.com/realestate-com-au/shush/releases/download/v1.5.4/shush_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_/amd/' | sed 's/aarch/arm/')" \
  && sudo chmod +x /usr/local/bin/shush
 ```
 
