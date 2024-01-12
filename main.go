@@ -150,7 +150,7 @@ func main() {
 						key := keyValuePair[0]
 						if strings.HasPrefix(key, encryptedVarPrefix) {
 							ciphertext := keyValuePair[1]
-							plaintextKey := key[len(encryptedVarPrefix):len(key)]
+							plaintextKey := key[len(encryptedVarPrefix):]
 							plaintext, _, err := handle.Decrypt(ciphertext)
 							if err != nil {
 								sys.Abort(sys.KmsError, fmt.Sprintf("cannot decrypt $%s; %s\n", key, err))

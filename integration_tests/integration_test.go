@@ -25,7 +25,7 @@ func TestMain(m *testing.M) {
 	err = make.Run()
 	if err != nil {
 		fmt.Printf("could not make binary for shush %v", err)
-		fmt.Printf(stderr.String())
+		fmt.Println(stderr.String())
 		os.Exit(1)
 	}
 
@@ -125,4 +125,3 @@ func encryptValue(t *testing.T, key string, secret string) string {
 
 	return stdout.String()
 }
-
