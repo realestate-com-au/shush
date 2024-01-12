@@ -40,6 +40,10 @@ func main() {
 					Name:  "trim, t",
 					Usage: "If set, remove leading and trailing whitespace from plaintext",
 				},
+				cli.BoolFlag{
+					Name:  "no-warn-whitespace, w",
+					Usage: "If set, suppress warnings about whitespace in plaintext",
+				},
 			},
 			Action: func(c *cli.Context) {
 				if len(c.Args()) == 0 {
@@ -67,6 +71,13 @@ func main() {
 				if c.Bool("trim") {
 					plaintext = strings.TrimSpace(plaintext)
 				}
+
+				// Warn if input has suspicious whitespace.
+				if plaintext != strings.TrimSpace(plaintext) &&
+					!c.Bool("no-warn-whitespace") {
+					fmt.Fprintf(os.Stderr, "shush: 🚨 WARNING: Plaintext contains suspicious whitespace, consider --trim, or silence with --no-warn-whitespace\n")
+				}
+
 				ciphertext, err := handle.Encrypt(plaintext, key)
 				if err != nil {
 					sys.Abort(sys.KmsError, err)
