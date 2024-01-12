@@ -1,5 +1,9 @@
 # CHANGES
 
+## 1.5.5
+
+- When encrypting, warn if plaintext begins or ends with whitespace.  Warning can be silenced with `--no-warn-whitespace` or `-w`.
+
 ## 1.5.4
 
 - Upgraded Go from 1.18 to 1.20.
