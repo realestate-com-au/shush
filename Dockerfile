@@ -4,7 +4,7 @@ WORKDIR /go/src/github.com/realestate-com-au/shush
 COPY . /go/src/github.com/realestate-com-au/shush
 RUN go mod vendor && go install
 
-FROM alpine:3.18.2@sha256:82d1e9d7ed48a7523bdebc18cf6290bdb97b82302a8a9c27d4fe885949ea94d1
+FROM alpine:3.19.0@sha256:13b7e62e8df80264dbb747995705a986aa530415763a6c58f84a3ca8af9a5bcd
 
 RUN mkdir -p /go/bin
 
