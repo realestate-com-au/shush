@@ -105,10 +105,9 @@ sudo curl -fsSL -o /usr/local/bin/shush \
 
 ### Encrypt a password
 
-Encrypt user input:
+Encrypt plaintext:
 
-    echo -n "Enter password: "
-    ENCRYPTED_PASSWORD=$(shush encrypt alias/app-secrets)
+    echo -n "my_s3cr3t_t0ken" | shush encrypt alias/app-secrets
 
 and later:
 
