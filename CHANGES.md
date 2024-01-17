@@ -2,7 +2,8 @@
 
 ## 1.5.5
 
-- When encrypting, warn if plaintext begins or ends with whitespace.  Warning can be silenced with `--no-warn-whitespace` or `-w`.
+- When encrypting, warn if plaintext begins or ends with whitespace.  Warning can
+  be silenced with `--no-warn-whitespace` or `-w`.
 - Upgraded Go from 1.20 to 1.21.
 - Upgraded base Docker image to alpine:3.19.0.
 - Upgraded aws/aws-sdk-go-v2/config to v1.26.3.
