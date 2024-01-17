@@ -79,7 +79,7 @@ In this example, "shush exec":
 "shush exec" works well as an entrypoint for Docker images, e.g.
 
 ```Dockerfile
-FROM realestate/shush:1.5.4 AS shush
+FROM realestate/shush:1.5.5 AS shush
 # Empty Dockerfile stage causes engine to fetch correct layer for your ARCH
 
 FROM debian AS my-app
