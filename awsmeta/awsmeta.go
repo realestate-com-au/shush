@@ -2,13 +2,12 @@ package awsmeta
 
 import (
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"time"
 )
 
 // GetMetaData ... fetch AWS meta-data.
-//
 func GetMetaData(path string) (contents []byte, err error) {
 	url := "http://169.254.169.254/latest/meta-data/" + path
 
@@ -25,11 +24,11 @@ func GetMetaData(path string) (contents []byte, err error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != 200 {
-		err = fmt.Errorf("Code %d returned for url %s", resp.StatusCode, url)
+		err = fmt.Errorf("awsmeta: code %d returned for url %s", resp.StatusCode, url)
 		return
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
+	body, err := io.ReadAll(resp.Body)
 
 	if err != nil {
 		return
@@ -39,7 +38,6 @@ func GetMetaData(path string) (contents []byte, err error) {
 }
 
 // GetRegion ... get the effective EC2 region.
-//
 func GetRegion() string {
 	path := "placement/availability-zone"
 

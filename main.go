@@ -15,7 +15,7 @@ func main() {
 
 	app := cli.NewApp()
 	app.Name = "shush"
-	app.Version = "1.5.4"
+	app.Version = "1.5.5"
 	app.Usage = "KMS encryption and decryption"
 
 	app.Flags = []cli.Flag{
@@ -39,6 +39,10 @@ func main() {
 				cli.BoolFlag{
 					Name:  "trim, t",
 					Usage: "If set, remove leading and trailing whitespace from plaintext",
+				},
+				cli.BoolFlag{
+					Name:  "no-warn-whitespace, w",
+					Usage: "If set, suppress warnings about whitespace in plaintext",
 				},
 			},
 			Action: func(c *cli.Context) {
@@ -67,6 +71,13 @@ func main() {
 				if c.Bool("trim") {
 					plaintext = strings.TrimSpace(plaintext)
 				}
+
+				// Warn if input has suspicious whitespace.
+				if plaintext != strings.TrimSpace(plaintext) &&
+					!c.Bool("no-warn-whitespace") {
+					fmt.Fprintf(os.Stderr, "shush: 🚨 WARNING: Plaintext contains suspicious whitespace, consider --trim, or silence with --no-warn-whitespace\n")
+				}
+
 				ciphertext, err := handle.Encrypt(plaintext, key)
 				if err != nil {
 					sys.Abort(sys.KmsError, err)
@@ -139,7 +150,7 @@ func main() {
 						key := keyValuePair[0]
 						if strings.HasPrefix(key, encryptedVarPrefix) {
 							ciphertext := keyValuePair[1]
-							plaintextKey := key[len(encryptedVarPrefix):len(key)]
+							plaintextKey := key[len(encryptedVarPrefix):]
 							plaintext, _, err := handle.Decrypt(ciphertext)
 							if err != nil {
 								sys.Abort(sys.KmsError, fmt.Sprintf("cannot decrypt $%s; %s\n", key, err))

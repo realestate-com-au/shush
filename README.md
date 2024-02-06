@@ -78,12 +78,15 @@ In this example, "shush exec":
 
 "shush exec" works well as an entrypoint for Docker images, e.g.
 
-    # Include "shush" to decode KMS_ENCRYPTED_STUFF
-    ARG TARGETARCH
-    RUN curl -fsSL -o /usr/local/bin/shush \
-        https://github.com/realestate-com-au/shush/releases/download/v1.5.4/shush_linux_${TARGETARCH} \
-     && chmod +x /usr/local/bin/shush
-    ENTRYPOINT ["/usr/local/bin/shush", "exec", "--"]
+```Dockerfile
+FROM realestate/shush:1.5.5 AS shush
+# Empty Dockerfile stage causes engine to fetch correct layer for your ARCH
+
+FROM debian AS my-app
+# Include "shush" to decode KMS_ENCRYPTED_STUFF
+COPY --from=shush /go/bin/shush /usr/local/bin/shush
+ENTRYPOINT ["/usr/local/bin/shush", "exec", "--"]
+```
 
 ## Installation
 
@@ -93,11 +96,11 @@ If you want to compile it from source, try:
 
     $ go get github.com/realestate-com-au/shush
 
-For Unix/Linux users, you can install `shush` using the following command. You may want to change the version number in the command below from `v1.5.4` to whichever version you want:
+For Unix/Linux users, you can install `shush` using the following command. You may want to change the version number in the command below from `v1.5.5` to whichever version you want:
 
 ```
 sudo curl -fsSL -o /usr/local/bin/shush \
-    "https://github.com/realestate-com-au/shush/releases/download/v1.5.4/shush_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_/amd/' | sed 's/aarch/arm/')" \
+    "https://github.com/realestate-com-au/shush/releases/download/v1.5.5/shush_$(uname -s | tr '[:upper:]' '[:lower:]')_$(uname -m | sed 's/x86_/amd/' | sed 's/aarch/arm/')" \
  && sudo chmod +x /usr/local/bin/shush
 ```
 

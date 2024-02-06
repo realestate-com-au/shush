@@ -1,5 +1,15 @@
 # CHANGES
 
+## 1.5.5
+
+- When encrypting, warn if plaintext begins or ends with whitespace.  Warning can
+  be silenced with `--no-warn-whitespace` or `-w`.
+- Upgraded Go from 1.20 to 1.21.
+- Upgraded base Docker image to alpine:3.19.0.
+- Upgraded aws/aws-sdk-go-v2/config to v1.26.3.
+- Upgraded aws/aws-sdk-go-v2/service/kms to v1.27.9.
+- Upgraded google/uuid to v1.5.0.
+
 ## 1.5.4
 
 - Upgraded Go from 1.18 to 1.20.
