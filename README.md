@@ -78,15 +78,12 @@ In this example, "shush exec":
 
 "shush exec" works well as an entrypoint for Docker images, e.g.
 
-```Dockerfile
-FROM realestate/shush:1.5.5 AS shush
-# Empty Dockerfile stage causes engine to fetch correct layer for your ARCH
-
-FROM debian AS my-app
-# Include "shush" to decode KMS_ENCRYPTED_STUFF
-COPY --from=shush /go/bin/shush /usr/local/bin/shush
-ENTRYPOINT ["/usr/local/bin/shush", "exec", "--"]
-```
+    # Include "shush" to decode KMS_ENCRYPTED_STUFF
+    ARG TARGETARCH
+    RUN curl -fsSL -o /usr/local/bin/shush \
+        https://github.com/realestate-com-au/shush/releases/download/v1.5.5/shush_linux_${TARGETARCH} \
+     && chmod +x /usr/local/bin/shush
+    ENTRYPOINT ["/usr/local/bin/shush", "exec", "--"]
 
 ## Installation
 
