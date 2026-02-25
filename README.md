@@ -91,7 +91,7 @@ Binaries for official releases may be downloaded from the [releases page on GitH
 
 If you want to compile it from source, try:
 
-    $ go get github.com/realestate-com-au/shush
+    $ go install github.com/realestate-com-au/shush@latest
 
 For Unix/Linux users, you can install `shush` using the following command. You may want to change the version number in the command below from `v1.5.5` to whichever version you want:
 
