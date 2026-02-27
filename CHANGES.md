@@ -1,5 +1,14 @@
 # CHANGES
 
+## 1.5.6
+
+- Upgraded Go from 1.21 to 1.22.
+- Upgraded aws/aws-sdk-go-v2/config from v1.26.3 to v1.29.16.
+- Upgraded aws/aws-sdk-go-v2/service/kms from v1.27.9 to v1.40.1.
+- Upgraded google/uuid from v1.5.0 to v1.6.0.
+- Upgraded cpuguy83/go-md2man/v2 from v2.0.5 to v2.0.7.
+- Upgraded urfave/cli to v1.22.16.
+
 ## 1.5.5
 
 - When encrypting, warn if plaintext begins or ends with whitespace.  Warning can
