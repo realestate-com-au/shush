@@ -1,4 +1,4 @@
-FROM golang:1.21-alpine as build
+FROM golang:1.22.4-alpine as build
 
 WORKDIR /go/src/github.com/realestate-com-au/shush
 COPY . /go/src/github.com/realestate-com-au/shush

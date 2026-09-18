@@ -1,5 +1,9 @@
 # CHANGES
 
+## Unreleased
+
+- Upgraded Go from 1.21 to 1.22.4, fixing CVE-2024-24790.
+
 ## 1.5.5
 
 - When encrypting, warn if plaintext begins or ends with whitespace.  Warning can
